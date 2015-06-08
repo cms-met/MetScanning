@@ -60,7 +60,6 @@ process.load('RecoJets.JetProducers.PFClustersForJets_cff')
 #process.clusterMETSelector = cms.EDFilter(
 #    "CandViewSelector",
 #    src = cms.InputTag("pfClusterMet"),
-##    src = cms.InputTag("caloMetM"), #muon corrected
 #    cut = cms.string( "pt()>50" )
 #    )
 
@@ -68,7 +67,7 @@ process.load('RecoJets.JetProducers.PFClustersForJets_cff')
 process.condMETSelector = cms.EDProducer(
    "CandViewShallowCloneCombiner",
    decay = cms.string("caloMet pfClusterMet"),
-   cut = cms.string("(daughter(0).pt > 50) || (daughter(0).pt/daughter(1).pt > 2 && daughter(1).pt > 25 ) || (daughter(1).pt/daughter(0).pt > 2 && daughter(0).pt > 25 )" )
+   cut = cms.string("(daughter(0).pt > 80) || (daughter(0).pt/daughter(1).pt > 2 && daughter(1).pt > 40 ) || (daughter(1).pt/daughter(0).pt > 2 && daughter(0).pt > 40 )" )
    )
 
 
