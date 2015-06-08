@@ -45,18 +45,36 @@ process.ApplyBaselineHBHENoiseFilter = cms.EDFilter('BooleanFlagFilter',
     inputLabel = cms.InputTag('HBHENoiseFilterResultProducer','HBHENoiseFilterResult'),
     reverseDecision = cms.bool(False)
 )
+##____________________________________________________________________________||
+process.load('RecoMET.METProducers.PFClusterMET_cfi')
+process.load('RecoJets.JetProducers.PFClustersForJets_cff')
 
-## select events with high caloMET 
-process.caloMETSelector = cms.EDFilter(
-    "CandViewSelector",
-    src = cms.InputTag("caloMet"),
-#    src = cms.InputTag("caloMetM"), #muon corrected
-    cut = cms.string( "pt()>50" )
-    )
 
-process.caloMETCounter = cms.EDFilter(
+### select events with high caloMET 
+#process.caloMETSelector = cms.EDFilter(
+#    "CandViewSelector",
+#    src = cms.InputTag("caloMet"),
+##    src = cms.InputTag("caloMetM"), #muon corrected
+#    cut = cms.string( "pt()>50" )
+#    )
+#process.clusterMETSelector = cms.EDFilter(
+#    "CandViewSelector",
+#    src = cms.InputTag("pfClusterMet"),
+##    src = cms.InputTag("caloMetM"), #muon corrected
+#    cut = cms.string( "pt()>50" )
+#    )
+
+
+process.condMETSelector = cms.EDProducer(
+   "CandViewShallowCloneCombiner",
+   decay = cms.string("caloMet pfClusterMet"),
+   cut = cms.string("(daughter(0).pt > 50) || (daughter(0).pt/daughter(1).pt > 2 && daughter(1).pt > 25 ) || (daughter(1).pt/daughter(0).pt > 2 && daughter(0).pt > 25 )" )
+   )
+
+
+process.metCounter = cms.EDFilter(
     "CandViewCountFilter",
-    src = cms.InputTag("caloMETSelector"),
+    src = cms.InputTag("condMETSelector"),
     minNumber = cms.uint32(1),
     )
 
@@ -65,8 +83,13 @@ process.p = cms.Path(
     process.CSCTightHaloFilter*
     process.HBHENoiseFilterResultProducer*
     process.ApplyBaselineHBHENoiseFilter*
-    process.caloMETSelector*
-    process.caloMETCounter
+    process.pfClusterRefsForJetsHCAL*
+    process.pfClusterRefsForJetsECAL*
+    process.pfClusterRefsForJets*
+    process.pfClusterMet*
+#    process.caloMETSelector*
+    process.condMETSelector*
+    process.metCounter
     )
 
 process.e1 = cms.EndPath(
