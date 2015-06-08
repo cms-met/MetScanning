@@ -51,7 +51,7 @@ process.caloMETSelector = cms.EDFilter(
     "CandViewSelector",
     src = cms.InputTag("caloMet"),
 #    src = cms.InputTag("caloMetM"), #muon corrected
-    cut = cms.string( "pt()>150" )
+    cut = cms.string( "pt()>50" )
     )
 
 process.caloMETCounter = cms.EDFilter(
