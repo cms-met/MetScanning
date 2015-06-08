@@ -40,6 +40,7 @@ process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
 process.load('RecoMET.METFilters.CSCTightHaloFilter_cfi')
 
 ##____________________________________________________________________________||
+process.load('CommonTools.RecoAlgos.HBHENoiseFilterResultProducer_cfi')
 process.ApplyBaselineHBHENoiseFilter = cms.EDFilter('BooleanFlagFilter',
     inputLabel = cms.InputTag('HBHENoiseFilterResultProducer','HBHENoiseFilterResult'),
     reverseDecision = cms.bool(False)
@@ -62,6 +63,7 @@ process.caloMETCounter = cms.EDFilter(
 ##____________________________________________________________________________||
 process.p = cms.Path(
     process.CSCTightHaloFilter*
+    process.HBHENoiseFilterResultProducer*
     process.ApplyBaselineHBHENoiseFilter*
     process.caloMETSelector*
     process.caloMETCounter
