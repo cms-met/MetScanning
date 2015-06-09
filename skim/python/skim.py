@@ -67,7 +67,8 @@ process.load('RecoJets.JetProducers.PFClustersForJets_cff')
 process.condMETSelector = cms.EDProducer(
    "CandViewShallowCloneCombiner",
    decay = cms.string("caloMet pfClusterMet"),
-   cut = cms.string("(daughter(0).pt > 80) || (daughter(0).pt/daughter(1).pt > 2 && daughter(1).pt > 40 ) || (daughter(1).pt/daughter(0).pt > 2 && daughter(0).pt > 40 )" )
+#   cut = cms.string("(daughter(0).pt > 80) || (daughter(0).pt/daughter(1).pt > 2 && daughter(1).pt > 40 ) || (daughter(1).pt/daughter(0).pt > 2 && daughter(0).pt > 40 )" ) #Skim v0
+   cut = cms.string("(daughter(0).pt > 50) || (daughter(1).pt > 50)" ) #Skim v1
    )
 
 
