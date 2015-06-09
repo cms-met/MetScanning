@@ -18,7 +18,10 @@ process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc', '')
 ##____________________________________________________________________________||
 process.source = cms.Source(
     "PoolSource",
-    fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/data/Run2015A/ZeroBias1/RECO/PromptReco-v1/000/246/930/00000/2E8CE084-930B-E511-88E0-02163E0145E7.root")
+    #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/data/Run2015A/HcalHPDNoise/RAW/v1/000/246/877/00000/9A0372A1-B809-E511-ABDF-02163E01440B.root")
+    #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/data/Run2015A/SingleMu/RECO/PromptReco-v1/000/246/865/00000/2631D17B-140B-E511-AB09-02163E014641.root")
+    fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/data/Run2015A/SingleMu/RECO/PromptReco-v1/000/247/070/00000/A2AFED85-AB0C-E511-ACA9-02163E0142B7.root")
+    #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/data/Run2015A/ZeroBias1/RECO/PromptReco-v1/000/246/930/00000/2E8CE084-930B-E511-88E0-02163E0145E7.root")
     )
 
 ##____________________________________________________________________________||
