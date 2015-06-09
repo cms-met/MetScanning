@@ -4,27 +4,27 @@ from CRABClient.UserUtilities import config
 
 config = config()
 config.General.requestName = 'ZeroBias1_Run2015A-PromptReco-v1_RECO'
-config.General.workArea = 'private0TSkim'
+config.General.workArea = 'private0TSkim_v1'
 
 config.JobType.pluginName = 'Analysis'
 config.JobType.psetName = '../python/skim.py'
 
 config.Data.inputDataset = '/ZeroBias1/Run2015A-PromptReco-v1/RECO'
 config.Data.inputDBS = 'global'
-config.Data.lumiMask = 'json_DCSONLY_150708.txt' 
+config.Data.lumiMask = 'json_DCSONLY_150709_skim_v1.txt' 
 config.Data.splitting = 'LumiBased'
-config.Data.unitsPerJob = 5
+config.Data.unitsPerJob = 15
 
 config.Data.publication = False
 #config.Data.outLFNDirBase = '' 
 #config.Data.publishDataName = ''
 
-config.Data.outLFNDirBase = '/store/group/phys_jetmet/schoef/private0TSkim/'
+config.Data.outLFNDirBase = '/store/group/phys_jetmet/schoef/private0TSkim_v1/'
 config.Site.storageSite = 'T2_CH_CERN'
 
 datasets=[
-
 '/EGamma/Run2015A-PromptReco-v1/RECO',
+'/Jet/Run2015A-PromptReco-v1/RECO',
 '/ZeroBias1/Run2015A-PromptReco-v1/RECO',
 '/ZeroBias2/Run2015A-PromptReco-v1/RECO',
 '/ZeroBias3/Run2015A-PromptReco-v1/RECO',
