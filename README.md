@@ -3,7 +3,7 @@
 ```
   cmsrel CMSSW_7_4_4_patch2
   cd CMSSW_7_4_4_patch2/src
-  git clone https://github.com/cms-met/MetScanning/edit/master/README.md
+  git clone https://github.com/cms-met/MetScanning
   ```
 ## Run on local file
 ```
