@@ -3,7 +3,9 @@
 ```
   cmsrel CMSSW_7_4_4_patch2
   cd CMSSW_7_4_4_patch2/src
-  git clone https://github.com/cms-met/MetScanning/edit/master/README.md
+  cmsenv
+  git cms-addpkg RecoParticleFlow/PFProducer
+  git clone https://github.com/cms-met/MetScanning
   ```
 ## Run on local file
 ```
