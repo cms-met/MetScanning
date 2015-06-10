@@ -5,6 +5,7 @@
   cd CMSSW_7_4_4_patch2/src
   cmsenv
   git cms-addpkg RecoParticleFlow/PFProducer
+  git cherry-pick af5c1ba33e88b3be627c262eb93d678f9f70e729
   git clone https://github.com/cms-met/MetScanning
   ```
 ## Run on local file
