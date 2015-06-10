@@ -25,7 +25,7 @@ edmCollections = { \
 }
 handles={k:Handle(edmCollections[k][0]) for k in edmCollections.keys()}
 
-samples = [ZeroBias, EGamma, SingleMu]
+samples = [ZeroBias]
 #samples = [EGamma, SingleMu]
 #samples = [SingleMu]
 
