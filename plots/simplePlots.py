@@ -2,10 +2,11 @@ from MetScanning.plots.helpers import getFileList
 from MetScanning.plots.samples import *
 
 import ROOT
+ROOT.gStyle.SetOptStat(0)
 from DataFormats.FWLite import Events, Handle
 from PhysicsTools.PythonAnalysis import *
 
-small = False
+small = True
 prefix='v1'
 plotDirectory = "/afs/hephy.at/user/r/rschoefbeck/www/png0T/"
 
@@ -31,10 +32,10 @@ samples = [ZeroBias]
 
 h_caloMet = ROOT.TH1F('caloMet', 'caloMet', 100,0,200)
 h_pfClusterMet = ROOT.TH1F('pfClusterMet', 'pfClusterMet', 100,0,200)
-h_caloMet_vs_pfClusterMet = ROOT.TH2F('caloVSpfCluster', 'caloVSpfCluster', 100,0,200,100,0,200)
+h_caloMet_vs_pfClusterMet = ROOT.TH2F('caloVSpfCluster_MET', 'caloVSpfCluster_MET', 100,0,200,100,0,200)
 h_caloSumET = ROOT.TH1F('caloSumET', 'caloSumET', 100,0,2000)
 h_pfClusterSumET = ROOT.TH1F('pfClusterSumET', 'pfClusterSumET', 100,0,2000)
-h_caloSumET_vs_pfClusterSumET = ROOT.TH2F('caloVSpfCluster', 'caloVSpfCluster', 100,0,2000,100,0,2000)
+h_caloSumET_vs_pfClusterSumET = ROOT.TH2F('caloVSpfCluster_sumET', 'caloVSpfCluster_sumET', 100,0,2000,100,0,2000)
 
 for s in samples:
   h_caloMet.Reset()
@@ -95,15 +96,18 @@ for s in samples:
   c1.Print(plotDirectory+'/'+prefix+'_'+s['name']+'_1D_caloMet_vs_pfClusterMet.png')
   c1.Print(plotDirectory+'/'+prefix+'_'+s['name']+'_1D_caloMet_vs_pfClusterMet.pdf')
   c1.Print(plotDirectory+'/'+prefix+'_'+s['name']+'_1D_caloMet_vs_pfClusterMet.root')
+  del c1
 
+  c1 = ROOT.TCanvas()
   l = ROOT.TLegend(0.7,0.7,1,1)
   l.SetFillColor(0)
   l.SetShadowColor(ROOT.kWhite)
   l.SetBorderSize(1)
-  l.AddEntry(h_caloSumET, "calo MET")
-  l.AddEntry(h_pfClusterSumET, "pfCluster MET")
+  l.AddEntry(h_caloSumET, "calo SumET")
+  l.AddEntry(h_pfClusterSumET, "pfCluster SumET")
   h_caloSumET.GetXaxis().SetTitle("SumET (GeV)")
   h_caloSumET.GetYaxis().SetTitle("Events")
+  h_caloSumET.SetTitle("")
   h_caloSumET.Draw()
   h_pfClusterSumET.SetLineColor(ROOT.kRed)
   h_pfClusterSumET.Draw("same")
@@ -111,17 +115,34 @@ for s in samples:
   c1.Print(plotDirectory+'/'+prefix+'_'+s['name']+'_1D_caloSumET_vs_pfClusterSumET.png')
   c1.Print(plotDirectory+'/'+prefix+'_'+s['name']+'_1D_caloSumET_vs_pfClusterSumET.pdf')
   c1.Print(plotDirectory+'/'+prefix+'_'+s['name']+'_1D_caloSumET_vs_pfClusterSumET.root')
+  del c1
 
+  c1 = ROOT.TCanvas()
+  h_caloMet_vs_pfClusterMet.SetTitle("")
   h_caloMet_vs_pfClusterMet.GetXaxis().SetTitle('caloMet')
   h_caloMet_vs_pfClusterMet.GetYaxis().SetTitle('pfClusterMet')
+  c1.SetLogz()
+  h_caloMet.SetTitle("")
   h_caloMet_vs_pfClusterMet.Draw('colz')
   c1.Print(plotDirectory+'/'+prefix+'_'+s['name']+'_2D_caloMet_vs_pfClusterMet.png')
   c1.Print(plotDirectory+'/'+prefix+'_'+s['name']+'_2D_caloMet_vs_pfClusterMet.pdf')
   c1.Print(plotDirectory+'/'+prefix+'_'+s['name']+'_2D_caloMet_vs_pfClusterMet.root')
+  del c1
 
+  c1 = ROOT.TCanvas()
+  h_caloSumET_vs_pfClusterSumET.SetTitle("")
   h_caloSumET_vs_pfClusterSumET.GetXaxis().SetTitle('caloSumET')
   h_caloSumET_vs_pfClusterSumET.GetYaxis().SetTitle('pfClusterSumET')
+  c1.SetLogz()
   h_caloSumET_vs_pfClusterSumET.Draw('colz')
   c1.Print(plotDirectory+'/'+prefix+'_'+s['name']+'_2D_caloSumET_vs_pfClusterSumET.png')
   c1.Print(plotDirectory+'/'+prefix+'_'+s['name']+'_2D_caloSumET_vs_pfClusterSumET.pdf')
   c1.Print(plotDirectory+'/'+prefix+'_'+s['name']+'_2D_caloSumET_vs_pfClusterSumET.root')
+  del c1
+
+del h_caloMet
+del h_pfClusterMet
+del h_caloMet_vs_pfClusterMet
+del h_caloSumET
+del h_pfClusterSumET
+del h_caloSumET_vs_pfClusterSumET
