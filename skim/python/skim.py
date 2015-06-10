@@ -50,7 +50,7 @@ process.load('CommonTools.RecoAlgos.HBHENoiseFilterResultProducer_cfi')
 #    reverseDecision = cms.bool(False)
 #)
 
-##____________________________________________________________________________||
+##___________________________PFClusterMet_____________________________________||
 process.load('RecoMET.METProducers.PFClusterMET_cfi')
 process.load("RecoParticleFlow.PFClusterProducer.particleFlowCluster_cff")
 process.load("RecoLocalCalo.HcalRecAlgos.hcalRecAlgoESProd_cfi")
@@ -74,8 +74,8 @@ process.pfClusterRefsForJetsHO = cms.EDProducer("PFClusterRefCandidateProducer",
 process.pfClusterRefsForJets = cms.EDProducer("PFClusterRefCandidateMerger",
   src = cms.VInputTag("pfClusterRefsForJetsHCAL", "pfClusterRefsForJetsECAL", "pfClusterRefsForJetsHF", "pfClusterRefsForJetsHO")
 )
-#process.load( "RecoJets.JetProducers.ak4PFClusterJets_cfi" )
-process.pfClusterRefsForJets_step = cms.Sequence(
+process.load("RecoJets.JetProducers.ak4PFClusterJets_cfi")
+process.pfClusterMetSequence = cms.Sequence(
  process.particleFlowRecHitECAL*
  process.particleFlowRecHitHBHE*
  process.particleFlowRecHitHF*
@@ -90,8 +90,91 @@ process.pfClusterRefsForJets_step = cms.Sequence(
  process.pfClusterRefsForJetsECAL*
  process.pfClusterRefsForJetsHF*
  process.pfClusterRefsForJetsHO*
- process.pfClusterRefsForJets
-# *process.ak4PFClusterJets
+ process.pfClusterRefsForJets*
+#   process.ak4PFClusterJets
+ process.pfClusterMet
+)
+
+##___________________________PFCaloMet_____________________________________||
+############ need the following setup when running in <CMSSW_7_5_X:
+# git cms-addpkg RecoParticleFlow/PFProducer
+# git cherry-pick af5c1ba33e88b3be627c262eb93d678f9f70e729
+process.hltParticleFlowBlock = cms.EDProducer("PFBlockProducer",
+  debug = cms.untracked.bool(False),
+  verbose = cms.untracked.bool(False),
+  elementImporters = cms.VPSet(
+      cms.PSet(
+          source = cms.InputTag("particleFlowClusterECAL"),
+          #source = cms.InputTag("particleFlowClusterECALUncorrected"), #we use uncorrected
+          importerName = cms.string('GenericClusterImporter')
+      ),
+      cms.PSet(
+          source = cms.InputTag("particleFlowClusterHCAL"),
+          importerName = cms.string('GenericClusterImporter')
+      ),
+      cms.PSet(
+          source = cms.InputTag("particleFlowClusterHO"),
+          importerName = cms.string('GenericClusterImporter')
+      ),
+      cms.PSet(
+          source = cms.InputTag("particleFlowClusterHF"),
+          importerName = cms.string('GenericClusterImporter')
+      )
+  ),
+  linkDefinitions = cms.VPSet(
+      cms.PSet(
+          linkType = cms.string('ECAL:HCAL'),
+          useKDTree = cms.bool(False),
+          #linkerName = cms.string('ECALAndHCALLinker')
+          linkerName = cms.string('ECALAndHCALCaloJetLinker') #new ECal and HCal Linker for PFCaloJets
+      ),
+      cms.PSet(
+          linkType = cms.string('HCAL:HO'),
+          useKDTree = cms.bool(False),
+          linkerName = cms.string('HCALAndHOLinker')
+      ),
+      cms.PSet(
+          linkType = cms.string('HFEM:HFHAD'),
+          useKDTree = cms.bool(False),
+          linkerName = cms.string('HFEMAndHFHADLinker')
+      ),
+      cms.PSet(
+          linkType = cms.string('ECAL:ECAL'),
+          useKDTree = cms.bool(False),
+          linkerName = cms.string('ECALAndECALLinker')
+      )
+   )
+)
+from RecoParticleFlow.PFProducer.particleFlow_cfi import particleFlowTmp
+process.hltParticleFlow = particleFlowTmp.clone(
+  GedPhotonValueMap = cms.InputTag(""),
+  useEGammaFilters = cms.bool(False),
+  useEGammaElectrons = cms.bool(False), 
+  useEGammaSupercluster = cms.bool(False),
+  rejectTracks_Step45 = cms.bool(False),
+  usePFNuclearInteractions = cms.bool(False),  
+  blocks = cms.InputTag("hltParticleFlowBlock"), 
+  egammaElectrons = cms.InputTag(""),
+  useVerticesForNeutral = cms.bool(False),
+  PFEGammaCandidates = cms.InputTag(""),
+  useProtectionsForJetMET = cms.bool(False),
+  usePFConversions = cms.bool(False),
+  rejectTracks_Bad = cms.bool(False),
+  muons = cms.InputTag(""),
+  postMuonCleaning = cms.bool(False),
+  usePFSCEleCalib = cms.bool(False)
+)
+
+process.load("RecoMET.METProducers.PFMET_cfi")
+process.pfCaloMet = process.pfMet.clone(
+  src = cms.InputTag("hltParticleFlow"),
+  alias = cms.string('pfCaloMet')
+)
+
+process.pfCaloMetSequence = cms.Sequence(
+   process.hltParticleFlowBlock *
+   process.hltParticleFlow *
+   process.pfCaloMet
 )
 
 ### select events with high caloMET 
@@ -127,8 +210,8 @@ process.p = cms.Path(
     process.HBHENoiseFilterResultProducer* #produces bools
 #    process.ApplyBaselineHBHENoiseFilter* 
 #    process.pfClusterRefsForJets*
-    process.pfClusterRefsForJets_step*
-    process.pfClusterMet*
+    process.pfClusterMetSequence*
+    process.pfCaloMetSequence*
 #    process.caloMETSelector*
     process.condMETSelector*
     process.metCounter
