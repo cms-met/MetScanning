@@ -13,7 +13,7 @@ config.Data.inputDataset = '/ZeroBias1/Run2015A-PromptReco-v1/RECO'
 config.Data.inputDBS = 'global'
 config.Data.lumiMask = 'json_DCSONLY_150710_skim_v3.txt' 
 config.Data.splitting = 'LumiBased'
-config.Data.unitsPerJob = 15
+config.Data.unitsPerJob = 10
 
 config.Data.publication = False
 #config.Data.outLFNDirBase = '' 
