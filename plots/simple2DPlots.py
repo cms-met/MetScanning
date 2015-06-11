@@ -21,16 +21,18 @@ plotDirectory = "/afs/hephy.at/user/r/rschoefbeck/www/png0T/"
 edmCollections = { \
 #  'pfMet':("vector<reco::PFMET>", "pfMet", ""), #, "RECO")
 'pfClusterECAL':("vector<reco::PFCluster>", "particleFlowClusterECAL",   ""), 
-'pfClusterHCAL':("vector<reco::PFCluster>", "particleFlowClusterHBHE",   "")  
+'pfClusterHCAL':("vector<reco::PFCluster>", "particleFlowClusterHCAL",   "")  
 }
 handles={k:Handle(edmCollections[k][0]) for k in edmCollections.keys()}
 
-applied_filters = ["CSCTightHaloFilter", "HBHENoiseFilterResultRun2Loose"]
+#applied_filters = ["CSCTightHaloFilter", "HBHENoiseFilterResultRun2Loose"]
+applied_filters = []
+
 
 samples = [minBias]
 
-h_pfClusterECAL = ROOT.TH2F('pfClusterECAL', 'pfClusterECAL', 100, -5, 5, 100, -pi, pi)
-h_pfClusterHCAL = ROOT.TH2F('pfClusterHCAL', 'pfClusterHCAL', 100, -5, 5, 100, -pi, pi)
+h_pfClusterECAL = ROOT.TH2F('h_pfClusterECAL', 'h_pfClusterECAL', 500, -3, 3, 500, -pi, pi)
+h_pfClusterHCAL = ROOT.TH2F('h_pfClusterHCAL', 'h_pfClusterHCAL', 500, -3, 3, 500, -pi, pi)
 
 for s in samples:
   h_pfClusterECAL.Reset()
@@ -71,27 +73,34 @@ for s in samples:
         break
     if filter:continue
 
-    pfClustersECAL = products['pfClusterECAL'] 
-    for i_c, c in enumerate(pfClustersHCAL):
-#      hitsAndFractions = c.hitsAndFractions()
-#      recHitMultiplicity = len(hitsAndFractions)
-      print "\nCluster",i_c,"energy",c.energy()
-      h_pfClusterECAL.Fill(c.eta(),c.phi())
     pfClustersHCAL = products['pfClusterHCAL'] 
-#    for i_c, c in enumerate(pfClustersHCAL):
-##      hitsAndFractions = c.hitsAndFractions()
-##      recHitMultiplicity = len(hitsAndFractions)
+    for i_c, c in enumerate(pfClustersHCAL):
 #      print "\nCluster",i_c,"energy",c.energy()
-#      h_pfClusterHCAL.Fill(c.eta(),c.phi())
+      h_pfClusterHCAL.Fill(c.eta(),c.phi())
+    pfClustersECAL = products['pfClusterECAL'] 
+    for i_c, c in enumerate(pfClustersECAL):
+#      print "\nCluster",i_c,"energy",c.energy()
+      h_pfClusterECAL.Fill(c.eta(),c.phi())
 
   c1 = ROOT.TCanvas()
-  h_pfClustersHCAL.SetTitle("")
-  h_pfClustersHCAL.GetXaxis().SetTitle('#eta')
-  h_pfClustersHCAL.GetYaxis().SetTitle('#phi')
+  h_pfClusterHCAL.SetTitle("")
+  h_pfClusterHCAL.GetXaxis().SetTitle('#eta')
+  h_pfClusterHCAL.GetYaxis().SetTitle('#phi')
   c1.SetLogz()
-  h_pfClustersHCAL.Draw('colz')
+  h_pfClusterHCAL.Draw('colz')
   c1.Print(plotDirectory+'/'+prefix+'_'+s['name']+'_2D_pfClustersHCAL.png')
   c1.Print(plotDirectory+'/'+prefix+'_'+s['name']+'_2D_pfClustersHCAL.pdf')
   c1.Print(plotDirectory+'/'+prefix+'_'+s['name']+'_2D_pfClustersHCAL.root')
+  del c1
+
+  c1 = ROOT.TCanvas()
+  h_pfClusterECAL.SetTitle("")
+  h_pfClusterECAL.GetXaxis().SetTitle('#eta')
+  h_pfClusterECAL.GetYaxis().SetTitle('#phi')
+  c1.SetLogz()
+  h_pfClusterECAL.Draw('colz')
+  c1.Print(plotDirectory+'/'+prefix+'_'+s['name']+'_2D_pfClustersECAL.png')
+  c1.Print(plotDirectory+'/'+prefix+'_'+s['name']+'_2D_pfClustersECAL.pdf')
+  c1.Print(plotDirectory+'/'+prefix+'_'+s['name']+'_2D_pfClustersECAL.root')
   del c1
 

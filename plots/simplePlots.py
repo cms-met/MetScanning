@@ -35,10 +35,9 @@ handles={k:Handle(edmCollections[k][0]) for k in edmCollections.keys()}
 
 applied_filters = ["CSCTightHaloFilter", "HBHENoiseFilterResultRun2Tight"]
 
-samples = [Jet, ZeroBias, SingleMu]
+#samples = [Jet]
 #samples = [ZeroBias]
-#samples = [EGamma, SingleMu]
-#samples = [SingleMu]
+samples = [EGamma, SingleMu]
 maxMet = 350
 maxSumET = 2500
 
@@ -159,9 +158,21 @@ for s in samples:
     pfClusterSumET = products['pfClusterMet'][0].sumEt()
     pfCaloSumET = products['pfCaloMet'][0].sumEt()
 
-    if caloMet>caloMetThr: h_caloMet.Fill(caloMet)
-    if pfCaloMet>pfCaloMetThr: h_pfCaloMet.Fill(pfCaloMet)
-    if pfClusterMet>pfClusterMetThr: h_pfClusterMet.Fill(pfClusterMet)
+    if caloMet>caloMetThr: 
+      h_caloMet.Fill(caloMet)
+      h_caloMex     .Fill(caloMex     )
+      h_caloMey     .Fill(caloMey     )
+      h_caloMetPhi     .Fill(caloMetPhi     )
+    if pfCaloMet>pfCaloMetThr: 
+      h_pfCaloMet.Fill(pfCaloMet)
+      h_pfCaloMex     .Fill(pfCaloMex     )
+      h_pfCaloMey     .Fill(pfCaloMey     )
+      h_pfCaloMetPhi     .Fill(pfCaloMetPhi     )
+    if pfClusterMet>pfClusterMetThr: 
+      h_pfClusterMet.Fill(pfClusterMet)
+      h_pfClusterMex     .Fill(pfClusterMex     )
+      h_pfClusterMey     .Fill(pfClusterMey     )
+      h_pfClusterMetPhi     .Fill(pfClusterMetPhi     )
     if caloMet>caloMetThr or pfClusterMet>pfClusterMetThr: h_caloMet_vs_pfClusterMet.Fill(caloMet, pfClusterMet)
     if pfCaloMet>pfCaloMetThr or pfClusterMet>pfClusterMetThr: h_pfCaloMet_vs_pfClusterMet.Fill(pfCaloMet, pfClusterMet)
     if caloMet>caloMetThr or pfCaloMet>pfCaloMetThr: h_caloMet_vs_pfCaloMet.Fill(caloMet, pfCaloMet)
@@ -175,17 +186,6 @@ for s in samples:
     if pfClusterMet>maxMet:
       print "outlier pfClusterMet %5.3f "%pfClusterMet
       outliers_pfClusterMet.append([run, lumi, event])
-    h_caloMex     .Fill(caloMex     )
-    h_pfCaloMex   .Fill(pfCaloMex   )
-    h_pfClusterMex.Fill(pfClusterMex)
-
-    h_caloMey     .Fill(caloMey     )
-    h_pfCaloMey   .Fill(pfCaloMey   )
-    h_pfClusterMey.Fill(pfClusterMey)
-
-    h_caloMetPhi     .Fill(caloMetPhi     )
-    h_pfCaloMetPhi   .Fill(pfCaloMetPhi   )
-    h_pfClusterMetPhi.Fill(pfClusterMetPhi)
 
     h_caloSumET.Fill(caloSumET)
     h_pfCaloSumET.Fill(pfCaloSumET)
@@ -236,7 +236,7 @@ for s in samples:
   del c1
 
   c1 = ROOT.TCanvas()
-  l = ROOT.TLegend(0.5,0.7,1,1)
+  l = ROOT.TLegend(0.6,0.8,1,1)
   l.SetFillColor(0)
   l.SetShadowColor(ROOT.kWhite)
   l.SetBorderSize(1)
@@ -247,6 +247,7 @@ for s in samples:
   h_pfCaloMex.GetYaxis().SetTitle("Events")
   h_pfCaloMex.SetTitle("")
   c1.SetLogy()
+  h_pfCaloMex.GetYaxis().SetRangeUser(0.1, 100*h_pfCaloMex.GetMaximum())
   h_pfCaloMex.Draw()
   h_caloMex.SetLineColor(ROOT.kGreen)
   h_caloMex.Draw("same")
@@ -259,7 +260,7 @@ for s in samples:
   del c1
 
   c1 = ROOT.TCanvas()
-  l = ROOT.TLegend(0.5,0.7,1,1)
+  l = ROOT.TLegend(0.6,0.8,1,1)
   l.SetFillColor(0)
   l.SetShadowColor(ROOT.kWhite)
   l.SetBorderSize(1)
@@ -270,6 +271,7 @@ for s in samples:
   h_pfCaloMey.GetYaxis().SetTitle("Events")
   h_pfCaloMey.SetTitle("")
   c1.SetLogy()
+  h_pfCaloMey.GetYaxis().SetRangeUser(0.1, 100*h_pfCaloMey.GetMaximum())
   h_pfCaloMey.Draw()
   h_caloMey.SetLineColor(ROOT.kGreen)
   h_caloMey.Draw("same")
@@ -291,7 +293,8 @@ for s in samples:
   h_pfCaloMetPhi.GetXaxis().SetTitle("MetPhi (GeV)")
   h_pfCaloMetPhi.GetYaxis().SetTitle("Events")
   h_pfCaloMetPhi.SetTitle("")
-  c1.SetLogy()
+  c1.SetLogy(0)
+  h_pfCaloMetPhi.GetYaxis().SetRangeUser(0.1, 1.5*h_pfCaloMetPhi.GetMaximum())
   h_pfCaloMetPhi.Draw()
   h_caloMetPhi.SetLineColor(ROOT.kGreen)
   h_caloMetPhi.Draw("same")
@@ -381,8 +384,8 @@ for s in samples:
 
   c1 = ROOT.TCanvas()
   h_pfCaloMet_vs_pfClusterMet.SetTitle("")
-  h_pfCaloMet_vs_pfClusterMet.GetXaxis().SetTitle('caloMet')
-  h_pfCaloMet_vs_pfClusterMet.GetYaxis().SetTitle('pfCaloMet')
+  h_pfCaloMet_vs_pfClusterMet.GetXaxis().SetTitle('pfCaloMet')
+  h_pfCaloMet_vs_pfClusterMet.GetYaxis().SetTitle('pfClusterMet')
   c1.SetLogz()
   h_caloMet.SetTitle("")
   h_pfCaloMet_vs_pfClusterMet.Draw('colz')
@@ -395,8 +398,8 @@ for s in samples:
 
   c1 = ROOT.TCanvas()
   h_pfCaloSumET_vs_pfClusterSumET.SetTitle("")
-  h_pfCaloSumET_vs_pfClusterSumET.GetXaxis().SetTitle('caloSumET')
-  h_pfCaloSumET_vs_pfClusterSumET.GetYaxis().SetTitle('pfCaloSumET')
+  h_pfCaloSumET_vs_pfClusterSumET.GetXaxis().SetTitle('pfCaloSumET')
+  h_pfCaloSumET_vs_pfClusterSumET.GetYaxis().SetTitle('pfClusterSumET')
   c1.SetLogz()
   h_pfCaloSumET_vs_pfClusterSumET.Draw('colz')
   line=ROOT.TLine(0,0,h_pfCaloSumET_vs_pfClusterSumET.GetXaxis().GetXmax(),h_pfCaloSumET_vs_pfClusterSumET.GetXaxis().GetXmax())
