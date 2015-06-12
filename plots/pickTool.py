@@ -24,19 +24,28 @@ edmCollections = { \
 handles={k:Handle(edmCollections[k][0]) for k in edmCollections.keys()}
 
 applied_filters = ["CSCTightHaloFilter", "HBHENoiseFilterResultRun2Tight"]
+outputDir = "~/eos/cms/store/group/phys_jetmet/schoef/private0TSkim_v3/outliers/"
+
+#sample = SingleMu
+#prefix = sample['name']+"_pfCaloMetBelow10_pfClusterMetAbove80"
+#def pfCaloMetBelow10_pfClusterMetAbove80(products):
+#  caloMet = products['caloMet'][0].pt()
+#  pfCaloMet = products['pfCaloMet'][0].pt()
+#  pfClusterMet = products['pfClusterMet'][0].pt()
+#  if pfCaloMet<10 and pfClusterMet>80: return True
+#  return False
+#skimCondition = highCaloMet
+
+sample = Jet
+prefix = sample['name']+"_caloMetAbove250"
+def caloMetAbove250(products):
+  if caloMet = products['caloMet'][0].pt()>250: return True
+  return False
+skimCondition = caloMetAbove250
 
 #samples = [Jet, EGamma]
 #samples = [ZeroBias]
-sample = SingleMu
-prefix = "pfCaloMetBelow10_pfClusterMetAbove80"
-outputDir = "~/eos/cms/store/group/phys_jetmet/schoef/private0TSkim_v3/outliers/"
 
-def skimCondition(products):
-  caloMet = products['caloMet'][0].pt()
-  pfCaloMet = products['pfCaloMet'][0].pt()
-  pfClusterMet = products['pfClusterMet'][0].pt()
-  if pfCaloMet<10 and pfClusterMet>80: return True
-  return False
 
 files=[]
 for d in sample['directories']:
