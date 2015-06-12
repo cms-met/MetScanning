@@ -8,6 +8,7 @@ from DataFormats.FWLite import Events, Handle
 from PhysicsTools.PythonAnalysis import *
 
 small = False
+outputDir = "~/eos/cms/store/group/phys_jetmet/schoef/private0TSkim_v3/outliers/"
 
 edmCollections = { \
 #  'pfMet':("vector<reco::PFMET>", "pfMet", ""), #, "RECO")
@@ -23,9 +24,6 @@ edmCollections = { \
 }
 handles={k:Handle(edmCollections[k][0]) for k in edmCollections.keys()}
 
-applied_filters = ["CSCTightHaloFilter", "HBHENoiseFilterResultRun2Tight"]
-outputDir = "~/eos/cms/store/group/phys_jetmet/schoef/private0TSkim_v3/outliers/"
-
 #sample = SingleMu
 #prefix = sample['name']+"_pfCaloMetBelow10_pfClusterMetAbove80"
 #def pfCaloMetBelow10_pfClusterMetAbove80(products):
@@ -39,12 +37,23 @@ outputDir = "~/eos/cms/store/group/phys_jetmet/schoef/private0TSkim_v3/outliers/
 sample = Jet
 prefix = sample['name']+"_caloMetAbove250"
 def caloMetAbove250(products):
-  if caloMet = products['caloMet'][0].pt()>250: return True
+  if products['caloMet'][0].pt()>250: return True
   return False
 skimCondition = caloMetAbove250
 
 #samples = [Jet, EGamma]
 #samples = [ZeroBias]
+
+
+def filterCondition(products):
+  passed=True
+  applied_filters = ["CSCTightHaloFilter", "HBHENoiseFilterResultRun2Tight"]
+  for f in applied_filters:
+    if not products[f][0]: 
+      print "Filtering because of %s"%f
+      passed = False
+      break
+  return passed
 
 
 files=[]
@@ -74,17 +83,11 @@ for nev in range(size):
       print "Not found:",k
       missingCollections.append(k)
 
-  filter=False
-  for f in applied_filters:
-    if not products[f][0]: 
-      print "Filtering because of %s"%f
-      filter=True
-      break
-  if filter:continue
+  if not filterCondition(products):continue
   if not skimCondition(products):continue
   selected.append({'run':run,"lumi":lumi,"event":event,'file':os.path.expanduser(files[events.fileIndex()])})
 
-print "Now picking: ", selected
+print "Now picking %i events", len(selected)
 os.system('mkdir -p %s/%s'%(outputDir,prefix))
 for e in selected:
   os.system("edmCopyPickMerge eventsToProcess=%i:%i inputFiles=file:%s outputFile=%s/%s/%i_%i.root"%(e['run'],e['event'],e['file'],outputDir,prefix,e['run'],e['event'])) 
