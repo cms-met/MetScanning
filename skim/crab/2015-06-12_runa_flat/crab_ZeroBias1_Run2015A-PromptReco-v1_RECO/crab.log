@@ -1,0 +1,71 @@
+DEBUG 2015-06-11 18:18:41,869: 	 Executing command: 'kill'
+DEBUG 2015-06-11 18:18:41,870: 	 Found CRAB cache file /afs/cern.ch/user/c/cheidegg/.crab3
+DEBUG 2015-06-11 18:18:41,880: 	 Checking credentials
+DEBUG 2015-06-11 18:18:41,880: 	 Found proxy file /tmp/x509up_u66803
+DEBUG 2015-06-11 18:18:41,880: 	 Getting proxy life time left
+DEBUG 2015-06-11 18:18:42,486: 	 Executing : 
+ command : voms-proxy-info -file /tmp/x509up_u66803 -timeleft
+ output : 85936
+
+ error: 
+ retcode : 0
+DEBUG 2015-06-11 18:18:42,996: 	 Executing : 
+ command : voms-proxy-info -file /tmp/x509up_u66803 -actimeleft
+ output : 85936
+
+ error: 
+ retcode : 0
+DEBUG 2015-06-11 18:18:42,997: 	 Proxy valid for 23:52:16 hours
+DEBUG 2015-06-11 18:18:43,108: 	 Executing : 
+ command : openssl x509 -in ~/.globus/usercert.pem -subject -noout
+ output : subject= /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=cheidegg/CN=756816/CN=Constantin Heidegger
+
+ error: WARNING: can't open config file: /build/dmwmbld/srv/state/dmwmbld/builds/comp_gcc481/w/tmp/BUILDROOT/779a792f862039a4ebba572299ebbb36/build/dmwmbld/srv/state/dmwmbld/builds/comp_gcc481/w/slc6_amd64_gcc481/external/openssl/1.0.1m-comp/ssl/openssl.cnf
+
+ retcode : 0
+DEBUG 2015-06-11 18:18:43,108: 	 Checking credentials
+DEBUG 2015-06-11 18:18:43,108: 	 Found proxy file /tmp/x509up_u66803
+DEBUG 2015-06-11 18:18:43,109: 	 Getting proxy life time left
+DEBUG 2015-06-11 18:18:43,614: 	 Executing : 
+ command : voms-proxy-info -file /tmp/x509up_u66803 -timeleft
+ output : 85935
+
+ error: 
+ retcode : 0
+DEBUG 2015-06-11 18:18:44,120: 	 Executing : 
+ command : voms-proxy-info -file /tmp/x509up_u66803 -actimeleft
+ output : 85934
+
+ error: 
+ retcode : 0
+DEBUG 2015-06-11 18:18:44,120: 	 Proxy valid for 23:52:15 hours
+DEBUG 2015-06-11 18:18:44,410: 	 Registering user credentials for server /DC=ch/DC=cern/OU=computers/CN=vocms(045|052|021|031).cern.ch
+DEBUG 2015-06-11 18:18:44,520: 	 Executing : 
+ command : openssl x509 -in ~/.globus/usercert.pem -subject -noout
+ output : subject= /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=cheidegg/CN=756816/CN=Constantin Heidegger
+
+ error: WARNING: can't open config file: /build/dmwmbld/srv/state/dmwmbld/builds/comp_gcc481/w/tmp/BUILDROOT/779a792f862039a4ebba572299ebbb36/build/dmwmbld/srv/state/dmwmbld/builds/comp_gcc481/w/slc6_amd64_gcc481/external/openssl/1.0.1m-comp/ssl/openssl.cnf
+
+ retcode : 0
+DEBUG 2015-06-11 18:18:44,521: 	 Getting myproxy life time left for myproxy.cern.ch
+DEBUG 2015-06-11 18:18:44,521: 	 Calculating hash of /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=cheidegg/CN=756816/CN=Constantin Heidegger_cmsweb.cern.ch for credential name
+DEBUG 2015-06-11 18:18:44,925: 	 Executing : 
+ command : myproxy-info -l 7faaffd8954819267d7c126a4d20774bc88ab24e -s myproxy.cern.ch
+ output : username: 7faaffd8954819267d7c126a4d20774bc88ab24e
+owner: /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=cheidegg/CN=756816/CN=Constantin Heidegger
+  renewal policy: /DC=ch/DC=cern/OU=computers/CN=vocms(045|052|021|031).cern.ch
+  trusted retrieval policy: /DC=ch/DC=cern/OU=computers/CN=vocms(045|052|021|031).cern.ch
+  timeleft: 646:37:28  (26.9 days)
+
+ error: 
+ retcode : 0
+DEBUG 2015-06-11 18:18:44,926: 	 Myproxy is valid: 2327848
+DEBUG 2015-06-11 18:18:44,926: 	 Command use: kill
+DEBUG 2015-06-11 18:18:44,926: 	 Options use: ['--dir=2015-06-12_runa_flat/crab_ZeroBias1_Run2015A-PromptReco-v1_RECO/']
+DEBUG 2015-06-11 18:18:45,151: 	 CRABClient version: 3.3.1506
+DEBUG 2015-06-11 18:18:45,151: 	 Instance is prod
+DEBUG 2015-06-11 18:18:45,151: 	 Server base url is cmsweb.cern.ch
+DEBUG 2015-06-11 18:18:45,151: 	 Command url /crabserver/prod/workflow
+DEBUG 2015-06-11 18:18:45,151: 	 Killing task 150611_161138:cheidegg_crab_ZeroBias1_Run2015A-PromptReco-v1_RECO
+DEBUG 2015-06-11 18:18:46,684: 	 Result: {'result': [{'result': 'ok'}], 'desc': {'columns': ['tm_taskname', 'panda_jobset_id', 'tm_task_status', 'tm_user_role', 'tm_user_group', 'tm_task_failure', 'tm_split_args', 'panda_resubmitted_jobs', 'tm_save_logs', 'tm_username', 'tm_user_dn', 'tm_arguments', 'tm_input_dataset', 'tm_dbs_url', 'tm_task_warnings', 'tm_publication', 'tm_user_webdir', 'tm_asourl', 'tm_output_dataset', 'tm_collector', 'tm_schedd', 'tm_dry_run']}}
+INFO 2015-06-11 18:18:46,684: 	 Kill request successfully sent

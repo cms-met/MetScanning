@@ -4,8 +4,9 @@ from CRABClient.UserUtilities import config
 
 config = config()
 config.General.requestName = 'ZeroBias1_Run2015A-PromptReco-v1_RECO'
-config.General.workArea = 'private0TSkim_v1'
+config.General.workArea = '2015-06-12_runa_flat2'
 
+config.JobType.outputFiles = ['tuple.root']
 config.JobType.pluginName = 'Analysis'
 config.JobType.psetName = '../python/skim.py'
 
@@ -19,8 +20,8 @@ config.Data.publication = False
 #config.Data.outLFNDirBase = '' 
 #config.Data.publishDataName = ''
 
-config.Data.outLFNDirBase = '/store/group/phys_jetmet/schoef/private0TSkim_v1/'
-config.Site.storageSite = 'T2_CH_CERN'
+config.Data.outLFNDirBase = '/store/user/cheidegg/METskims/2015-06-12_runa_flat'
+config.Site.storageSite = 'T3_CH_PSI'
 
 datasets=[
 '/EGamma/Run2015A-PromptReco-v1/RECO',
@@ -33,7 +34,7 @@ datasets=[
 '/ZeroBias6/Run2015A-PromptReco-v1/RECO',
 '/ZeroBias7/Run2015A-PromptReco-v1/RECO',
 '/ZeroBias8/Run2015A-PromptReco-v1/RECO',
-'/SingleMu/Run2015A-PromptReco-v1/RECO',
+'/SingleMu/Run2015A-PromptReco-v1/RECO'
 ]
 
 if __name__ == '__main__':

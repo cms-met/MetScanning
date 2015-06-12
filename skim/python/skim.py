@@ -23,6 +23,7 @@ process.source = cms.Source(
     "PoolSource",
     #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/data/Run2015A/HcalHPDNoise/RAW/v1/000/246/877/00000/9A0372A1-B809-E511-ABDF-02163E01440B.root")
     #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/data/Run2015A/SingleMu/RECO/PromptReco-v1/000/246/865/00000/2631D17B-140B-E511-AB09-02163E014641.root")
+    #fileNames = cms.untracked.vstring("root://eoscms//eos/cms/store/data/Run2015A/Jet/RECO/PromptReco-v1/000/246/960/00000/4CED9FE9-DB0B-E511-A069-02163E012432.root")
     fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/data/Run2015A/SingleMu/RECO/PromptReco-v1/000/247/070/00000/A2AFED85-AB0C-E511-ACA9-02163E0142B7.root")
     #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/data/Run2015A/ZeroBias1/RECO/PromptReco-v1/000/246/930/00000/2E8CE084-930B-E511-88E0-02163E0145E7.root")
     )
@@ -124,6 +125,25 @@ process.metCounter = cms.EDFilter(
     minNumber = cms.uint32(1),
     )
 
+
+
+###____________________________________________________________________________||
+process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
+   rootOutputFile=cms.string("tuple.root"),
+   caloMET=cms.InputTag("caloMet"),
+   pfClusterMET=cms.InputTag("pfClusterMet"),
+   EcalPFClusterCollection=cms.InputTag("particleFlowClusterECAL"),
+   HBHEPFClusterCollection=cms.InputTag("particleFlowClusterHCAL"),
+   HOPFClusterCollection=cms.InputTag("particleFlowClusterHO"),
+   HFPFClusterCollection=cms.InputTag("particleFlowClusterHF"),
+   tracksCollection=cms.InputTag("generalTracks"),
+   CSCfilter=cms.InputTag("CSCTightHaloFilter"),
+   HBHEfilterR1=cms.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResultRun1"),
+   HBHEfilterR2L=cms.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResultRun2Loose"),
+   HBHEfilterR2T=cms.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResultRun2Tight")
+)
+
+
 ##____________________________________________________________________________||
 process.p = cms.Path(
     process.CSCTightHaloFilter*
@@ -132,13 +152,14 @@ process.p = cms.Path(
 #    process.pfClusterRefsForJets*
     process.pfClusterRefsForJets_step*
     process.pfClusterMet*
-#    process.caloMETSelector*
-    process.condMETSelector*
-    process.metCounter
+#    process.caloMETSelector* ##CH: caloMET skim
+#    process.condMETSelector* ##CH: conditial MET skim
+#    process.metCounter*      ##CH: needed for any of the aforementioned skims
+    process.metScanNtupleMaker ##CH: writes a flat tree
     )
 
 process.e1 = cms.EndPath(
-    process.out
+    #process.out ##CH: write the skimmed edm file 
     )
 
 ##____________________________________________________________________________||
