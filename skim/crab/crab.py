@@ -12,7 +12,7 @@ config.JobType.psetName = '../python/skim.py'
 
 config.Data.inputDataset = '/ZeroBias1/Run2015A-PromptReco-v1/RECO'
 config.Data.inputDBS = 'global'
-config.Data.lumiMask = 'Cert_246908-247381_13TeV_PromptReco_Collisions15_ZeroTesla_JSON.txt'
+config.Data.lumiMask = 'json/Cert_246908-247381_13TeV_PromptReco_Collisions15_ZeroTesla_JSON.txt' 
 config.Data.splitting = 'LumiBased'
 config.Data.unitsPerJob = 10
 
