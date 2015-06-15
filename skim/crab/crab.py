@@ -20,8 +20,8 @@ config.Data.publication = False
 #config.Data.outLFNDirBase = '' 
 #config.Data.publishDataName = ''
 
-config.Data.outLFNDirBase = '/store/user/cheidegg/METskims/2015-06-13_runa_flat'
-config.Site.storageSite = 'T3_CH_PSI'
+config.Data.outLFNDirBase = '/store/group/phys_jetmet/schoef/private0TSkim_v4/'
+config.Site.storageSite = 'T2_CH_CERN'
 
 datasets=[
 '/EGamma/Run2015A-PromptReco-v1/RECO',
