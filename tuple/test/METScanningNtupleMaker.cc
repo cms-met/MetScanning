@@ -6,6 +6,7 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
 
   //the input tags
    inputTagCaloMET_ = iConfig.getParameter<edm::InputTag>("caloMET");
+   inputTagPFCaloMET_ = iConfig.getParameter<edm::InputTag>("pfCaloMET");
    inputTagPFClusterMET_ = iConfig.getParameter<edm::InputTag>("pfClusterMET");
    inputTagEcalPFClusters_ = iConfig.getParameter<edm::InputTag>("EcalPFClusterCollection");
    inputTagHBHEPFClusters_ = iConfig.getParameter<edm::InputTag>("HBHEPFClusterCollection");
@@ -41,6 +42,10 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   s->Branch("caloMETPt",&caloMETPt,"caloMETPt/F");  
   s->Branch("caloMETPhi",&caloMETPhi,"caloMETPhi/F"); 
   s->Branch("caloMETSumEt",&caloMETSumEt,"caloMETSumEt/F");  
+
+  s->Branch("pfCaloMETPt",&pfCaloMETPt,"pfCaloMETPt/F");  
+  s->Branch("pfCaloMETPhi",&pfCaloMETPhi,"pfCaloMETPhi/F"); 
+  s->Branch("pfCaloMETSumEt",&pfCaloMETSumEt,"pfCaloMETSumEt/F");  
 
   s->Branch("pfClusterMETPt",&pfClusterMETPt,"pfClusterMETPt/F");  
   s->Branch("pfClusterMETPhi",&pfClusterMETPhi,"pfClusterMETPhi/F"); 
@@ -120,15 +125,16 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   iEvent.getByLabel(inputTagHBHER2T_, ifilterhbher2t);
   filterhbher2t = *ifilterhbher2t;
 
-
   // get METs
   Handle<reco::CaloMETCollection> caloMET;
   iEvent.getByLabel(inputTagCaloMET_, caloMET);
 
+  Handle<reco::PFMETCollection> pfCaloMET;
+  iEvent.getByLabel(inputTagPFCaloMET_, pfCaloMET);
+
   Handle<reco::PFClusterMETCollection> pfClusterMET;
   iEvent.getByLabel(inputTagPFClusterMET_, pfClusterMET);
   
-
   //get PFClusters
   Handle<reco::PFClusterCollection> pfClustersEcal;
   iEvent.getByLabel(inputTagEcalPFClusters_,pfClustersEcal);
@@ -178,6 +184,10 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   caloMETPt = caloMET->begin()->pt();
   caloMETPhi = caloMET->begin()->phi();
   caloMETSumEt = caloMET->begin()->sumEt();
+
+  pfCaloMETPt = pfCaloMET->begin()->pt();
+  pfCaloMETPhi = pfCaloMET->begin()->phi();
+  pfCaloMETSumEt = pfCaloMET->begin()->sumEt();
 
   pfClusterMETPt = pfClusterMET->begin()->pt();
   pfClusterMETPhi = pfClusterMET->begin()->phi();

@@ -4,7 +4,7 @@ from CRABClient.UserUtilities import config
 
 config = config()
 config.General.requestName = 'ZeroBias1_Run2015A-PromptReco-v1_RECO'
-config.General.workArea = '2015-06-12_runa_flat2'
+config.General.workArea = '2015-06-13_runa_flat'
 
 config.JobType.outputFiles = ['tuple.root']
 config.JobType.pluginName = 'Analysis'
@@ -12,15 +12,15 @@ config.JobType.psetName = '../python/skim.py'
 
 config.Data.inputDataset = '/ZeroBias1/Run2015A-PromptReco-v1/RECO'
 config.Data.inputDBS = 'global'
-config.Data.lumiMask = 'json_DCSONLY_150709_skim_v1.txt' 
+config.Data.lumiMask = 'Cert_246908-247381_13TeV_PromptReco_Collisions15_ZeroTesla_JSON.txt'
 config.Data.splitting = 'LumiBased'
-config.Data.unitsPerJob = 15
+config.Data.unitsPerJob = 10
 
 config.Data.publication = False
 #config.Data.outLFNDirBase = '' 
 #config.Data.publishDataName = ''
 
-config.Data.outLFNDirBase = '/store/user/cheidegg/METskims/2015-06-12_runa_flat'
+config.Data.outLFNDirBase = '/store/user/cheidegg/METskims/2015-06-13_runa_flat'
 config.Site.storageSite = 'T3_CH_PSI'
 
 datasets=[

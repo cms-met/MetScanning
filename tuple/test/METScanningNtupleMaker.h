@@ -21,6 +21,8 @@
 #include "DataFormats/METReco/interface/PFClusterMET.h"
 #include "DataFormats/METReco/interface/CaloMETCollection.h"
 #include "DataFormats/METReco/interface/PFClusterMETCollection.h"
+#include "DataFormats/METReco/interface/PFMET.h"
+#include "DataFormats/METReco/interface/PFMETCollection.h"
 
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/TrackReco/interface/TrackFwd.h"
@@ -56,6 +58,7 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
  private:
   
   edm::InputTag inputTagCaloMET_;
+  edm::InputTag inputTagPFCaloMET_;
   edm::InputTag inputTagPFClusterMET_;
   edm::InputTag inputTagEcalPFClusters_;
   edm::InputTag inputTagHBHEPFClusters_;
@@ -79,6 +82,10 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
   float caloMETPt;
   float caloMETPhi;
   float caloMETSumEt;
+
+  float pfCaloMETPt;
+  float pfCaloMETPhi;
+  float pfCaloMETSumEt;
 
   float pfClusterMETPt;
   float pfClusterMETPhi;
