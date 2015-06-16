@@ -50,11 +50,20 @@ process.load('CommonTools.RecoAlgos.HBHENoiseFilterResultProducer_cfi')
 #    reverseDecision = cms.bool(False)
 #)
 
+process.load('Configuration.StandardSequences.Reconstruction_Data_cff')
 ##___________________________PFClusterMet_____________________________________||
 process.load('RecoMET.METProducers.PFClusterMET_cfi')
-process.load("RecoParticleFlow.PFClusterProducer.particleFlowCluster_cff")
-process.load("RecoLocalCalo.HcalRecAlgos.hcalRecAlgoESProd_cfi")
-process.load("RecoLocalCalo.EcalRecAlgos.EcalSeverityLevelESProducer_cfi")
+from Configuration.StandardSequences.Reconstruction_Data_cff import *
+process.particleFlowRecHitECAL=particleFlowRecHitECAL
+process.particleFlowRecHitHBHE=particleFlowRecHitHBHE
+process.particleFlowRecHitHF=particleFlowRecHitHF
+process.particleFlowRecHitHO=particleFlowRecHitHO
+process.particleFlowClusterECALUncorrected=particleFlowClusterECALUncorrected
+process.particleFlowClusterECAL=particleFlowClusterECAL
+process.particleFlowClusterHBHE=particleFlowClusterHBHE
+process.particleFlowClusterHCAL=particleFlowClusterHCAL
+process.particleFlowClusterHF=particleFlowClusterHF
+process.particleFlowClusterHO=particleFlowClusterHO
 process.pfClusterRefsForJetsHCAL = cms.EDProducer("PFClusterRefCandidateProducer",
   src          = cms.InputTag('particleFlowClusterHCAL'),
   particleType = cms.string('pi+')
@@ -74,7 +83,6 @@ process.pfClusterRefsForJetsHO = cms.EDProducer("PFClusterRefCandidateProducer",
 process.pfClusterRefsForJets = cms.EDProducer("PFClusterRefCandidateMerger",
   src = cms.VInputTag("pfClusterRefsForJetsHCAL", "pfClusterRefsForJetsECAL", "pfClusterRefsForJetsHF", "pfClusterRefsForJetsHO")
 )
-process.load("RecoJets.JetProducers.ak4PFClusterJets_cfi")
 process.pfClusterMetSequence = cms.Sequence(
  process.particleFlowRecHitECAL*
  process.particleFlowRecHitHBHE*
@@ -96,9 +104,6 @@ process.pfClusterMetSequence = cms.Sequence(
 )
 
 ##___________________________PFCaloMet_____________________________________||
-############ need the following setup when running in <CMSSW_7_5_X:
-# git cms-addpkg RecoParticleFlow/PFProducer
-# git cherry-pick af5c1ba33e88b3be627c262eb93d678f9f70e729
 process.hltParticleFlowBlock = cms.EDProducer("PFBlockProducer",
   debug = cms.untracked.bool(False),
   verbose = cms.untracked.bool(False),
@@ -147,24 +152,23 @@ process.hltParticleFlowBlock = cms.EDProducer("PFBlockProducer",
 )
 from RecoParticleFlow.PFProducer.particleFlow_cfi import particleFlowTmp
 process.hltParticleFlow = particleFlowTmp.clone(
-  GedPhotonValueMap = cms.InputTag(""),
-  useEGammaFilters = cms.bool(False),
-  useEGammaElectrons = cms.bool(False), 
-  useEGammaSupercluster = cms.bool(False),
-  rejectTracks_Step45 = cms.bool(False),
-  usePFNuclearInteractions = cms.bool(False),  
-  blocks = cms.InputTag("hltParticleFlowBlock"), 
-  egammaElectrons = cms.InputTag(""),
-  useVerticesForNeutral = cms.bool(False),
-  PFEGammaCandidates = cms.InputTag(""),
-  useProtectionsForJetMET = cms.bool(False),
-  usePFConversions = cms.bool(False),
-  rejectTracks_Bad = cms.bool(False),
-  muons = cms.InputTag(""),
-  postMuonCleaning = cms.bool(False),
-  usePFSCEleCalib = cms.bool(False)
-)
-
+    GedPhotonValueMap = cms.InputTag(""),
+    useEGammaFilters = cms.bool(False),
+    useEGammaElectrons = cms.bool(False), 
+    useEGammaSupercluster = cms.bool(False),
+    rejectTracks_Step45 = cms.bool(False),
+    usePFNuclearInteractions = cms.bool(False),  
+    blocks = cms.InputTag("hltParticleFlowBlock"), 
+    egammaElectrons = cms.InputTag(""),
+    useVerticesForNeutral = cms.bool(False),
+    PFEGammaCandidates = cms.InputTag(""),
+    useProtectionsForJetMET = cms.bool(False),
+    usePFConversions = cms.bool(False),
+    rejectTracks_Bad = cms.bool(False),
+    muons = cms.InputTag(""),
+    postMuonCleaning = cms.bool(False),
+    usePFSCEleCalib = cms.bool(False)
+    )
 process.load("RecoMET.METProducers.PFMET_cfi")
 process.pfCaloMet = process.pfMet.clone(
   src = cms.InputTag("hltParticleFlow"),
