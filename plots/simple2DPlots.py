@@ -7,7 +7,7 @@ from DataFormats.FWLite import Events, Handle
 from PhysicsTools.PythonAnalysis import *
 
 small = False
-prefix='v3'
+prefix='v4'
 plotDirectory = "/afs/hephy.at/user/r/rschoefbeck/www/png0T/"
 
 #ROOT.gStyle.SetOptStat(0)

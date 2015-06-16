@@ -1,14 +1,15 @@
 from MetScanning.plots.helpers import getFileList
-from MetScanning.plots.samples import *
+from MetScanning.plots.samples_v3 import *
 from math import pi
 import os
 import ROOT
+from subprocess import call
 ROOT.gStyle.SetOptStat(0)
 from DataFormats.FWLite import Events, Handle
 from PhysicsTools.PythonAnalysis import *
 
 small = False
-outputDir = "~/eos/cms/store/group/phys_jetmet/schoef/private0TSkim_v3/outliers/"
+outputDir = os.path.expanduser("~/eos/cms/store/group/phys_jetmet/schoef/private0TSkim_v3/outliers/")
 
 edmCollections = { \
 #  'pfMet':("vector<reco::PFMET>", "pfMet", ""), #, "RECO")
@@ -24,26 +25,20 @@ edmCollections = { \
 }
 handles={k:Handle(edmCollections[k][0]) for k in edmCollections.keys()}
 
-#sample = SingleMu
-#prefix = sample['name']+"_pfCaloMetBelow10_pfClusterMetAbove80"
-#def pfCaloMetBelow10_pfClusterMetAbove80(products):
-#  caloMet = products['caloMet'][0].pt()
-#  pfCaloMet = products['pfCaloMet'][0].pt()
-#  pfClusterMet = products['pfClusterMet'][0].pt()
-#  if pfCaloMet<10 and pfClusterMet>80: return True
-#  return False
-#skimCondition = highCaloMet
-
-sample = Jet
-prefix = sample['name']+"_caloMetAbove250"
-def caloMetAbove250(products):
-  if products['caloMet'][0].pt()>250: return True
+def lowerCut(products, var, thr):
+  if products[var][0].pt()>=thr: return True
   return False
-skimCondition = caloMetAbove250
+def upperCut(products, var, thr):
+  if products[var][0].pt()<thr: return True
+  return False
 
-#samples = [Jet, EGamma]
-#samples = [ZeroBias]
+sample = ZeroBias
+if small:
+  prefix = sample['name']+"_test"
+else:
+  prefix = sample['name']+"_pfCaloMetAbove70_caloMetBelow10"
 
+skimCondition = lambda products:lowerCut(products, 'pfCaloMet', 70) and upperCut(products, 'caloMet', 10)
 
 def filterCondition(products):
   passed=True
@@ -58,37 +53,48 @@ def filterCondition(products):
 
 files=[]
 for d in sample['directories']:
-  files.extend(getFileList(d))
+  if small:
+    files.extend(getFileList(d)[:1])
+  else:
+    files.extend(getFileList(d))
 print "Running %s in %i directory(ies) and a total of %i files."%(sample['name'], len(sample['directories']), len(files))
 
-events = Events(files) if not small else Events(files[:10])
-size=events.size() if not small else 10
-events.toBegin()
-products={}
-missingCollections=[]
+#files = ["/afs/cern.ch/user/s/schoef/eos/cms/store/group/phys_jetmet/schoef/private0TSkim_v3/Jet/crab_Jet_Run2015A-PromptReco-v1_RECO/150610_094813/0000/skim_20.root"]
+
 selected=[]
-for nev in range(size):
-  if nev%100==0:print nev,'/',size
-  events.to(nev)
-  eaux=events.eventAuxiliary()
-  run=eaux.run()           
-  event=eaux.event()
-  lumi=eaux.luminosityBlock()
-  for k in [ x for x in edmCollections.keys() if x not in missingCollections]:
-    try:
-      events.getByLabel(edmCollections[k][1:],handles[k])
-      products[k]=handles[k].product()
-    except:
-      products[k]=None
-      print "Not found:",k
-      missingCollections.append(k)
+for i_f, f in enumerate(files):
+  print "Running over file %i: %s"%(i_f, f)
+  events = Events([f])
+  size=events.size()
+  events.toBegin()
+  products={}
+  missingCollections=[]
+  for nev in xrange(size):
+    #if nev%100==0:print nev,'/',size
+    events.to(nev)
+    eaux=events.eventAuxiliary()
+    run=eaux.run()           
+    event=eaux.event()
+    lumi=eaux.luminosityBlock()
+    for k in [ x for x in edmCollections.keys() if x not in missingCollections]:
+      try:
+        events.getByLabel(edmCollections[k][1:],handles[k])
+        products[k]=handles[k].product()
+      except:
+        products[k]=None
+        print "Not found:",k
+        missingCollections.append(k)
+    if not small:
+      if not filterCondition(products):continue
+      if not skimCondition(products):continue
+    selected.append({'run':run,"lumi":lumi,"event":event,'file':os.path.expanduser(f)})
+  del events
 
-  if not filterCondition(products):continue
-  if not skimCondition(products):continue
-  selected.append({'run':run,"lumi":lumi,"event":event,'file':os.path.expanduser(files[events.fileIndex()])})
-
-print "Now picking %i events", len(selected)
+print "Now picking %i events" % len(selected)
 os.system('mkdir -p %s/%s'%(outputDir,prefix))
 for e in selected:
-  os.system("edmCopyPickMerge eventsToProcess=%i:%i inputFiles=file:%s outputFile=%s/%s/%i_%i.root"%(e['run'],e['event'],e['file'],outputDir,prefix,e['run'],e['event'])) 
-
+  outputFile=os.path.expanduser("%s/%s/%i_%i.root"%(outputDir,prefix,e['run'],e['event']))
+  print e
+  print "Running\nedmCopyPickMerge eventsToProcess=%i:%i inputFiles=file:%s outputFile=%s\n"%(e['run'],e['event'],e['file'],outputFile) 
+#  os.system("edmCopyPickMerge eventsToProcess=%i:%i inputFiles=file:%s outputFile=%s"%(e['run'],e['event'],e['file'],outputFile)) 
+  call(["edmCopyPickMerge", "eventsToProcess=%i:%i"%(e['run'],e['event']), "inputFiles=file:%s"%e['file'], "outputFile=%s"%outputFile])

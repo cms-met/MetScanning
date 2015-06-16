@@ -8,7 +8,7 @@ from DataFormats.FWLite import Events, Handle
 from PhysicsTools.PythonAnalysis import *
 
 small = False
-prefix='v3'
+prefix='v4'
 plotDirectory = "/afs/hephy.at/user/r/rschoefbeck/www/png0T/"
 
 #ROOT.gStyle.SetOptStat(0)
@@ -37,7 +37,7 @@ applied_filters = ["CSCTightHaloFilter", "HBHENoiseFilterResultRun2Tight"]
 
 #samples = [Jet]
 #samples = [ZeroBias]
-samples = [EGamma, SingleMu]
+samples = [ZeroBias, SingleMu]
 maxMet = 350
 maxSumET = 2500
 
