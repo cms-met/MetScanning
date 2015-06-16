@@ -53,17 +53,6 @@ process.load('CommonTools.RecoAlgos.HBHENoiseFilterResultProducer_cfi')
 process.load('Configuration.StandardSequences.Reconstruction_Data_cff')
 ##___________________________PFClusterMet_____________________________________||
 process.load('RecoMET.METProducers.PFClusterMET_cfi')
-from Configuration.StandardSequences.Reconstruction_Data_cff import *
-process.particleFlowRecHitECAL=particleFlowRecHitECAL
-process.particleFlowRecHitHBHE=particleFlowRecHitHBHE
-process.particleFlowRecHitHF=particleFlowRecHitHF
-process.particleFlowRecHitHO=particleFlowRecHitHO
-process.particleFlowClusterECALUncorrected=particleFlowClusterECALUncorrected
-process.particleFlowClusterECAL=particleFlowClusterECAL
-process.particleFlowClusterHBHE=particleFlowClusterHBHE
-process.particleFlowClusterHCAL=particleFlowClusterHCAL
-process.particleFlowClusterHF=particleFlowClusterHF
-process.particleFlowClusterHO=particleFlowClusterHO
 process.pfClusterRefsForJetsHCAL = cms.EDProducer("PFClusterRefCandidateProducer",
   src          = cms.InputTag('particleFlowClusterHCAL'),
   particleType = cms.string('pi+')
