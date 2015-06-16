@@ -94,7 +94,6 @@ print "Now picking %i events" % len(selected)
 os.system('mkdir -p %s/%s'%(outputDir,prefix))
 for e in selected:
   outputFile=os.path.expanduser("%s/%s/%i_%i.root"%(outputDir,prefix,e['run'],e['event']))
-  print e
-  print "Running\nedmCopyPickMerge eventsToProcess=%i:%i inputFiles=file:%s outputFile=%s\n"%(e['run'],e['event'],e['file'],outputFile) 
+#  print "Running\nedmCopyPickMerge eventsToProcess=%i:%i inputFiles=file:%s outputFile=%s\n"%(e['run'],e['event'],e['file'],outputFile) 
 #  os.system("edmCopyPickMerge eventsToProcess=%i:%i inputFiles=file:%s outputFile=%s"%(e['run'],e['event'],e['file'],outputFile)) 
   call(["edmCopyPickMerge", "eventsToProcess=%i:%i"%(e['run'],e['event']), "inputFiles=file:%s"%e['file'], "outputFile=%s"%outputFile])
