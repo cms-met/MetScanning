@@ -1,5 +1,5 @@
 from MetScanning.plots.helpers import getFileList
-from MetScanning.plots.samples import *
+from MetScanning.plots.samples_v5 import *
 from math import pi
 
 import ROOT
@@ -8,7 +8,7 @@ from DataFormats.FWLite import Events, Handle
 from PhysicsTools.PythonAnalysis import *
 
 small = False
-prefix='v4'
+prefix='v5'
 plotDirectory = "/afs/hephy.at/user/r/rschoefbeck/www/png0T/"
 
 #ROOT.gStyle.SetOptStat(0)
@@ -37,7 +37,7 @@ applied_filters = ["CSCTightHaloFilter", "HBHENoiseFilterResultRun2Tight"]
 
 #samples = [Jet]
 #samples = [ZeroBias]
-samples = [ZeroBias, SingleMu]
+samples = [Jet, ZeroBias, SingleMu]
 maxMet = 350
 maxSumET = 2500
 

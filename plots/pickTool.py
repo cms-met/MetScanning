@@ -1,5 +1,5 @@
 from MetScanning.plots.helpers import getFileList
-from MetScanning.plots.samples_v3 import *
+from MetScanning.plots.samples_v5 import *
 from math import pi
 import os
 import ROOT
@@ -9,7 +9,7 @@ from DataFormats.FWLite import Events, Handle
 from PhysicsTools.PythonAnalysis import *
 
 small = False
-outputDir = os.path.expanduser("~/eos/cms/store/group/phys_jetmet/schoef/private0TSkim_v3/outliers/")
+outputDir = os.path.expanduser("~/eos/cms/store/group/phys_jetmet/schoef/private0TSkim_v5/outliers/")
 
 edmCollections = { \
 #  'pfMet':("vector<reco::PFMET>", "pfMet", ""), #, "RECO")
@@ -36,9 +36,9 @@ sample = ZeroBias
 if small:
   prefix = sample['name']+"_test"
 else:
-  prefix = sample['name']+"_pfCaloMetAbove70_caloMetBelow10"
+  prefix = sample['name']+"_caloMetAbove80"
 
-skimCondition = lambda products:lowerCut(products, 'pfCaloMet', 70) and upperCut(products, 'caloMet', 10)
+skimCondition = lambda products:lowerCut(products, 'caloMet', 80)
 
 def filterCondition(products):
   passed=True
