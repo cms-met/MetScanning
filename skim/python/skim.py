@@ -189,7 +189,8 @@ process.condMETSelector = cms.EDProducer(
    decay = cms.string("caloMet pfClusterMet pfCaloMet"),
 #   cut = cms.string("(daughter(0).pt > 80) || (daughter(0).pt/daughter(1).pt > 2 && daughter(1).pt > 40 ) || (daughter(1).pt/daughter(0).pt > 2 && daughter(0).pt > 40 )" ) #Skim v0
 #   cut = cms.string("(daughter(0).pt > 60) || (daughter(1).pt > 60)" ) #Skim v1
-   cut = cms.string("(daughter(0).pt > 60) || (daughter(1).pt > 60) ||  (daughter(2).pt > 60)" ) #Skim v3
+#   cut = cms.string("(daughter(0).pt > 60) || (daughter(1).pt > 60) ||  (daughter(2).pt > 60)" ) #Skim v3 and v5
+   cut = cms.string("(daughter(0).pt > 90) || (daughter(1).pt > 90) ||  (daughter(2).pt > 90)" ) #22Jun2015
    )
 
 process.metCounter = cms.EDFilter(
