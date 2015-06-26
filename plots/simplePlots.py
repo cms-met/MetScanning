@@ -33,7 +33,7 @@ edmCollections = { \
 }
 handles={k:Handle(edmCollections[k][0]) for k in edmCollections.keys()}
 
-applied_filters = ["CSCTightHaloFilter", "HBHENoiseFilterResultRun2Tight"]
+applied_filters = ["CSCTightHaloFilter", "HBHENoiseFilterResultRun1"]
 
 #samples = [Jet]
 #samples = [ZeroBias]
