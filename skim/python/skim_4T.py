@@ -191,10 +191,9 @@ process.p = cms.Path(
 #    process.ApplyBaselineHBHENoiseFilter* 
     process.EcalDeadCellTriggerPrimitiveFilter*
     process.pfClusterMetSequence*
-    process.pfCaloMetSequence
-#    process.trkMetSequence*
-#    process.condMETSelector*
-#    process.metCounter
+    process.pfCaloMetSequence*
+    process.condMETSelector*
+    process.metCounter
     )
 
 process.e1 = cms.EndPath(
