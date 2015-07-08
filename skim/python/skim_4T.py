@@ -172,6 +172,9 @@ process.pfCaloMetSequence = cms.Sequence(
 process.load('RecoMET.METFilters.EcalDeadCellTriggerPrimitiveFilter_cfi')
 process.EcalDeadCellTriggerPrimitiveFilter.taggingMode = cms.bool(True)
 
+process.load('RecoMET.METFilters.eeBadScFilter_cfi')
+process.eeBadScFilter.taggingMode = cms.bool(True)
+
 process.condMETSelector = cms.EDProducer(
    "CandViewShallowCloneCombiner",
    decay = cms.string("caloMet pfMet"),
@@ -192,6 +195,7 @@ process.p = cms.Path(
     process.EcalDeadCellTriggerPrimitiveFilter*
     process.pfClusterMetSequence*
     process.pfCaloMetSequence*
+    process.eeBadScFilter*
     process.condMETSelector*
     process.metCounter
     )
