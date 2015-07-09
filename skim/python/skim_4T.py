@@ -21,7 +21,7 @@ process.GlobalTag.globaltag = 'GR_P_V56::All'
 ##____________________________________________________________________________||
 process.source = cms.Source(
     "PoolSource",
-    fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/data/Run2015A/ZeroBias1/RECO/PromptReco-v1/000/246/930/00000/2E8CE084-930B-E511-88E0-02163E0145E7.root")
+    fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/04380D9C-0F24-E511-9772-02163E0127EF.root")
     )
 
 ##____________________________________________________________________________||
@@ -175,10 +175,17 @@ process.EcalDeadCellTriggerPrimitiveFilter.taggingMode = cms.bool(True)
 process.load('RecoMET.METFilters.eeBadScFilter_cfi')
 process.eeBadScFilter.taggingMode = cms.bool(True)
 
+process.primaryVertexFilter = cms.EDFilter("GoodVertexFilter",
+                                           vertexCollection = cms.InputTag('offlinePrimaryVertices'),
+                                           minimumNDOF = cms.uint32(4) ,
+                                           maxAbsZ = cms.double(15),
+                                           maxd0 = cms.double(2)
+                                           )
+
 process.condMETSelector = cms.EDProducer(
    "CandViewShallowCloneCombiner",
    decay = cms.string("caloMet pfMet"),
-   cut = cms.string("(daughter(0).pt > 60) || (daughter(1).pt > 60)" ) 
+   cut = cms.string("(daughter(0).pt > 50) || (daughter(1).pt > 50)" ) 
    )
 
 process.metCounter = cms.EDFilter(
@@ -189,6 +196,7 @@ process.metCounter = cms.EDFilter(
 
 ##____________________________________________________________________________||
 process.p = cms.Path(
+    process.primaryVertexFilter*
     process.CSCTightHaloFilter*
     process.HBHENoiseFilterResultProducer* #produces bools
 #    process.ApplyBaselineHBHENoiseFilter* 
