@@ -15,8 +15,18 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 
+#include "DataFormats/EcalRecHit/interface/EcalRecHitCollections.h"
+#include "DataFormats/DetId/interface/DetId.h"
+#include "DataFormats/EcalDetId/interface/EBDetId.h"
+#include "DataFormats/EcalDetId/interface/EEDetId.h"
+#include "DataFormats/EcalDetId/interface/ESDetId.h"
+
+#include "RecoLocalCalo/EcalRecAlgos/interface/EcalSeverityLevelAlgoRcd.h"
+#include "RecoLocalCalo/EcalRecAlgos/interface/EcalSeverityLevelAlgo.h"
+
 #include "DataFormats/ParticleFlowReco/interface/PFCluster.h"
 #include "DataFormats/ParticleFlowReco/interface/PFClusterFwd.h"
+#include "DataFormats/METReco/interface/HcalNoiseSummary.h"
 #include "DataFormats/METReco/interface/CaloMET.h"
 #include "DataFormats/METReco/interface/PFClusterMET.h"
 #include "DataFormats/METReco/interface/CaloMETCollection.h"
@@ -61,6 +71,7 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
   edm::InputTag inputTagPFCaloMET_;
   edm::InputTag inputTagPFClusterMET_;
   edm::InputTag inputTagEcalPFClusters_;
+  edm::InputTag inputTagHcalPFClusters_;
   edm::InputTag inputTagHBHEPFClusters_;
   edm::InputTag inputTagHOPFClusters_;
   edm::InputTag inputTagHFPFClusters_;
@@ -69,10 +80,12 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
   edm::InputTag inputTagHBHER1_;
   edm::InputTag inputTagHBHER2L_;
   edm::InputTag inputTagHBHER2T_;
+  edm::InputTag inputTagRecHitsEB_;
+  edm::InputTag inputTagRecHitsEE_;
+  edm::InputTag inputTagRecHitsES_;
 
-  
   size_t run,event,lumiBlock,time;
-  bool filtercsc, filterhbher1, filterhbher2l, filterhbher2t; 
+  bool filtercsc, filterhbher1, filterhbher2l, filterhbher2t, filterhbheiso; 
  
   edm::RunNumber_t irun;
   edm::EventNumber_t ievent;
@@ -92,18 +105,29 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
   float pfClusterMETSumEt;
 
   std::vector<float>  pfClusterEcal_energy;
+  std::vector<float>  pfClusterEcal_time;
   std::vector<float>  pfClusterEcal_eta;
   std::vector<float>  pfClusterEcal_phi;
+  std::vector<float>  pfClusterEcal_status13;
+  std::vector<float>  pfClusterEcal_status14;
+
+  std::vector<float>  pfClusterHcal_energy;
+  std::vector<float>  pfClusterHcal_time;
+  std::vector<float>  pfClusterHcal_eta;
+  std::vector<float>  pfClusterHcal_phi;
 
   std::vector<float>  pfClusterHBHE_energy;
+  std::vector<float>  pfClusterHBHE_time;
   std::vector<float>  pfClusterHBHE_eta;
   std::vector<float>  pfClusterHBHE_phi;
 
   std::vector<float>  pfClusterHO_energy;
+  std::vector<float>  pfClusterHO_time;
   std::vector<float>  pfClusterHO_eta;
   std::vector<float>  pfClusterHO_phi;
 
   std::vector<float>  pfClusterHF_energy;
+  std::vector<float>  pfClusterHF_time;
   std::vector<float>  pfClusterHF_eta;
   std::vector<float>  pfClusterHF_phi;
   
