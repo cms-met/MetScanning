@@ -23,7 +23,7 @@ config.Data.outLFNDirBase = '/store/group/phys_jetmet/schoef/private4TSkim_9Jul2
 config.Site.storageSite = 'T2_CH_CERN'
 
 datasets=[
-'/ExpressPhysics/Run2015B-Express-v1/FEVT'
+'/ExpressPhysics/Run2015B-Express-v1/FEVT',
 '/ZeroBias1/Run2015B-PromptReco-v1/RECO',
 '/ZeroBias2/Run2015B-PromptReco-v1/RECO',
 '/ZeroBias3/Run2015B-PromptReco-v1/RECO',
