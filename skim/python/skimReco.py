@@ -51,15 +51,15 @@ process.maxEvents = cms.untracked.PSet()#input = cms.untracked.int32(10))
 
 ##___________________________CSC_Halo_Filter__________________________________||
 process.load('RecoMET.METFilters.CSCTightHaloFilter_cfi')
-process.CSCTightHaloFilter.taggingMode = cms.bool(True)
+process.CSCTightHaloFilter.taggingMode = cms.bool(False)
 
 
 ##___________________________HCAL_Noise_Filter________________________________||
 process.load('CommonTools.RecoAlgos.HBHENoiseFilterResultProducer_cfi')
-#process.ApplyBaselineHBHENoiseFilter = cms.EDFilter('BooleanFlagFilter',
-#    inputLabel = cms.InputTag('HBHENoiseFilterResultProducer','HBHENoiseFilterResult'),
-#    reverseDecision = cms.bool(False)
-#)
+process.ApplyBaselineHBHENoiseFilter = cms.EDFilter('BooleanFlagFilter',
+    inputLabel = cms.InputTag('HBHENoiseFilterResultProducer','HBHENoiseFilterResult'),
+    reverseDecision = cms.bool(False)
+)
 process.load('Configuration.StandardSequences.Reconstruction_Data_cff')
 
 
@@ -183,10 +183,10 @@ process.pfCaloMetSequence = cms.Sequence(
 )
 
 process.load('RecoMET.METFilters.EcalDeadCellTriggerPrimitiveFilter_cfi')
-process.EcalDeadCellTriggerPrimitiveFilter.taggingMode = cms.bool(True)
+process.EcalDeadCellTriggerPrimitiveFilter.taggingMode = cms.bool(False)
 
 process.load('RecoMET.METFilters.eeBadScFilter_cfi')
-process.eeBadScFilter.taggingMode = cms.bool(True)
+process.eeBadScFilter.taggingMode = cms.bool(False)
 
 process.primaryVertexFilter = cms.EDFilter("GoodVertexFilter",
                                            vertexCollection = cms.InputTag('offlinePrimaryVertices'),
@@ -239,18 +239,18 @@ process.p = cms.Path(
     process.primaryVertexFilter*
     process.CSCTightHaloFilter*
     process.HBHENoiseFilterResultProducer* #produces bools
-#    process.ApplyBaselineHBHENoiseFilter* 
+    process.ApplyBaselineHBHENoiseFilter* 
     process.EcalDeadCellTriggerPrimitiveFilter*
     process.pfClusterMetSequence*
     process.pfCaloMetSequence*
     process.eeBadScFilter*
-    #process.condMETSelector*
-    #process.metCounter*
-    process.metScanNtupleMaker ##CH: writes a flat tree
+    process.condMETSelector*
+    process.metCounter
+    #process.metScanNtupleMaker ##CH: writes a flat tree
     )
 
 process.e1 = cms.EndPath(
-    #process.out ##CH: write the skimmed edm file 
+    process.out ##CH: write the skimmed edm file 
     )
 
 ##____________________________________________________________________________||

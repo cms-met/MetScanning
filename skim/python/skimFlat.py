@@ -236,10 +236,10 @@ process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
 
 ##___________________________PATH______________________________________________||
 process.p = cms.Path(
-    process.primaryVertexFilter*
+    #process.primaryVertexFilter*
     process.CSCTightHaloFilter*
     process.HBHENoiseFilterResultProducer* #produces bools
-#    process.ApplyBaselineHBHENoiseFilter* 
+    #process.ApplyBaselineHBHENoiseFilter* 
     process.EcalDeadCellTriggerPrimitiveFilter*
     process.pfClusterMetSequence*
     process.pfCaloMetSequence*
