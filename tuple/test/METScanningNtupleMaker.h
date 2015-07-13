@@ -37,6 +37,8 @@
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/TrackReco/interface/TrackFwd.h"
 
+#include "DataFormats/METReco/interface/HcalNoiseSummary.h"
+
 #include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include "FWCore/Utilities/interface/Exception.h"
@@ -70,6 +72,7 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
   edm::InputTag inputTagCaloMET_;
   edm::InputTag inputTagPFCaloMET_;
   edm::InputTag inputTagPFClusterMET_;
+  edm::InputTag inputTagPFMET_;
   edm::InputTag inputTagEcalPFClusters_;
   edm::InputTag inputTagHcalPFClusters_;
   edm::InputTag inputTagHBHEPFClusters_;
@@ -80,12 +83,14 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
   edm::InputTag inputTagHBHER1_;
   edm::InputTag inputTagHBHER2L_;
   edm::InputTag inputTagHBHER2T_;
+  edm::InputTag inputTagECALTP_;
+  edm::InputTag inputTagECALSC_;
   edm::InputTag inputTagRecHitsEB_;
   edm::InputTag inputTagRecHitsEE_;
   edm::InputTag inputTagRecHitsES_;
 
   size_t run,event,lumiBlock,time;
-  bool filtercsc, filterhbher1, filterhbher2l, filterhbher2t, filterhbheiso; 
+  bool filtercsc, filterhbher1, filterhbher2l, filterhbher2t, filterhbheiso, filterecaltp, filterecalsc; 
  
   edm::RunNumber_t irun;
   edm::EventNumber_t ievent;
@@ -103,6 +108,10 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
   float pfClusterMETPt;
   float pfClusterMETPhi;
   float pfClusterMETSumEt;
+
+  float pfMETPt;
+  float pfMETPhi;
+  float pfMETSumEt;
 
   std::vector<float>  pfClusterEcal_energy;
   std::vector<float>  pfClusterEcal_time;

@@ -3,3 +3,4 @@ __init__.py
 *.cc~
 *.h~
 *.root
+*.log

@@ -18,6 +18,8 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   inputTagHBHER1_ = iConfig.getParameter<edm::InputTag>("HBHEfilterR1");
   inputTagHBHER2L_ = iConfig.getParameter<edm::InputTag>("HBHEfilterR2L");
   inputTagHBHER2T_ = iConfig.getParameter<edm::InputTag>("HBHEfilterR2T");
+  inputTagECALTP_ = iConfig.getParameter<edm::InputTag>("ECALTPfilter");
+  inputTagECALSC_ = iConfig.getParameter<edm::InputTag>("ECALSCfilter");
   inputTagRecHitsEB_ = iConfig.getParameter<edm::InputTag>("EBRecHits");
   inputTagRecHitsEE_ = iConfig.getParameter<edm::InputTag>("EERecHits");
   inputTagRecHitsES_ = iConfig.getParameter<edm::InputTag>("ESRecHits");
@@ -43,6 +45,8 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   s->Branch("filter_hbher2l",&filterhbher2l,"filter_hbher2l/O");
   s->Branch("filter_hbher2t",&filterhbher2t,"filter_hbher2t/O");
   s->Branch("filter_hbheiso",&filterhbheiso,"filter_hbheiso/O");
+  s->Branch("filter_ecaltp",&filterecaltp,"filter_ecaltp/O");
+  s->Branch("filter_ecalsc",&filterecalsc,"filter_ecalsc/O");
 
   //METs ========================================
   s->Branch("caloMETPt",&caloMETPt,"caloMETPt/F");  
@@ -56,6 +60,10 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   s->Branch("pfClusterMETPt",&pfClusterMETPt,"pfClusterMETPt/F");  
   s->Branch("pfClusterMETPhi",&pfClusterMETPhi,"pfClusterMETPhi/F"); 
   s->Branch("pfClusterMETSumEt",&pfClusterMETSumEt,"pfClusterMETSumEt/F"); 
+
+  s->Branch("pfMETPt",&pfMETPt,"pfMETPt/F");  
+  s->Branch("pfMETPhi",&pfMETPhi,"pfMETPhi/F"); 
+  s->Branch("pfMETSumEt",&pfMETSumEt,"pfMETSumEt/F"); 
   
   //clusters ==========================================
   s->Branch("pfClusterEcal_energy",&pfClusterEcal_energy);
@@ -145,14 +153,25 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   iEvent.getByLabel(inputTagHBHER2T_, ifilterhbher2t);
   filterhbher2t = *ifilterhbher2t;
 
+  //Handle<bool> ifilterhbheiso;
+  //iEvent.getByLabel(inputTagHBHEISO_, ifilterhbheiso);
+  //filterhbheiso = *ifilterhbheiso;
+
+  Handle<bool> ifilterecaltp;
+  iEvent.getByLabel(inputTagECALTP_, ifilterecaltp);
+  filterecaltp = *ifilterecaltp;
+
+  Handle<bool> ifilterecalsc;
+  iEvent.getByLabel(inputTagECALSC_, ifilterecalsc);
+  filterecalsc = *ifilterecalsc;
+
   edm::Handle<HcalNoiseSummary> hSummary;
   iEvent.getByLabel("hcalnoise", hSummary);
+
   filterhbheiso = true;
-
-  if( hSummary -> numIsolatedNoiseChannels() >= 10 ||
-      hSummary -> isolatedNoiseSumE()        >= 50 ||
-      hSummary -> isolatedNoiseSumEt()       >= 25 ) filterhbheiso = false;
-
+  if( hSummary->numIsolatedNoiseChannels() >= 10 ) filterhbheiso = false;
+  if( hSummary->isolatedNoiseSumE()        >= 50 ) filterhbheiso = false;
+  if( hSummary->isolatedNoiseSumEt()       >= 25 ) filterhbheiso = false;
 
 
 
@@ -165,6 +184,9 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
 
   Handle<reco::PFClusterMETCollection> pfClusterMET;
   iEvent.getByLabel(inputTagPFClusterMET_, pfClusterMET);
+
+  Handle<reco::PFMETCollection> pfMET;
+  iEvent.getByLabel(inputTagPFMET_, pfMET);
   
   //get PFClusters
   Handle<reco::PFClusterCollection> pfClustersEcal;

@@ -12,24 +12,19 @@ process.load('Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cf
 
 process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
 
-
-##___________________________Global_Tag_______________________________________||
+## ----------------- Global Tag ------------------
 #process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 #from Configuration.AlCa.GlobalTag import GlobalTag
 #process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc', '')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.GlobalTag.globaltag = 'GR_P_V56::All'
-
-
-##___________________________Input_Files______________________________________||
+##____________________________________________________________________________||
 process.source = cms.Source(
     "PoolSource",
-    #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/data/Run2015A/SingleMu/RECO/PromptReco-v1/000/247/070/00000/A2AFED85-AB0C-E511-ACA9-02163E0142B7.root")
-    fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/data/Run2015A/Jet/RECO/PromptReco-v1/000/246/960/00000/4CED9FE9-DB0B-E511-A069-02163E012432.root")
+    fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/data/Run2015A/ZeroBias1/RECO/PromptReco-v1/000/246/930/00000/2E8CE084-930B-E511-88E0-02163E0145E7.root")
     )
 
-
-##___________________________EDM_Output_File__________________________________||
+##____________________________________________________________________________||
 process.out = cms.OutputModule(
     "PoolOutputModule",
     fileName = cms.untracked.string('skim.root'),
@@ -40,27 +35,22 @@ process.out = cms.OutputModule(
         )
     )
 
-
 ##____________________________________________________________________________||
 process.options   = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 process.MessageLogger.cerr.FwkReport.reportEvery = 50
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(10))
 
-
-##___________________________CSC_Halo_Filter__________________________________||
+##____________________________________________________________________________||
 process.load('RecoMET.METFilters.CSCTightHaloFilter_cfi')
 process.CSCTightHaloFilter.taggingMode = cms.bool(True)
-
-
-##___________________________HCAL_Noise_Filter________________________________||
+##____________________________________________________________________________||
 process.load('CommonTools.RecoAlgos.HBHENoiseFilterResultProducer_cfi')
 #process.ApplyBaselineHBHENoiseFilter = cms.EDFilter('BooleanFlagFilter',
 #    inputLabel = cms.InputTag('HBHENoiseFilterResultProducer','HBHENoiseFilterResult'),
 #    reverseDecision = cms.bool(False)
 #)
+
 process.load('Configuration.StandardSequences.Reconstruction_Data_cff')
-
-
 ##___________________________PFClusterMet_____________________________________||
 process.load('RecoMET.METProducers.PFClusterMET_cfi')
 process.pfClusterRefsForJetsHCAL = cms.EDProducer("PFClusterRefCandidateProducer",
@@ -101,7 +91,6 @@ process.pfClusterMetSequence = cms.Sequence(
 #   process.ak4PFClusterJets
  process.pfClusterMet
 )
-
 
 ##___________________________PFCaloMet_____________________________________||
 process.hltParticleFlowBlock = cms.EDProducer("PFBlockProducer",
@@ -181,9 +170,6 @@ process.pfCaloMetSequence = cms.Sequence(
    process.pfCaloMet
 )
 
-
-
-##___________________________High_Met_Skim____________________________________||
 ### select events with high caloMET 
 #process.caloMETSelector = cms.EDFilter(
 #    "CandViewSelector",
@@ -197,13 +183,15 @@ process.pfCaloMetSequence = cms.Sequence(
 #    cut = cms.string( "pt()>50" )
 #    )
 
+
 process.condMETSelector = cms.EDProducer(
    "CandViewShallowCloneCombiner",
    decay = cms.string("caloMet pfClusterMet pfCaloMet"),
 #   cut = cms.string("(daughter(0).pt > 80) || (daughter(0).pt/daughter(1).pt > 2 && daughter(1).pt > 40 ) || (daughter(1).pt/daughter(0).pt > 2 && daughter(0).pt > 40 )" ) #Skim v0
 #   cut = cms.string("(daughter(0).pt > 60) || (daughter(1).pt > 60)" ) #Skim v1
-   cut = cms.string("(daughter(0).pt > 60) || (daughter(1).pt > 60) ||  (daughter(2).pt > 60)" ) #Skim v3
-#   cut = cms.string("(daughter(0).pt > 90) || (daughter(1).pt > 90) ||  (daughter(2).pt > 90)" ) #Skim v5
+#   cut = cms.string("(daughter(0).pt > 60) || (daughter(1).pt > 60) ||  (daughter(2).pt > 60)" ) #Skim v3 and v5
+#   cut = cms.string("(daughter(0).pt > 90) || (daughter(1).pt > 90) ||  (daughter(2).pt > 90)" ) #22Jun2015
+   cut = cms.string("(daughter(0).pt > 120) || (daughter(1).pt > 120) ||  (daughter(2).pt > 120)" ) #30Jun2015
    )
 
 process.metCounter = cms.EDFilter(
@@ -212,46 +200,21 @@ process.metCounter = cms.EDFilter(
     minNumber = cms.uint32(1),
     )
 
-
-##___________________________Flat_Tuple________________________________________||
-process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
-   rootOutputFile=cms.string("tuple.root"),
-   caloMET=cms.InputTag("caloMet"),
-   pfCaloMET=cms.InputTag("pfCaloMet"),
-   pfClusterMET=cms.InputTag("pfClusterMet"),
-   EcalPFClusterCollection=cms.InputTag("particleFlowClusterECAL"),
-   HcalPFClusterCollection=cms.InputTag("particleFlowClusterHCAL"),
-   HBHEPFClusterCollection=cms.InputTag("particleFlowClusterHBHE"),
-   HOPFClusterCollection=cms.InputTag("particleFlowClusterHO"),
-   HFPFClusterCollection=cms.InputTag("particleFlowClusterHF"),
-   tracksCollection=cms.InputTag("generalTracks"),
-   CSCfilter=cms.InputTag("CSCTightHaloFilter"),
-   HBHEfilterR1=cms.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResultRun1"),
-   HBHEfilterR2L=cms.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResultRun2Loose"),
-   HBHEfilterR2T=cms.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResultRun2Tight"),
-   EBRecHits=cms.InputTag("reducedEcalRecHitsEB"),
-   EERecHits=cms.InputTag("reducedEcalRecHitsEE"),
-   ESRecHits=cms.InputTag("reducedEcalRecHitsES")
-)
-
-
-##___________________________PATH______________________________________________||
+##____________________________________________________________________________||
 process.p = cms.Path(
     process.CSCTightHaloFilter*
     process.HBHENoiseFilterResultProducer* #produces bools
 #    process.ApplyBaselineHBHENoiseFilter* 
 #    process.pfClusterRefsForJets*
-#    process.pfClusterRefsForJets_step*
     process.pfClusterMetSequence*
     process.pfCaloMetSequence*
-#    process.caloMETSelector* ##CH: caloMET skim
-    process.condMETSelector* ##CH: conditial MET skim
-    process.metCounter*      ##CH: needed for any of the aforementioned skims
-    process.metScanNtupleMaker ##CH: writes a flat tree
+#    process.caloMETSelector*
+    process.condMETSelector*
+    process.metCounter
     )
 
 process.e1 = cms.EndPath(
-    #process.out ##CH: write the skimmed edm file 
+    process.out
     )
 
 ##____________________________________________________________________________||
