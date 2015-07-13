@@ -23,26 +23,18 @@ config.Data.outLFNDirBase = '/store/group/phys_jetmet/schoef/private4TSkim_9Jul2
 config.Site.storageSite = 'T2_CH_CERN'
 
 datasets=[
-'/ExpressPhysics/Run2015B-Express-v1/FEVT'
-#'/MET/Run2015A-PromptReco-v1/RECO',
-#'/HTMHT/Run2015A-PromptReco-v1/RECO',
-#'/HighMultiplicity/Run2015A-PromptReco-v1/RECO',
-#'/Jet/Run2015A-PromptReco-v1/RECO',
-#'/JetHT/Run2015A-PromptReco-v1/RECO',
-#'/SingleElectron/Run2015A-PromptReco-v1/RECO',
-#'/SinglePhoton/Run2015A-PromptReco-v1/RECO',
-#'/BTagCSV/Run2015A-PromptReco-v1/RECO',
-#'/BTagMu/Run2015A-PromptReco-v1/RECO',
-#'/EGamma/Run2015A-PromptReco-v1/RECO',
-#'/ZeroBias1/Run2015A-PromptReco-v1/RECO',
-#'/ZeroBias2/Run2015A-PromptReco-v1/RECO',
-#'/ZeroBias3/Run2015A-PromptReco-v1/RECO',
-#'/ZeroBias4/Run2015A-PromptReco-v1/RECO',
-#'/ZeroBias5/Run2015A-PromptReco-v1/RECO',
-#'/ZeroBias6/Run2015A-PromptReco-v1/RECO',
-#'/ZeroBias7/Run2015A-PromptReco-v1/RECO',
-#'/ZeroBias8/Run2015A-PromptReco-v1/RECO',
-#'/SingleMu/Run2015A-PromptReco-v1/RECO',
+'/ExpressPhysics/Run2015B-Express-v1/FEVT',
+'/ZeroBias1/Run2015B-PromptReco-v1/RECO',
+'/ZeroBias2/Run2015B-PromptReco-v1/RECO',
+'/ZeroBias3/Run2015B-PromptReco-v1/RECO',
+'/ZeroBias4/Run2015B-PromptReco-v1/RECO',
+'/ZeroBias5/Run2015B-PromptReco-v1/RECO',
+'/ZeroBias6/Run2015B-PromptReco-v1/RECO',
+'/ZeroBias7/Run2015B-PromptReco-v1/RECO',
+'/ZeroBias8/Run2015B-PromptReco-v1/RECO',
+'/EGamma/Run2015B-PromptReco-v1/RECO',
+'/Jet/Run2015B-PromptReco-v1/RECO',
+'/MinimumBias/Run2015B-PromptReco-v1/RECO',
 ]
 
 if __name__ == '__main__':
