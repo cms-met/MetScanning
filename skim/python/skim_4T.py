@@ -244,8 +244,8 @@ process.p = cms.Path(
     process.pfClusterMetSequence*
     process.pfCaloMetSequence*
     process.eeBadScFilter*
-    #process.condMETSelector*
-    #process.metCounter*
+    process.condMETSelector*
+    process.metCounter*
     process.metScanNtupleMaker ##CH: writes a flat tree
     )
 
