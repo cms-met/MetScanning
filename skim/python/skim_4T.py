@@ -251,8 +251,8 @@ process.p = cms.Path(
     process.eeBadScFilter*
     process.trackingFailureFilter*
     process.condMETSelector*
-    process.metCounter*
-    process.metScanNtupleMaker ##CH: writes a flat tree
+    process.metCounter
+#   *process.metScanNtupleMaker ##CH: writes a flat tree
     )
 
 process.e1 = cms.EndPath(
