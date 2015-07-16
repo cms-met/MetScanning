@@ -256,7 +256,7 @@ process.p = cms.Path(
     )
 
 process.e1 = cms.EndPath(
-    #process.out ##CH: write the skimmed edm file 
+    process.out ##CH: write the skimmed edm file 
     )
 
 ##____________________________________________________________________________||
