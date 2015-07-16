@@ -203,7 +203,7 @@ process.primaryVertexFilter = cms.EDFilter("GoodVertexFilter",
 process.condMETSelector = cms.EDProducer(
    "CandViewShallowCloneCombiner",
    decay = cms.string("caloMet pfMet"),
-   cut = cms.string("(daughter(0).pt > 50) || (daughter(1).pt > 50)" ) 
+   cut = cms.string("(daughter(0).pt > 100) || (daughter(1).pt > 100)" ) 
    )
 
 process.metCounter = cms.EDFilter(
