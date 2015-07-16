@@ -56,6 +56,8 @@ process.CSCTightHaloFilter.taggingMode = cms.bool(True)
 
 ##___________________________HCAL_Noise_Filter________________________________||
 process.load('CommonTools.RecoAlgos.HBHENoiseFilterResultProducer_cfi')
+process.HBHENoiseFilterResultProducer.minZeros = cms.int32(99999)
+
 #process.ApplyBaselineHBHENoiseFilter = cms.EDFilter('BooleanFlagFilter',
 #    inputLabel = cms.InputTag('HBHENoiseFilterResultProducer','HBHENoiseFilterResult'),
 #    reverseDecision = cms.bool(False)
@@ -182,12 +184,23 @@ process.pfCaloMetSequence = cms.Sequence(
    process.pfCaloMet
 )
 
+
+##______________________trackingFailureFilter______________________________||
+process.load('RecoMET.METFilters.trackingFailureFilter_cfi')
+process.trackingFailureFilter.taggingMode = cms.bool(True)
+
+
+##__________________________ECAL_TP_Filter_________________________________||
 process.load('RecoMET.METFilters.EcalDeadCellTriggerPrimitiveFilter_cfi')
 process.EcalDeadCellTriggerPrimitiveFilter.taggingMode = cms.bool(True)
 
+
+##________________________________EE_SC_Filter_____________________________||
 process.load('RecoMET.METFilters.eeBadScFilter_cfi')
 process.eeBadScFilter.taggingMode = cms.bool(True)
 
+
+##__________________________________PV_Filter______________________________||
 process.primaryVertexFilter = cms.EDFilter("GoodVertexFilter",
                                            vertexCollection = cms.InputTag('offlinePrimaryVertices'),
                                            minimumNDOF = cms.uint32(4) ,
@@ -195,6 +208,7 @@ process.primaryVertexFilter = cms.EDFilter("GoodVertexFilter",
                                            maxd0 = cms.double(2)
                                            )
 
+##_________________________MET_skimming____________________________________||
 process.condMETSelector = cms.EDProducer(
    "CandViewShallowCloneCombiner",
    decay = cms.string("caloMet pfMet"),
@@ -236,10 +250,11 @@ process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
 
 ##___________________________PATH______________________________________________||
 process.p = cms.Path(
-    #process.primaryVertexFilter*
+    process.primaryVertexFilter*
     process.CSCTightHaloFilter*
     process.HBHENoiseFilterResultProducer* #produces bools
     #process.ApplyBaselineHBHENoiseFilter* 
+    process.trackingFailureFilter*
     process.EcalDeadCellTriggerPrimitiveFilter*
     process.pfClusterMetSequence*
     process.pfCaloMetSequence*

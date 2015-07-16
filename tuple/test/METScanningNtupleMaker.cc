@@ -5,24 +5,25 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
 
 
   //the input tags
-  inputTagCaloMET_ = iConfig.getParameter<edm::InputTag>("caloMET");
-  inputTagPFCaloMET_ = iConfig.getParameter<edm::InputTag>("pfCaloMET");
-  inputTagPFClusterMET_ = iConfig.getParameter<edm::InputTag>("pfClusterMET");
+  inputTagCaloMET_        = iConfig.getParameter<edm::InputTag>("caloMET");
+  inputTagPFCaloMET_      = iConfig.getParameter<edm::InputTag>("pfCaloMET");
+  inputTagPFClusterMET_   = iConfig.getParameter<edm::InputTag>("pfClusterMET");
+  inputTagPFMET_          = iConfig.getParameter<edm::InputTag>("pfMET");
   inputTagEcalPFClusters_ = iConfig.getParameter<edm::InputTag>("EcalPFClusterCollection");
   inputTagHcalPFClusters_ = iConfig.getParameter<edm::InputTag>("HcalPFClusterCollection");
   inputTagHBHEPFClusters_ = iConfig.getParameter<edm::InputTag>("HBHEPFClusterCollection");
-  inputTagHOPFClusters_ = iConfig.getParameter<edm::InputTag>("HOPFClusterCollection");
-  inputTagHFPFClusters_ = iConfig.getParameter<edm::InputTag>("HFPFClusterCollection");
-  inputTagTracks_ = iConfig.getParameter<edm::InputTag>("tracksCollection");
-  inputTagCSC_ = iConfig.getParameter<edm::InputTag>("CSCfilter");
-  inputTagHBHER1_ = iConfig.getParameter<edm::InputTag>("HBHEfilterR1");
-  inputTagHBHER2L_ = iConfig.getParameter<edm::InputTag>("HBHEfilterR2L");
-  inputTagHBHER2T_ = iConfig.getParameter<edm::InputTag>("HBHEfilterR2T");
-  inputTagECALTP_ = iConfig.getParameter<edm::InputTag>("ECALTPfilter");
-  inputTagECALSC_ = iConfig.getParameter<edm::InputTag>("ECALSCfilter");
-  inputTagRecHitsEB_ = iConfig.getParameter<edm::InputTag>("EBRecHits");
-  inputTagRecHitsEE_ = iConfig.getParameter<edm::InputTag>("EERecHits");
-  inputTagRecHitsES_ = iConfig.getParameter<edm::InputTag>("ESRecHits");
+  inputTagHOPFClusters_   = iConfig.getParameter<edm::InputTag>("HOPFClusterCollection");
+  inputTagHFPFClusters_   = iConfig.getParameter<edm::InputTag>("HFPFClusterCollection");
+  inputTagTracks_         = iConfig.getParameter<edm::InputTag>("tracksCollection");
+  inputTagCSC_            = iConfig.getParameter<edm::InputTag>("CSCfilter");
+  inputTagHBHER1_         = iConfig.getParameter<edm::InputTag>("HBHEfilterR1");
+  inputTagHBHER2L_        = iConfig.getParameter<edm::InputTag>("HBHEfilterR2L");
+  inputTagHBHER2T_        = iConfig.getParameter<edm::InputTag>("HBHEfilterR2T");
+  inputTagECALTP_         = iConfig.getParameter<edm::InputTag>("ECALTPfilter");
+  inputTagECALSC_         = iConfig.getParameter<edm::InputTag>("ECALSCfilter");
+  inputTagRecHitsEB_      = iConfig.getParameter<edm::InputTag>("EBRecHits");
+  inputTagRecHitsEE_      = iConfig.getParameter<edm::InputTag>("EERecHits");
+  inputTagRecHitsES_      = iConfig.getParameter<edm::InputTag>("ESRecHits");
 
 
 
@@ -42,6 +43,7 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
 
   s->Branch("filter_csc",&filtercsc,"filter_csc/O");
   s->Branch("filter_hbher1",&filterhbher1,"filter_hbher1/O");
+  s->Branch("filter_hbher1nozeros",&filterhbher1nozeros,"filter_hbher1nozeros/O");
   s->Branch("filter_hbher2l",&filterhbher2l,"filter_hbher2l/O");
   s->Branch("filter_hbher2t",&filterhbher2t,"filter_hbher2t/O");
   s->Branch("filter_hbheiso",&filterhbheiso,"filter_hbheiso/O");
@@ -173,6 +175,10 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   if( hSummary->isolatedNoiseSumE()        >= 50 ) filterhbheiso = false;
   if( hSummary->isolatedNoiseSumEt()       >= 25 ) filterhbheiso = false;
 
+  filterhbher1nozeros = true;
+  if( hSummary->maxHPDHits()               >= 17                           ) filterhbher1nozeros = false;
+  if( hSummary->maxHPDNoOtherHits()        >= 10                           ) filterhbher1nozeros = false;
+  if( hSummary->HasBadRBXTS4TS5() && !hSummary->goodJetFoundInLowBVRegion()) filterhbher1nozeros = false;
 
 
   // get METs
@@ -273,6 +279,10 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   pfClusterMETPt = pfClusterMET->begin()->pt();
   pfClusterMETPhi = pfClusterMET->begin()->phi();
   pfClusterMETSumEt = pfClusterMET->begin()->sumEt();
+
+  pfMETPt = pfMET->begin()->pt();
+  pfMETPhi = pfMET->begin()->phi();
+  pfMETSumEt = pfMET->begin()->sumEt();
 
   //ECAL clusters
   for( size_t ibc=0; ibc<pfClustersEcal->size(); ++ibc ) {

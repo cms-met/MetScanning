@@ -56,6 +56,7 @@ process.CSCTightHaloFilter.taggingMode = cms.bool(False)
 
 ##___________________________HCAL_Noise_Filter________________________________||
 process.load('CommonTools.RecoAlgos.HBHENoiseFilterResultProducer_cfi')
+process.HBHENoiseFilterResultProducer.minZeros = cms.int32(99999)
 process.ApplyBaselineHBHENoiseFilter = cms.EDFilter('BooleanFlagFilter',
     inputLabel = cms.InputTag('HBHENoiseFilterResultProducer','HBHENoiseFilterResult'),
     reverseDecision = cms.bool(False)
@@ -182,12 +183,19 @@ process.pfCaloMetSequence = cms.Sequence(
    process.pfCaloMet
 )
 
+##___________________________tracking_Failure_Filter___________________________||
+process.load('RecoMET.METFilters.trackingFailureFilter_cfi')
+process.trackingFailureFilter.taggingMode = cms.bool(False)
+
+##___________________________ECAL_TP_Filter____________________________________||
 process.load('RecoMET.METFilters.EcalDeadCellTriggerPrimitiveFilter_cfi')
 process.EcalDeadCellTriggerPrimitiveFilter.taggingMode = cms.bool(False)
 
+##___________________________EE_SC_Filter______________________________________||
 process.load('RecoMET.METFilters.eeBadScFilter_cfi')
 process.eeBadScFilter.taggingMode = cms.bool(False)
 
+##___________________________PV_Filter_________________________________________||
 process.primaryVertexFilter = cms.EDFilter("GoodVertexFilter",
                                            vertexCollection = cms.InputTag('offlinePrimaryVertices'),
                                            minimumNDOF = cms.uint32(4) ,
@@ -195,6 +203,7 @@ process.primaryVertexFilter = cms.EDFilter("GoodVertexFilter",
                                            maxd0 = cms.double(2)
                                            )
 
+##___________________________MET_Skim__________________________________________||
 process.condMETSelector = cms.EDProducer(
    "CandViewShallowCloneCombiner",
    decay = cms.string("caloMet pfMet"),
@@ -239,7 +248,8 @@ process.p = cms.Path(
     process.primaryVertexFilter*
     process.CSCTightHaloFilter*
     process.HBHENoiseFilterResultProducer* #produces bools
-    process.ApplyBaselineHBHENoiseFilter* 
+    #process.ApplyBaselineHBHENoiseFilter* 
+    process.trackingFailureFilter*
     process.EcalDeadCellTriggerPrimitiveFilter*
     process.pfClusterMetSequence*
     process.pfCaloMetSequence*

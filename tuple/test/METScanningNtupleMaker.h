@@ -90,7 +90,7 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
   edm::InputTag inputTagRecHitsES_;
 
   size_t run,event,lumiBlock,time;
-  bool filtercsc, filterhbher1, filterhbher2l, filterhbher2t, filterhbheiso, filterecaltp, filterecalsc; 
+  bool filtercsc, filterhbher1, filterhbher1nozeros, filterhbher2l, filterhbher2t, filterhbheiso, filterecaltp, filterecalsc; 
  
   edm::RunNumber_t irun;
   edm::EventNumber_t ievent;
