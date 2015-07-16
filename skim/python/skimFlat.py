@@ -56,8 +56,6 @@ process.CSCTightHaloFilter.taggingMode = cms.bool(True)
 
 ##___________________________HCAL_Noise_Filter________________________________||
 process.load('CommonTools.RecoAlgos.HBHENoiseFilterResultProducer_cfi')
-process.HBHENoiseFilterResultProducer.minZeros = cms.int32(99999)
-
 #process.ApplyBaselineHBHENoiseFilter = cms.EDFilter('BooleanFlagFilter',
 #    inputLabel = cms.InputTag('HBHENoiseFilterResultProducer','HBHENoiseFilterResult'),
 #    reverseDecision = cms.bool(False)
@@ -184,9 +182,6 @@ process.pfCaloMetSequence = cms.Sequence(
    process.pfCaloMet
 )
 
-process.load('RecoMET.METFilters.trackingFailureFilter_cfi')
-process.trackingFailureFilter.taggingMode = cms.bool(True)
-
 process.load('RecoMET.METFilters.EcalDeadCellTriggerPrimitiveFilter_cfi')
 process.EcalDeadCellTriggerPrimitiveFilter.taggingMode = cms.bool(True)
 
@@ -241,17 +236,16 @@ process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
 
 ##___________________________PATH______________________________________________||
 process.p = cms.Path(
-    process.primaryVertexFilter*
+    #process.primaryVertexFilter*
     process.CSCTightHaloFilter*
     process.HBHENoiseFilterResultProducer* #produces bools
-#    process.ApplyBaselineHBHENoiseFilter* 
+    #process.ApplyBaselineHBHENoiseFilter* 
     process.EcalDeadCellTriggerPrimitiveFilter*
     process.pfClusterMetSequence*
     process.pfCaloMetSequence*
     process.eeBadScFilter*
-    process.trackingFailureFilter*
-    process.condMETSelector*
-    process.metCounter*
+    #process.condMETSelector*
+    #process.metCounter*
     process.metScanNtupleMaker ##CH: writes a flat tree
     )
 
