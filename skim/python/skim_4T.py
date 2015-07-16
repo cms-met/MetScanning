@@ -45,6 +45,8 @@ process.load('RecoMET.METFilters.CSCTightHaloFilter_cfi')
 process.CSCTightHaloFilter.taggingMode = cms.bool(True)
 ##____________________________________________________________________________||
 process.load('CommonTools.RecoAlgos.HBHENoiseFilterResultProducer_cfi')
+process.HBHENoiseFilterResultProducer.minZeros = cms.int32(99999)
+
 #process.ApplyBaselineHBHENoiseFilter = cms.EDFilter('BooleanFlagFilter',
 #    inputLabel = cms.InputTag('HBHENoiseFilterResultProducer','HBHENoiseFilterResult'),
 #    reverseDecision = cms.bool(False)
@@ -169,6 +171,9 @@ process.pfCaloMetSequence = cms.Sequence(
    process.pfCaloMet
 )
 
+process.load('RecoMET.METFilters.trackingFailureFilter_cfi')
+process.trackingFailureFilter.taggingMode = cms.bool(True)
+
 process.load('RecoMET.METFilters.EcalDeadCellTriggerPrimitiveFilter_cfi')
 process.EcalDeadCellTriggerPrimitiveFilter.taggingMode = cms.bool(True)
 
@@ -204,6 +209,7 @@ process.p = cms.Path(
     process.pfClusterMetSequence*
     process.pfCaloMetSequence*
     process.eeBadScFilter*
+    process.trackingFailureFilter*
     process.condMETSelector*
     process.metCounter
     )
