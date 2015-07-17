@@ -19,15 +19,16 @@ process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
 #process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc', '')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.GlobalTag.globaltag = 'GR_P_V56::All'
+#process.GlobalTag.globaltag = '74X_dataRun2_Prompt_v0'
 
 
 ##___________________________Input_Files______________________________________||
 process.source = cms.Source(
     "PoolSource",
     #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/04380D9C-0F24-E511-9772-02163E0127EF.root")
-    fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/8CB978A3-1024-E511-A2E5-02163E011BC8.root")
+#    fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/8CB978A3-1024-E511-A2E5-02163E011BC8.root")
     #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/987/00000/D4337B5F-1224-E511-9969-02163E011BB6.root")
-    #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/04380D9C-0F24-E511-9772-02163E0127EF.root")
+    fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/data/Run2015B/ZeroBias1/RECO/PromptReco-v1/000/250/985/00000/70530BE4-A425-E511-905B-02163E0144D6.root")
     )
 
 
@@ -46,7 +47,7 @@ process.out = cms.OutputModule(
 ##____________________________________________________________________________||
 process.options   = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 process.MessageLogger.cerr.FwkReport.reportEvery = 50
-process.maxEvents = cms.untracked.PSet()#input = cms.untracked.int32(10))
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10) )
 
 
 ##___________________________CSC_Halo_Filter__________________________________||
@@ -249,9 +250,9 @@ process.p = cms.Path(
     process.pfClusterMetSequence*
     process.pfCaloMetSequence*
     process.eeBadScFilter*
-    process.trackingFailureFilter*
-    process.condMETSelector*
-    process.metCounter
+    process.trackingFailureFilter
+    *process.condMETSelector
+    *process.metCounter
 #   *process.metScanNtupleMaker ##CH: writes a flat tree
     )
 
