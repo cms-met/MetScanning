@@ -185,6 +185,12 @@ process.pfCaloMetSequence = cms.Sequence(
    process.pfCaloMet
 )
 
+process.goodVertices = cms.EDFilter(
+  "VertexSelector",
+  filter = cms.bool(False),
+  src = cms.InputTag("offlinePrimaryVertices"),
+  cut = cms.string("!isFake && ndof > 4 && abs(z) <= 24 && position.rho < 2")
+)
 process.load('RecoMET.METFilters.trackingFailureFilter_cfi')
 process.trackingFailureFilter.taggingMode = cms.bool(True)
 
@@ -250,6 +256,7 @@ process.p = cms.Path(
     process.pfClusterMetSequence*
     process.pfCaloMetSequence*
     process.eeBadScFilter*
+    process.goodVertices* 
     process.trackingFailureFilter
     *process.condMETSelector
     *process.metCounter
