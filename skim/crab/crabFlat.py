@@ -4,10 +4,10 @@ from CRABClient.UserUtilities import config
 
 ## define only these variables here
 
-production = "/afs/cern.ch/work/c/cheidegg/crab3/2015-07-17_filters_runb_flat/"
+production = "/afs/cern.ch/work/c/cheidegg/crab3/2015-07-18_filters_runb_flat/"
 json       = "json/Cert_246908-251252_13TeV_PromptReco_Collisions15_JSON.txt"
 site       = "T3_CH_PSI"
-outdir     = "/store/user/cheidegg/crab3/2015-07-17_filters_runb_flat/"
+outdir     = "/store/user/cheidegg/crab3/2015-07-18_filters_runb_flat/"
 
 
 ## do not touch beyond this point
@@ -51,6 +51,8 @@ datasets=[
 '/SingleElectron/Run2015B-PromptReco-v1/RECO',
 '/SingleMuon/Run2015B-PromptReco-v1/RECO',
 '/SinglePhoton/Run2015B-PromptReco-v1/RECO',
+#'/StreamExpress/Tier0_Test_SUPERBUNNIES_vocms015-Hotline-Express-v28/ALCARECO', 
+'/Tau/Run2015B-PromptReco-v1/RECO',
 '/ZeroBias/Run2015B-PromptReco-v1/RECO',
 '/ZeroBias1/Run2015B-PromptReco-v1/RECO',
 '/ZeroBias2/Run2015B-PromptReco-v1/RECO',

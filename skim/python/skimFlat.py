@@ -25,9 +25,18 @@ process.GlobalTag.globaltag = 'GR_P_V56::All'
 process.source = cms.Source(
     "PoolSource",
     #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/04380D9C-0F24-E511-9772-02163E0127EF.root")
-    fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/8CB978A3-1024-E511-A2E5-02163E011BC8.root")
+    #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/8CB978A3-1024-E511-A2E5-02163E011BC8.root")
     #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/987/00000/D4337B5F-1224-E511-9969-02163E011BB6.root")
     #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/04380D9C-0F24-E511-9772-02163E0127EF.root")
+
+    #HOTLINE
+    fileNames = cms.untracked.vstring(
+      "root://eoscms.cern.ch//store/backfill/1/express/Tier0_Test_SUPERBUNNIES_vocms015/StreamExpress/ALCARECO/Hotline-Express-v28/000/251/642/00000/3693DCE3-962A-E511-A3DF-02163E011816.root",
+      "root://eoscms.cern.ch//store/backfill/1/express/Tier0_Test_SUPERBUNNIES_vocms015/StreamExpress/ALCARECO/Hotline-Express-v28/000/251/642/00000/AE854519-982A-E511-8AC8-02163E0138A8.root",
+      "root://eoscms.cern.ch//store/backfill/1/express/Tier0_Test_SUPERBUNNIES_vocms015/StreamExpress/ALCARECO/Hotline-Express-v28/000/251/642/00000/C20EDBC4-962A-E511-BDBB-02163E01259F.root"
+    )
+
+
     )
 
 
@@ -254,11 +263,11 @@ process.p = cms.Path(
     process.CSCTightHaloFilter*
     process.HBHENoiseFilterResultProducer* #produces bools
     #process.ApplyBaselineHBHENoiseFilter* 
-    process.trackingFailureFilter*
     process.EcalDeadCellTriggerPrimitiveFilter*
     process.pfClusterMetSequence*
     process.pfCaloMetSequence*
     process.eeBadScFilter*
+    #process.trackingFailureFilter*
     #process.condMETSelector*
     #process.metCounter*
     process.metScanNtupleMaker ##CH: writes a flat tree

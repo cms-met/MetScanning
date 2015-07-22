@@ -51,6 +51,7 @@ datasets=[
 '/SingleElectron/Run2015B-PromptReco-v1/RECO',
 '/SingleMuon/Run2015B-PromptReco-v1/RECO',
 '/SinglePhoton/Run2015B-PromptReco-v1/RECO',
+'/Tau/Run2015B-PromptReco-v1/RECO',
 '/ZeroBias/Run2015B-PromptReco-v1/RECO',
 '/ZeroBias1/Run2015B-PromptReco-v1/RECO',
 '/ZeroBias2/Run2015B-PromptReco-v1/RECO',
