@@ -40,7 +40,7 @@ datasets=[
 #'/MinimumBias/Run2015B-PromptReco-v1/RECO',
 #'/HTMHT/Run2015B-PromptReco-v1/RECO',
 #'/SingleMu/Run2015B-PromptReco-v1/RECO',
-#'/SingleMuon/Run2015B-PromptReco-v1/RECO'
+'/SingleMuon/Run2015B-PromptReco-v1/RECO',
 '/DoubleEG/Run2015B-PromptReco-v1/RECO',
 '/DoubleMuon/Run2015B-PromptReco-v1/RECO',
 '/HighMultiplicity/Run2015B-PromptReco-v1/RECO',
