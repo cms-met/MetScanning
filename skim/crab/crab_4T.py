@@ -4,7 +4,7 @@ from CRABClient.UserUtilities import config
 
 config = config()
 config.General.requestName = 'ZeroBias1_Run2015A-PromptReco-v1_RECO'
-config.General.workArea = 'private0TSkim_21Jul2015'
+config.General.workArea = 'private0TSkim_22Jul2015'
 config.General.transferOutputs = True
 config.General.transferLogs = True
 
@@ -13,7 +13,7 @@ config.JobType.psetName = '../python/skim_4T.py'
 
 config.Data.inputDataset = '/ZeroBias1/Run2015A-PromptReco-v1/RECO'
 config.Data.inputDBS = 'global'
-config.Data.lumiMask = 'json/Cert_246908-251252_13TeV_PromptReco_Collisions15_JSON.txt' 
+config.Data.lumiMask = 'json/Cert_246908-251642_13TeV_PromptReco_Collisions15_JSON.txt'
 config.Data.splitting = 'LumiBased'
 config.Data.unitsPerJob = 10
 
@@ -21,7 +21,7 @@ config.Data.publication = False
 #config.Data.outLFNDirBase = '' 
 #config.Data.publishDataName = ''
 
-config.Data.outLFNDirBase = '/store/group/phys_jetmet/schoef/private4TSkim_21Jul2015/'
+config.Data.outLFNDirBase = '/store/group/phys_jetmet/schoef/private4TSkim_22Jul2015/'
 config.Site.storageSite = 'T2_CH_CERN'
 
 datasets=[
@@ -40,7 +40,14 @@ datasets=[
 #'/MinimumBias/Run2015B-PromptReco-v1/RECO',
 #'/HTMHT/Run2015B-PromptReco-v1/RECO',
 #'/SingleMu/Run2015B-PromptReco-v1/RECO',
-'/SingleMuon/Run2015B-PromptReco-v1/RECO'
+#'/SingleMuon/Run2015B-PromptReco-v1/RECO'
+'/DoubleEG/Run2015B-PromptReco-v1/RECO',
+'/DoubleMuon/Run2015B-PromptReco-v1/RECO',
+'/HighMultiplicity/Run2015B-PromptReco-v1/RECO',
+'/MET/Run2015B-PromptReco-v1/RECO',
+'/SingleElectron/Run2015B-PromptReco-v1/RECO',
+'/SinglePhoton/Run2015B-PromptReco-v1/RECO',
+'/Tau/Run2015B-PromptReco-v1/RECO',
 ]
 
 if __name__ == '__main__':
