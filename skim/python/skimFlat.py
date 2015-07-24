@@ -17,8 +17,10 @@ process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
 #process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 #from Configuration.AlCa.GlobalTag import GlobalTag
 #process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc', '')
-process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
-process.GlobalTag.globaltag = 'GR_P_V56::All'
+#process.GlobalTag.globaltag = 'GR_P_V56::All'
+process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff') 
+process.GlobalTag.globaltag = '74X_dataRun2_Prompt_v0'
+
 
 
 ##___________________________Input_Files______________________________________||
@@ -30,11 +32,21 @@ process.source = cms.Source(
     #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/04380D9C-0F24-E511-9772-02163E0127EF.root")
 
     #HOTLINE
+    #fileNames = cms.untracked.vstring(
+    #  "root://eoscms.cern.ch//store/backfill/1/express/Tier0_Test_SUPERBUNNIES_vocms015/StreamExpress/ALCARECO/Hotline-Express-v28/000/251/642/00000/3693DCE3-962A-E511-A3DF-02163E011816.root",
+    #  "root://eoscms.cern.ch//store/backfill/1/express/Tier0_Test_SUPERBUNNIES_vocms015/StreamExpress/ALCARECO/Hotline-Express-v28/000/251/642/00000/AE854519-982A-E511-8AC8-02163E0138A8.root",
+    #  "root://eoscms.cern.ch//store/backfill/1/express/Tier0_Test_SUPERBUNNIES_vocms015/StreamExpress/ALCARECO/Hotline-Express-v28/000/251/642/00000/C20EDBC4-962A-E511-BDBB-02163E01259F.root"
+    #)
+
+    # Giulia's talk
     fileNames = cms.untracked.vstring(
-      "root://eoscms.cern.ch//store/backfill/1/express/Tier0_Test_SUPERBUNNIES_vocms015/StreamExpress/ALCARECO/Hotline-Express-v28/000/251/642/00000/3693DCE3-962A-E511-A3DF-02163E011816.root",
-      "root://eoscms.cern.ch//store/backfill/1/express/Tier0_Test_SUPERBUNNIES_vocms015/StreamExpress/ALCARECO/Hotline-Express-v28/000/251/642/00000/AE854519-982A-E511-8AC8-02163E0138A8.root",
-      "root://eoscms.cern.ch//store/backfill/1/express/Tier0_Test_SUPERBUNNIES_vocms015/StreamExpress/ALCARECO/Hotline-Express-v28/000/251/642/00000/C20EDBC4-962A-E511-BDBB-02163E01259F.root"
-    )
+      #"file:private/pickevents_1_1.root",
+      #"file:private/pickevents_1_2.root",
+      #"file:private/pickevents_2.root",
+      #"file:private/pickevents_3_1.root",
+      #"file:private/pickevents_3_2.root"
+      "file:private/JetHT_crystals.root"
+   )
 
 
     )
@@ -217,6 +229,15 @@ process.primaryVertexFilter = cms.EDFilter("GoodVertexFilter",
                                            maxd0 = cms.double(2)
                                            )
 
+
+##_________________________Good_Vertex_Filter______________________________||
+process.goodVertices = cms.EDFilter("VertexSelector",
+                                    filter = cms.bool(False),
+                                    src = cms.InputTag("offlinePrimaryVertices"),
+                                    cut = cms.string("!isFake && ndof > 4 && abs(z) <= 24 && position.rho < 2")
+)
+
+
 ##_________________________MET_skimming____________________________________||
 process.condMETSelector = cms.EDProducer(
    "CandViewShallowCloneCombiner",
@@ -267,7 +288,8 @@ process.p = cms.Path(
     process.pfClusterMetSequence*
     process.pfCaloMetSequence*
     process.eeBadScFilter*
-    #process.trackingFailureFilter*
+    process.goodVertices*
+    process.trackingFailureFilter*
     #process.condMETSelector*
     #process.metCounter*
     process.metScanNtupleMaker ##CH: writes a flat tree

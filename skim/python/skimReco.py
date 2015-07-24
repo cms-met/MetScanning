@@ -17,17 +17,32 @@ process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
 #process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 #from Configuration.AlCa.GlobalTag import GlobalTag
 #process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc', '')
-process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
-process.GlobalTag.globaltag = 'GR_P_V56::All'
+#process.GlobalTag.globaltag = 'GR_P_V56::All'
+process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
+process.GlobalTag.globaltag = '74X_dataRun2_Prompt_v0'
+
 
 
 ##___________________________Input_Files______________________________________||
 process.source = cms.Source(
     "PoolSource",
     #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/04380D9C-0F24-E511-9772-02163E0127EF.root")
-    fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/8CB978A3-1024-E511-A2E5-02163E011BC8.root")
+    #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/8CB978A3-1024-E511-A2E5-02163E011BC8.root")
     #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/987/00000/D4337B5F-1224-E511-9969-02163E011BB6.root")
     #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/04380D9C-0F24-E511-9772-02163E0127EF.root")
+
+    # Begona's events
+    #fileNames = cms.untracked.vstring("file:EvDisplaysPromptRecoEle.root", "file:EvDisplaysPromptRecoMu.root")
+    #fileNames = cms.untracked.vstring("file:SingleElectron.root")
+    #fileNames = cms.untracked.vstring("file:SingleMuon.root")
+
+    # Giulia's talk
+    fileNames = cms.untracked.vstring(
+      "file:private/pickevents_1.root",
+      "file:private/pickevents_2.root",
+      "file:private/pickevents_3.root"
+    )
+
     )
 
 
@@ -203,6 +218,15 @@ process.primaryVertexFilter = cms.EDFilter("GoodVertexFilter",
                                            maxd0 = cms.double(2)
                                            )
 
+
+##_________________________Good_Vertex_Filter______________________________||
+process.goodVertices = cms.EDFilter("VertexSelector",
+                                    filter = cms.bool(False),
+                                    src = cms.InputTag("offlinePrimaryVertices"),
+                                    cut = cms.string("!isFake && ndof > 4 && abs(z) <= 24 && position.rho < 2")
+)
+
+
 ##___________________________MET_Skim__________________________________________||
 process.condMETSelector = cms.EDProducer(
    "CandViewShallowCloneCombiner",
@@ -249,11 +273,12 @@ process.p = cms.Path(
     process.CSCTightHaloFilter*
     process.HBHENoiseFilterResultProducer* #produces bools
     #process.ApplyBaselineHBHENoiseFilter* 
-    process.trackingFailureFilter*
     process.EcalDeadCellTriggerPrimitiveFilter*
     process.pfClusterMetSequence*
     process.pfCaloMetSequence*
     process.eeBadScFilter*
+    process.goodVertices*
+    process.trackingFailureFilter*
     process.condMETSelector*
     process.metCounter
     #process.metScanNtupleMaker ##CH: writes a flat tree
