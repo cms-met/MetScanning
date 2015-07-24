@@ -5,6 +5,7 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
 
 
   //the input tags
+  inputTagPfJets_         = iConfig.getParameter<edm::InputTag>("pfJets");
   inputTagCaloMET_        = iConfig.getParameter<edm::InputTag>("caloMET");
   inputTagPFCaloMET_      = iConfig.getParameter<edm::InputTag>("pfCaloMET");
   inputTagPFClusterMET_   = iConfig.getParameter<edm::InputTag>("pfClusterMET");
@@ -49,6 +50,13 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   s->Branch("filter_hbheiso",&filterhbheiso,"filter_hbheiso/O");
   s->Branch("filter_ecaltp",&filterecaltp,"filter_ecaltp/O");
   s->Branch("filter_ecalsc",&filterecalsc,"filter_ecalsc/O");
+
+  //Jets ========================================
+  s->Branch("pfJet_pt"     ,&pfJet_pt );  
+  s->Branch("pfJet_eta"    ,&pfJet_eta); 
+  s->Branch("pfJet_phi"    ,&pfJet_phi);  
+  s->Branch("pfJet_looseId",&pfJet_looseId );  
+  s->Branch("pfJet_tightId",&pfJet_tightId );  
 
   //METs ========================================
   s->Branch("caloMETPt",&caloMETPt,"caloMETPt/F");  
@@ -180,6 +188,15 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   if( hSummary->maxHPDNoOtherHits()        >= 10                           ) filterhbher1nozeros = false;
   if( hSummary->HasBadRBXTS4TS5() && !hSummary->goodJetFoundInLowBVRegion()) filterhbher1nozeros = false;
 
+  // get Jets
+  Handle<reco::PFJetCollection> pfJets;
+  iEvent.getByLabel(inputTagPfJets_,pfJets);
+
+  pfJet_pt     .clear();
+  pfJet_eta    .clear();
+  pfJet_phi    .clear();
+  pfJet_looseId.clear();
+  pfJet_tightId.clear();
 
   // get METs
   Handle<reco::CaloMETCollection> caloMET;
@@ -266,6 +283,38 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
 
 
   //================================================================
+
+  //pfJets
+  for( size_t ibc=0; ibc<pfJets->size(); ++ibc ) {
+
+    bool looseId = false, tightId = false;
+    
+    //looseJetID = (NHF<0.99 && NEMF<0.99 && NumConst>1 && MUF<0.8) && ((abs(eta)<=2.4 && CHF>0 && CHM>0 && CEMF<0.99) || abs(eta)>2.4) 
+    looseId = ((pfJets->at(ibc).neutralHadronEnergyFraction() < 0.99 && pfJets->at(ibc).neutralEmEnergyFraction() < 0.99 
+                                                                     && pfJets->at(ibc).nConstituents() > 1
+                                                                     && pfJets->at(ibc).muonEnergyFraction() < 0.8)
+               && ((std::abs(pfJets->at(ibc).eta()) <= 2.4 && pfJets->at(ibc).chargedHadronEnergyFraction() > 0
+                                                           && pfJets->at(ibc).chargedHadronMultiplicity() > 0
+                                                           && pfJets->at(ibc).chargedEmEnergyFraction() < 0.9)
+                                                           || std::abs(pfJets->at(ibc).eta()) > 2.4));
+
+    //tightJetID = (NHF<0.90 && NEMF<0.90 && NumConst>1 && MUF<0.8) && ((abs(eta)<=2.4 && CHF>0 && CHM>0 && CEMF<0.90) || abs(eta)>2.4) 
+    tightId = ((pfJets->at(ibc).neutralHadronEnergyFraction() < 0.90 && pfJets->at(ibc).neutralEmEnergyFraction() < 0.90 
+                                                                     && pfJets->at(ibc).nConstituents() > 1
+                                                                     && pfJets->at(ibc).muonEnergyFraction() < 0.8)
+               && ((std::abs(pfJets->at(ibc).eta()) <= 2.4 && pfJets->at(ibc).chargedHadronEnergyFraction() > 0
+                                                           && pfJets->at(ibc).chargedHadronMultiplicity() > 0
+                                                           && pfJets->at(ibc).chargedEmEnergyFraction() < 0.9)
+                                                           || std::abs(pfJets->at(ibc).eta()) > 2.4));
+
+    pfJet_pt     .push_back( pfJets->at(ibc).pt()   );
+    pfJet_eta    .push_back( pfJets->at(ibc).eta()  );
+    pfJet_phi    .push_back( pfJets->at(ibc).phi()  );
+    pfJet_looseId.push_back( looseId );
+    pfJet_tightId.push_back( tightId );
+  }
+
+
 
   //METs =======================
   caloMETPt = caloMET->begin()->pt();

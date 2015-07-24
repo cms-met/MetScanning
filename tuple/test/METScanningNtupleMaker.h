@@ -15,6 +15,8 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 
+#include "DataFormats/PatCandidates/interface/Jet.h"
+
 #include "DataFormats/EcalRecHit/interface/EcalRecHitCollections.h"
 #include "DataFormats/DetId/interface/DetId.h"
 #include "DataFormats/EcalDetId/interface/EBDetId.h"
@@ -69,6 +71,7 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
 
  private:
   
+  edm::InputTag inputTagPfJets_;
   edm::InputTag inputTagCaloMET_;
   edm::InputTag inputTagPFCaloMET_;
   edm::InputTag inputTagPFClusterMET_;
@@ -96,6 +99,12 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
   edm::EventNumber_t ievent;
   edm::LuminosityBlockNumber_t ilumiBlock;
   edm::Timestamp itime;
+
+  std::vector<float>  pfJet_pt;
+  std::vector<float>  pfJet_eta;
+  std::vector<float>  pfJet_phi;
+  std::vector<float>  pfJet_looseId;
+  std::vector<float>  pfJet_tightId;
 
   float caloMETPt;
   float caloMETPhi;
