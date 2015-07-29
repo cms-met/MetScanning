@@ -4,15 +4,15 @@ from CRABClient.UserUtilities import config
 
 config = config()
 config.General.requestName = 'ZeroBias1_Run2015A-PromptReco-v1_RECO'
-config.General.workArea = 'private0TSkim_22Jun2015'
+config.General.workArea = 'private0TSkim_30Jun2015'
 
 config.JobType.pluginName = 'Analysis'
-config.JobType.psetName = '../python/skim.py'
+config.JobType.psetName = '../python/skim_0T.py'
 
 config.Data.inputDataset = '/ZeroBias1/Run2015A-PromptReco-v1/RECO'
 config.Data.inputDBS = 'global'
 #config.Data.lumiMask = 'json/Cert_246908-247381_13TeV_PromptReco_Collisions15_ZeroTesla_JSON.txt' 
-config.Data.lumiMask = 'json/Cert_246908-248005_13TeV_PromptReco_Collisions15_ZeroTesla_JSON_CaloOnly.txt' 
+config.Data.lumiMask = 'json/Cert_246908-248038_13TeV_PromptReco_Collisions15_ZeroTesla_JSON_CaloOnly.txt' 
 config.Data.splitting = 'LumiBased'
 config.Data.unitsPerJob = 5
 
@@ -20,7 +20,7 @@ config.Data.publication = False
 #config.Data.outLFNDirBase = '' 
 #config.Data.publishDataName = ''
 
-config.Data.outLFNDirBase = '/store/group/phys_jetmet/schoef/private0TSkim_22Jun2015/'
+config.Data.outLFNDirBase = '/store/group/phys_jetmet/schoef/private0TSkim_30Jun2015/'
 config.Site.storageSite = 'T2_CH_CERN'
 
 datasets=[
