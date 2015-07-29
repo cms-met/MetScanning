@@ -28,7 +28,14 @@ process.source = cms.Source(
     #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/04380D9C-0F24-E511-9772-02163E0127EF.root")
 #    fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/8CB978A3-1024-E511-A2E5-02163E011BC8.root")
     #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/987/00000/D4337B5F-1224-E511-9969-02163E011BB6.root")
-    fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/data/Run2015B/ZeroBias1/RECO/PromptReco-v1/000/250/985/00000/70530BE4-A425-E511-905B-02163E0144D6.root")
+    fileNames = cms.untracked.vstring(
+#"file:/data/rschoefbeck/pickEvents/nick/pickevents_1.root", 
+#"file:/data/rschoefbeck/pickEvents/nick/pickevents_2.root", 
+#"file:/data/rschoefbeck/pickEvents/nick/pickevents_3.root", 
+#"file:/data/rschoefbeck/pickEvents/nick/pickevents_4.root", 
+#"file:/data/rschoefbeck/pickEvents/nick/pickevents_5.root", 
+"file:/data/rschoefbeck/pickEvents/nick/pickevents_6.root"
+)
     )
 
 
