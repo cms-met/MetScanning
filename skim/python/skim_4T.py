@@ -17,9 +17,10 @@ process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
 #process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 #from Configuration.AlCa.GlobalTag import GlobalTag
 #process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc', '')
-process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
-process.GlobalTag.globaltag = 'GR_P_V56::All'
-#process.GlobalTag.globaltag = '74X_dataRun2_Prompt_v0'
+process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
+#process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
+#process.GlobalTag.globaltag = 'GR_P_V56::All'
+process.GlobalTag.globaltag = '74X_dataRun2_Prompt_v0'
 
 
 ##___________________________Input_Files______________________________________||
@@ -214,6 +215,9 @@ process.primaryVertexFilter = cms.EDFilter("GoodVertexFilter",
                                            maxd0 = cms.double(2)
                                            )
 
+process.load('RecoMET.METFilters.EcalDeadCellBoundaryEnergyFilter_cfi')
+process.EcalDeadCellBoundaryEnergyFilter.taggingMode = cms.bool(True)
+
 process.condMETSelector = cms.EDProducer(
    "CandViewShallowCloneCombiner",
    decay = cms.string("caloMet pfMet"),
@@ -264,7 +268,8 @@ process.p = cms.Path(
     process.pfCaloMetSequence*
     process.eeBadScFilter*
     process.goodVertices* 
-    process.trackingFailureFilter
+    process.trackingFailureFilter*
+    process.EcalDeadCellBoundaryEnergyFilter
     *process.condMETSelector
     *process.metCounter
 #   *process.metScanNtupleMaker ##CH: writes a flat tree
