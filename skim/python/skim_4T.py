@@ -34,7 +34,7 @@ process.source = cms.Source(
 #"file:/data/rschoefbeck/pickEvents/nick/pickevents_3.root", 
 #"file:/data/rschoefbeck/pickEvents/nick/pickevents_4.root", 
 #"file:/data/rschoefbeck/pickEvents/nick/pickevents_5.root", 
-#"file:/data/rschoefbeck/pickEvents/nick/pickevents_6.root"
+"file:/data/rschoefbeck/pickEvents/nick/pickevents_6.root"
 )
     )
 
@@ -214,7 +214,7 @@ process.primaryVertexFilter = cms.EDFilter("GoodVertexFilter",
                                            maxd0 = cms.double(2)
                                            )
 
-process.load('RecoMET/METFilters/EcalDeadCellBoundaryEnergyFilter_cfi.py')
+process.load('RecoMET.METFilters.EcalDeadCellBoundaryEnergyFilter_cfi')
 process.EcalDeadCellBoundaryEnergyFilter.taggingMode = cms.bool(True)
 
 process.condMETSelector = cms.EDProducer(
@@ -268,7 +268,7 @@ process.p = cms.Path(
     process.eeBadScFilter*
     process.goodVertices* 
     process.trackingFailureFilter*
-    process.EcalDeadCellBoundaryEnergyFilter*
+    process.EcalDeadCellBoundaryEnergyFilter
     *process.condMETSelector
     *process.metCounter
 #   *process.metScanNtupleMaker ##CH: writes a flat tree
