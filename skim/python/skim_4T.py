@@ -35,7 +35,7 @@ process.source = cms.Source(
 #"file:/data/rschoefbeck/pickEvents/nick/pickevents_3.root", 
 #"file:/data/rschoefbeck/pickEvents/nick/pickevents_4.root", 
 #"file:/data/rschoefbeck/pickEvents/nick/pickevents_5.root", 
-"file:/data/rschoefbeck/pickEvents/nick/pickevents_6.root"
+"file:/data/dspitzbart/Spring15/eventsWjetOutliers/pickevents.root"
 )
     )
 
@@ -217,6 +217,8 @@ process.primaryVertexFilter = cms.EDFilter("GoodVertexFilter",
 
 process.load('RecoMET.METFilters.EcalDeadCellBoundaryEnergyFilter_cfi')
 process.EcalDeadCellBoundaryEnergyFilter.taggingMode = cms.bool(True)
+process.EcalDeadCellBoundaryEnergyFilter.limitDeadCellToChannelStatusEB=cms.vint32(12, 13, 14)
+process.EcalDeadCellBoundaryEnergyFilter.limitDeadCellToChannelStatusEE=cms.vint32(12, 13, 14)
 
 process.condMETSelector = cms.EDProducer(
    "CandViewShallowCloneCombiner",
@@ -270,8 +272,8 @@ process.p = cms.Path(
     process.goodVertices* 
     process.trackingFailureFilter*
     process.EcalDeadCellBoundaryEnergyFilter
-    *process.condMETSelector
-    *process.metCounter
+#    *process.condMETSelector
+#    *process.metCounter
 #   *process.metScanNtupleMaker ##CH: writes a flat tree
     )
 
