@@ -24,6 +24,7 @@ edmCollections = { \
 #  'pfClusterMet':("vector<reco::PFClusterMET>", "pfClusterMet",""),
 #  'pfCandidates':("vector<reco::PFCandidate>", "particleFlow", "")
    'CSCTightHaloFilter':            ("bool",  "CSCTightHaloFilter",              "",                "SKIM"),
+   'EcalDeadCellBoundaryEnergyFilter':            ("bool",  "EcalDeadCellBoundaryEnergyFilter",              "",                "SKIM"),
    'HBHEIsoNoiseFilterResult':         ("bool",  "HBHENoiseFilterResultProducer",   "HBHEIsoNoiseFilterResult",   "SKIM"),
    'HBHENoiseFilterResult':         ("bool",  "HBHENoiseFilterResultProducer",   "HBHENoiseFilterResult",   "SKIM"),
    'HBHENoiseFilterResultRun1':     ("bool",  "HBHENoiseFilterResultProducer",   "HBHENoiseFilterResultRun1",   "SKIM"),
@@ -31,17 +32,19 @@ edmCollections = { \
    'HBHENoiseFilterResultRun2Tight':("bool",  "HBHENoiseFilterResultProducer",   "HBHENoiseFilterResultRun2Tight",   "SKIM"),
 }
 
-applied_filters = ["CSCTightHaloFilter","HBHEIsoNoiseFilterResult","HBHENoiseFilterResult","HBHENoiseFilterResultRun1","HBHENoiseFilterResultRun2Loose","HBHENoiseFilterResultRun2Tight"]
+applied_filters = ["CSCTightHaloFilter","HBHEIsoNoiseFilterResult","HBHENoiseFilterResult","HBHENoiseFilterResultRun1","HBHENoiseFilterResultRun2Loose","HBHENoiseFilterResultRun2Tight", "EcalDeadCellBoundaryEnergyFilter"]
 
 handles={k:Handle(edmCollections[k][0]) for k in edmCollections.keys()}
 
-files = ["file:/data/rschoefbeck/pickEvents/nick/skim_1.root", "file:/data/rschoefbeck/pickEvents/nick/skim_2.root", "file:/data/rschoefbeck/pickEvents/nick/skim_3.root", "file:/data/rschoefbeck/pickEvents/nick/skim_4.root", "file:/data/rschoefbeck/pickEvents/nick/skim_5.root", "file:/data/rschoefbeck/pickEvents/nick/skim_6.root" ]
+#files = ["file:/data/rschoefbeck/pickEvents/nick/skim_1.root", "file:/data/rschoefbeck/pickEvents/nick/skim_2.root", "file:/data/rschoefbeck/pickEvents/nick/skim_3.root", "file:/data/rschoefbeck/pickEvents/nick/skim_4.root", "file:/data/rschoefbeck/pickEvents/nick/skim_5.root", "file:/data/rschoefbeck/pickEvents/nick/skim_6.root" ]
+files = ["file:/afs/hephy.at/user/r/rschoefbeck/CMS/CMSSW_7_4_7/src/MetScanning/skim/python/skim.root" ]
 
 events = Events(files)
 events.toBegin()
 products={}
 missingCollections=[]
 
+print "number of events",events.size()
 for nev in range(events.size()):
   if nev%100==0:print nev,'/',events.size()
   events.to(nev)
@@ -60,5 +63,5 @@ for nev in range(events.size()):
 
   for f in applied_filters:
 #    if not products[f][0]: 
-      print "Filtering %i:%i:%i because of %s: result: %i"%(run,lumi,event,f,products[f][0])
-
+      print "%i:%i:%i filter %s: result: %i"%(run,lumi,event,f,products[f][0])
+  print
