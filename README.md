@@ -1,10 +1,10 @@
 # MetScanning
 ## Install (4T)
 ```
-  cmsrel CMSSW_7_4_6_patch5
-  cd CMSSW_7_4_6_patch5/src
+  cmsrel CMSSW_7_4_7
+  cd CMSSW_7_4_7/src
   cmsenv
-  git clone https://github.com/cms-met/MetScanning
+  git clone git@github.com:cms-met/MetScanning
   scram b -j9
   ```
 ## Run on local file (4T)
