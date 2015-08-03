@@ -202,9 +202,18 @@ process.pfCaloMetSequence = cms.Sequence(
 process.load('RecoMET.METFilters.trackingFailureFilter_cfi')
 process.trackingFailureFilter.taggingMode = cms.bool(False)
 
+##__________________________Tracking_POG_Filters___________________________||
+process.load('RecoMET.METFilters.trackingPOGFilters_cfi.py')
+
 ##___________________________ECAL_TP_Filter____________________________________||
 process.load('RecoMET.METFilters.EcalDeadCellTriggerPrimitiveFilter_cfi')
 process.EcalDeadCellTriggerPrimitiveFilter.taggingMode = cms.bool(False)
+
+##__________________________ECAL_DC_BE_Filter______________________________||
+process.load('RecoMET.METFilters.EcalDeadCellBoundaryEnergyFilter_cfi')
+process.EcalDeadCellBoundaryEnergyFilter.taggingMode = cms.bool(True)
+process.EcalDeadCellBoundaryEnergyFilter.limitDeadCellToChannelStatusEB=cms.vint32(12, 13, 14)
+process.EcalDeadCellBoundaryEnergyFilter.limitDeadCellToChannelStatusEE=cms.vint32(12, 13, 14)
 
 ##___________________________EE_SC_Filter______________________________________||
 process.load('RecoMET.METFilters.eeBadScFilter_cfi')
@@ -272,20 +281,29 @@ process.p = cms.Path(
     process.primaryVertexFilter*
     process.CSCTightHaloFilter*
     process.HBHENoiseFilterResultProducer* #produces bools
-    #process.ApplyBaselineHBHENoiseFilter* 
+    process.ApplyBaselineHBHENoiseFilter* 
     process.EcalDeadCellTriggerPrimitiveFilter*
+    process.EcalDeadCellBoundaryEnergyFilter*
+    process.eeBadScFilter*
+    #process.logErrorTooManyClusters*
+    #process.logErrorTooManyTripletsPairs*
+    #process.logErrorTooManySeeds*
+    #process.logErrorTooManySeedsDefault*
+    #process.manystripclus53X*
+    #process.toomanystripclus53X*
+    #process.logErrorTooManyTripletsPairsMainIterations*
+    #process.logErrorTooManySeedsMainIterations*
+    #process.tobtecfakesfilter*
+    #process.goodVertices*
+    #process.trackingFailureFilter*
     process.pfClusterMetSequence*
     process.pfCaloMetSequence*
-    process.eeBadScFilter*
-    process.goodVertices*
-    process.trackingFailureFilter*
     process.condMETSelector*
     process.metCounter
-    #process.metScanNtupleMaker ##CH: writes a flat tree
     )
 
 process.e1 = cms.EndPath(
-    process.out ##CH: write the skimmed edm file 
+    process.out
     )
 
 ##____________________________________________________________________________||

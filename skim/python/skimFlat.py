@@ -211,9 +211,21 @@ process.load('RecoMET.METFilters.trackingFailureFilter_cfi')
 process.trackingFailureFilter.taggingMode = cms.bool(True)
 
 
+##__________________________Tracking_POG_Filters___________________________||
+process.load('RecoMET.METFilters.trackingPOGFilters_cfi.py')
+
+
+
 ##__________________________ECAL_TP_Filter_________________________________||
 process.load('RecoMET.METFilters.EcalDeadCellTriggerPrimitiveFilter_cfi')
 process.EcalDeadCellTriggerPrimitiveFilter.taggingMode = cms.bool(True)
+
+
+##__________________________ECAL_DC_BE_Filter______________________________||
+process.load('RecoMET.METFilters.EcalDeadCellBoundaryEnergyFilter_cfi')
+process.EcalDeadCellBoundaryEnergyFilter.taggingMode = cms.bool(True)
+process.EcalDeadCellBoundaryEnergyFilter.limitDeadCellToChannelStatusEB=cms.vint32(12, 13, 14)
+process.EcalDeadCellBoundaryEnergyFilter.limitDeadCellToChannelStatusEE=cms.vint32(12, 13, 14)
 
 
 ##________________________________EE_SC_Filter_____________________________||
@@ -289,8 +301,9 @@ process.p = cms.Path(
     process.pfClusterMetSequence*
     process.pfCaloMetSequence*
     process.eeBadScFilter*
-    process.goodVertices*
-    process.trackingFailureFilter*
+    process.EcalDeadCellBoundaryEnergyFilter*
+    #process.goodVertices*
+    #process.trackingFailureFilter*
     #process.condMETSelector*
     #process.metCounter*
     process.metScanNtupleMaker ##CH: writes a flat tree
