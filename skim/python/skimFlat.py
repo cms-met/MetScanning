@@ -29,14 +29,14 @@ process.source = cms.Source(
     #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/04380D9C-0F24-E511-9772-02163E0127EF.root")
     #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/8CB978A3-1024-E511-A2E5-02163E011BC8.root")
     #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/987/00000/D4337B5F-1224-E511-9969-02163E011BB6.root")
-    #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/04380D9C-0F24-E511-9772-02163E0127EF.root")
+    fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/04380D9C-0F24-E511-9772-02163E0127EF.root")
 
     #HOTLINE
-    fileNames = cms.untracked.vstring(
-      "root://eoscms.cern.ch//store/backfill/1/express/Tier0_Test_SUPERBUNNIES_vocms015/StreamExpress/ALCARECO/Hotline-Express-v28/000/251/642/00000/3693DCE3-962A-E511-A3DF-02163E011816.root",
-      "root://eoscms.cern.ch//store/backfill/1/express/Tier0_Test_SUPERBUNNIES_vocms015/StreamExpress/ALCARECO/Hotline-Express-v28/000/251/642/00000/AE854519-982A-E511-8AC8-02163E0138A8.root",
-      "root://eoscms.cern.ch//store/backfill/1/express/Tier0_Test_SUPERBUNNIES_vocms015/StreamExpress/ALCARECO/Hotline-Express-v28/000/251/642/00000/C20EDBC4-962A-E511-BDBB-02163E01259F.root"
-    )
+    #fileNames = cms.untracked.vstring(
+    #  "root://eoscms.cern.ch//store/backfill/1/express/Tier0_Test_SUPERBUNNIES_vocms015/StreamExpress/ALCARECO/Hotline-Express-v28/000/251/642/00000/3693DCE3-962A-E511-A3DF-02163E011816.root",
+    #  "root://eoscms.cern.ch//store/backfill/1/express/Tier0_Test_SUPERBUNNIES_vocms015/StreamExpress/ALCARECO/Hotline-Express-v28/000/251/642/00000/AE854519-982A-E511-8AC8-02163E0138A8.root",
+    #  "root://eoscms.cern.ch//store/backfill/1/express/Tier0_Test_SUPERBUNNIES_vocms015/StreamExpress/ALCARECO/Hotline-Express-v28/000/251/642/00000/C20EDBC4-962A-E511-BDBB-02163E01259F.root"
+    #)
 
     # Giulia's talk
    # fileNames = cms.untracked.vstring(
@@ -212,8 +212,7 @@ process.trackingFailureFilter.taggingMode = cms.bool(True)
 
 
 ##__________________________Tracking_POG_Filters___________________________||
-process.load('RecoMET.METFilters.trackingPOGFilters_cfi.py')
-
+process.load('RecoMET.METFilters.trackingPOGFilters_cfi')
 
 
 ##__________________________ECAL_TP_Filter_________________________________||
@@ -298,12 +297,21 @@ process.p = cms.Path(
     process.HBHENoiseFilterResultProducer* #produces bools
     #process.ApplyBaselineHBHENoiseFilter* 
     process.EcalDeadCellTriggerPrimitiveFilter*
-    process.pfClusterMetSequence*
-    process.pfCaloMetSequence*
-    process.eeBadScFilter*
     process.EcalDeadCellBoundaryEnergyFilter*
+    process.eeBadScFilter*
+    #process.logErrorTooManyClusters*
+    #process.logErrorTooManyTripletsPairs*
+    #process.logErrorTooManySeeds*
+    #process.logErrorTooManySeedsDefault*
+    #process.manystripclus53X*
+    #process.toomanystripclus53X*
+    #process.logErrorTooManyTripletsPairsMainIterations*
+    #process.logErrorTooManySeedsMainIterations*
+    #process.tobtecfakesfilter*
     #process.goodVertices*
     #process.trackingFailureFilter*
+    process.pfClusterMetSequence*
+    process.pfCaloMetSequence*
     #process.condMETSelector*
     #process.metCounter*
     process.metScanNtupleMaker ##CH: writes a flat tree

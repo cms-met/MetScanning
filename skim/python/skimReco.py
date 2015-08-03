@@ -203,7 +203,7 @@ process.load('RecoMET.METFilters.trackingFailureFilter_cfi')
 process.trackingFailureFilter.taggingMode = cms.bool(False)
 
 ##__________________________Tracking_POG_Filters___________________________||
-process.load('RecoMET.METFilters.trackingPOGFilters_cfi.py')
+process.load('RecoMET.METFilters.trackingPOGFilters_cfi')
 
 ##___________________________ECAL_TP_Filter____________________________________||
 process.load('RecoMET.METFilters.EcalDeadCellTriggerPrimitiveFilter_cfi')
