@@ -122,7 +122,7 @@ process.p = cms.Path(
 #    process.pfClusterMetSequence*
 #    process.pfCaloMetSequence*
     process.eeBadScFilter*
-    process.primaryVertexFilter
+    process.primaryVertexFilter*
     process.goodVertices* 
     process.trackingFailureFilter*
     process.EcalDeadCellBoundaryEnergyFilter

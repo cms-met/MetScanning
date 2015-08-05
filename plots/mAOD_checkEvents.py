@@ -15,7 +15,8 @@ edmCollections = { \
 flags = ["Flag_trackingFailureFilter" , "Flag_goodVertices"]
 handles={k:Handle(edmCollections[k][0]) for k in edmCollections.keys()}
 
-files = ["file:/afs/cern.ch/user/m/mschoene/public/pickevents_17July_mAOD.root" ]
+#files = ["file:/afs/cern.ch/user/m/mschoene/public/pickevents_17July_mAOD.root" ]
+files = ["file:../../../../cmssw/CMSSW_7_4_7/src/miniAOD-prod_PAT.root" ]
 
 events = Events(files)
 events.toBegin()
