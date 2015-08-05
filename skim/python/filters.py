@@ -35,7 +35,7 @@ process.source = cms.Source(
 #"file:/data/rschoefbeck/pickEvents/nick/pickevents_3.root", 
 #"file:/data/rschoefbeck/pickEvents/nick/pickevents_4.root", 
 #"file:/data/rschoefbeck/pickEvents/nick/pickevents_5.root", 
-"file:/data/dspitzbart/Spring15/eventsWjetOutliersAOD/pickevents.root"
+"file:/afs/cern.ch/user/m/mschoene/public/pickevents_17July_RECO.root"
 )
     )
 
@@ -44,7 +44,7 @@ process.source = cms.Source(
 process.out = cms.OutputModule(
     "PoolOutputModule",
     fileName = cms.untracked.string('skim.root'),
-#    SelectEvents   = cms.untracked.PSet( SelectEvents = cms.vstring('p') ),
+    SelectEvents   = cms.untracked.PSet( SelectEvents = cms.vstring('p') ),
     outputCommands = cms.untracked.vstring(
         'keep *'
 #        'keep *_pfClusterMet_*_*', 'keep *_CSCTightHaloFilter_*_*', 'keep *_HBHENoiseFilterResultProducer_*_*'
@@ -95,9 +95,9 @@ process.eeBadScFilter.taggingMode = cms.bool(True)
 process.primaryVertexFilter = cms.EDFilter("GoodVertexFilter",
                                            vertexCollection = cms.InputTag('offlinePrimaryVertices'),
                                            minimumNDOF = cms.uint32(4) ,
-                                           maxAbsZ = cms.double(15),
+                                           maxAbsZ = cms.double(24),
                                            maxd0 = cms.double(2)
-                                           )
+)
 
 process.condMETSelector = cms.EDProducer(
    "CandViewShallowCloneCombiner",
@@ -122,6 +122,7 @@ process.p = cms.Path(
 #    process.pfClusterMetSequence*
 #    process.pfCaloMetSequence*
     process.eeBadScFilter*
+    process.primaryVertexFilter
     process.goodVertices* 
     process.trackingFailureFilter*
     process.EcalDeadCellBoundaryEnergyFilter

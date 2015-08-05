@@ -61,10 +61,10 @@ for nev in range(events.size()):
     rho  = v.position().rho()
     good = not(fake) and (ndof>4) and abs(z)<24 and rho<2
     if good:nGood += 1
-    print "Vertex %i: good %i, fake %i, ndof %f, z %f, rho %f"%(i, good, fake, ndof, z, rho)
+    print " Vertex %i: good %i, fake %i, ndof %f, z %f, rho %f"%(i, good, fake, ndof, z, rho)
     if i>=2: 
       print "<skip remaining>"
       break
   cons = "consistent" if (nGood>=1 and res[f]) or (nGood==0 and not res[f]) else "inconsistent"
-  print "Found at least %i good vertices, flag is %i. This is\033[1m %s\033[0m."%(nGood, res["Flag_goodVertices"], cons)
+  print "-->Found at least %i good vertices, flag is %i. This is\033[1m %s\033[0m."%(nGood, res["Flag_goodVertices"], cons)
       
