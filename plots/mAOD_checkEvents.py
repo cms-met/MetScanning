@@ -12,7 +12,7 @@ edmCollections = { \
 }
 
 #flags = ["Flag_HBHENoiseFilter" , "Flag_CSCTightHaloFilter" , "Flag_hcalLaserEventFilter" , "Flag_EcalDeadCellTriggerPrimitiveFilter" , "Flag_trackingFailureFilter" , "Flag_eeBadScFilter" , "Flag_ecalLaserCorrFilter" , "Flag_trkPOGFilters" , "Flag_trkPOG_manystripclus53X" , "Flag_trkPOG_toomanystripclus53X" , "Flag_trkPOG_logErrorTooManyClusters" , "Flag_METFilters", "Flag_goodVertices"]
-flags = ["Flag_METFilters", "Flag_trackingFailureFilter" , "Flag_goodVertices"]
+flags = ["Flag_trackingFailureFilter" , "Flag_goodVertices"]
 handles={k:Handle(edmCollections[k][0]) for k in edmCollections.keys()}
 
 files = ["file:/afs/cern.ch/user/m/mschoene/public/pickevents_17July_mAOD.root" ]
@@ -48,7 +48,8 @@ for nev in range(events.size()):
       triggerBitCheckersSingleBit = ROOT.heppy.TriggerBitChecker(trigVecBit)
       res[f]=triggerBitCheckersSingleBit.check(events.object(), products['TriggerResults'])
 
-  print "\nEvent: %i:%i:%i "% (run,lumi,event)
+  print "\n################## Event: %i:%i:%i ########################"% (run,lumi,event)
+  print "Filter flags mAOD:"
   for f in flags:
     print "%40s"%f, res[f]
 
@@ -66,5 +67,5 @@ for nev in range(events.size()):
       print "<skip remaining>"
       break
   cons = "consistent" if (nGood>=1 and res[f]) or (nGood==0 and not res[f]) else "inconsistent"
-  print "-->Found at least %i good vertices, flag is %i. This is\033[1m %s\033[0m."%(nGood, res["Flag_goodVertices"], cons)
+  print "-->Found %i good vertices, flag is %i. This is\033[1m %s\033[0m."%(nGood, res["Flag_goodVertices"], cons)
       

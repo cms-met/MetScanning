@@ -12,8 +12,8 @@ edmCollections = { \
 
 handles={k:Handle(edmCollections[k][0]) for k in edmCollections.keys()}
 
-#files = ["file:/afs/cern.ch/user/m/mschoene/public/pickevents_17July_RECO.root" ]
-files = ["file:../skim/python/skim.root" ]
+files = ["file:/afs/cern.ch/user/m/mschoene/public/pickevents_17July_RECO.root" ]
+#files = ["file:../skim/python/skim.root" ]
 
 events = Events(files)
 events.toBegin()
