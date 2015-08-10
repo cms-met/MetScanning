@@ -87,13 +87,14 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
   edm::InputTag inputTagHBHER2L_;
   edm::InputTag inputTagHBHER2T_;
   edm::InputTag inputTagECALTP_;
+  edm::InputTag inputTagECALBE_;
   edm::InputTag inputTagECALSC_;
   edm::InputTag inputTagRecHitsEB_;
   edm::InputTag inputTagRecHitsEE_;
   edm::InputTag inputTagRecHitsES_;
 
   size_t run,event,lumiBlock,time;
-  bool filtercsc, filterhbher1, filterhbher1nozeros, filterhbher2l, filterhbher2t, filterhbheiso, filterecaltp, filterecalsc; 
+  bool filtercsc, filterhbher1, filterhbher1nozeros, filterhbher2l, filterhbher2t, filterhbheiso, filterecaltp, filterecalbe, filterecalsc; 
  
   edm::RunNumber_t irun;
   edm::EventNumber_t ievent;
@@ -105,6 +106,10 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
   std::vector<float>  pfJet_phi;
   std::vector<float>  pfJet_looseId;
   std::vector<float>  pfJet_tightId;
+  std::vector<float>  pfJet_tlvId;
+  int pfJet_hpfl;
+  int pfJet_hpft;
+  int pfJet_hpfv;
 
   float caloMETPt;
   float caloMETPhi;

@@ -29,14 +29,14 @@ process.source = cms.Source(
     #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/04380D9C-0F24-E511-9772-02163E0127EF.root")
     #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/8CB978A3-1024-E511-A2E5-02163E011BC8.root")
     #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/987/00000/D4337B5F-1224-E511-9969-02163E011BB6.root")
-    fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/04380D9C-0F24-E511-9772-02163E0127EF.root")
+    #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/04380D9C-0F24-E511-9772-02163E0127EF.root")
 
     #HOTLINE
-    #fileNames = cms.untracked.vstring(
-    #  "root://eoscms.cern.ch//store/backfill/1/express/Tier0_Test_SUPERBUNNIES_vocms015/StreamExpress/ALCARECO/Hotline-Express-v28/000/251/642/00000/3693DCE3-962A-E511-A3DF-02163E011816.root",
+    fileNames = cms.untracked.vstring(
+      "root://eoscms.cern.ch//store/backfill/1/express/Tier0_Test_SUPERBUNNIES_vocms015/StreamExpress/ALCARECO/Hotline-Express-v28/000/251/642/00000/3693DCE3-962A-E511-A3DF-02163E011816.root",
     #  "root://eoscms.cern.ch//store/backfill/1/express/Tier0_Test_SUPERBUNNIES_vocms015/StreamExpress/ALCARECO/Hotline-Express-v28/000/251/642/00000/AE854519-982A-E511-8AC8-02163E0138A8.root",
     #  "root://eoscms.cern.ch//store/backfill/1/express/Tier0_Test_SUPERBUNNIES_vocms015/StreamExpress/ALCARECO/Hotline-Express-v28/000/251/642/00000/C20EDBC4-962A-E511-BDBB-02163E01259F.root"
-    #)
+    )
 
     # Giulia's talk
    # fileNames = cms.untracked.vstring(
@@ -213,6 +213,15 @@ process.trackingFailureFilter.taggingMode = cms.bool(True)
 
 ##__________________________Tracking_POG_Filters___________________________||
 process.load('RecoMET.METFilters.trackingPOGFilters_cfi')
+process.logErrorTooManyClusters.taggingMode = cms.bool(False)
+process.logErrorTooManyTripletsPairs.taggingMode = cms.bool(False)
+process.logErrorTooManySeeds.taggingMode = cms.bool(False)
+process.logErrorTooManySeedsDefault.taggingMode = cms.bool(False)
+process.manystripclus53X.taggingMode = cms.bool(False)
+process.toomanystripclus53X.taggingMode = cms.bool(False)
+process.logErrorTooManyTripletsPairsMainIterations.taggingMode = cms.bool(False)
+process.logErrorTooManySeedsMainIterations.taggingMode = cms.bool(False)
+#process.tobtecfakesfilter.taggingMode = cms.bool(False)
 
 
 ##__________________________ECAL_TP_Filter_________________________________||
@@ -281,8 +290,8 @@ process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
    HBHEfilterR1=cms.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResultRun1"),
    HBHEfilterR2L=cms.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResultRun2Loose"),
    HBHEfilterR2T=cms.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResultRun2Tight"),
-   HBHEfilterISO=cms.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResultRun1"),
    ECALTPfilter=cms.InputTag("EcalDeadCellTriggerPrimitiveFilter"),
+   ECALBEfilter=cms.InputTag("EcalDeadCellBoundaryEnergyFilter"),  
    ECALSCfilter=cms.InputTag("eeBadScFilter"),
    EBRecHits=cms.InputTag("reducedEcalRecHitsEB"),
    EERecHits=cms.InputTag("reducedEcalRecHitsEE"),
@@ -299,14 +308,14 @@ process.p = cms.Path(
     process.EcalDeadCellTriggerPrimitiveFilter*
     process.EcalDeadCellBoundaryEnergyFilter*
     process.eeBadScFilter*
-    #process.logErrorTooManyClusters*
-    #process.logErrorTooManyTripletsPairs*
-    #process.logErrorTooManySeeds*
-    #process.logErrorTooManySeedsDefault*
-    #process.manystripclus53X*
-    #process.toomanystripclus53X*
-    #process.logErrorTooManyTripletsPairsMainIterations*
-    #process.logErrorTooManySeedsMainIterations*
+    ~process.logErrorTooManyClusters* # adviced by V.Innocente
+    ~process.logErrorTooManySeeds*    # adviced by V.Innocente
+    ~process.manystripclus53X*        # adviced by V.Innocente
+    ~process.toomanystripclus53X*     # adviced by V.Innocente
+    #~process.logErrorTooManyTripletsPairs*
+    #~process.logErrorTooManySeedsDefault*
+    #~process.logErrorTooManyTripletsPairsMainIterations*
+    #~process.logErrorTooManySeedsMainIterations*
     #process.tobtecfakesfilter*
     #process.goodVertices*
     #process.trackingFailureFilter*

@@ -21,6 +21,7 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   inputTagHBHER2L_        = iConfig.getParameter<edm::InputTag>("HBHEfilterR2L");
   inputTagHBHER2T_        = iConfig.getParameter<edm::InputTag>("HBHEfilterR2T");
   inputTagECALTP_         = iConfig.getParameter<edm::InputTag>("ECALTPfilter");
+  inputTagECALBE_         = iConfig.getParameter<edm::InputTag>("ECALBEfilter");
   inputTagECALSC_         = iConfig.getParameter<edm::InputTag>("ECALSCfilter");
   inputTagRecHitsEB_      = iConfig.getParameter<edm::InputTag>("EBRecHits");
   inputTagRecHitsEE_      = iConfig.getParameter<edm::InputTag>("EERecHits");
@@ -49,14 +50,20 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   s->Branch("filter_hbher2t",&filterhbher2t,"filter_hbher2t/O");
   s->Branch("filter_hbheiso",&filterhbheiso,"filter_hbheiso/O");
   s->Branch("filter_ecaltp",&filterecaltp,"filter_ecaltp/O");
+  s->Branch("filter_ecalbe",&filterecalbe,"filter_ecalbe/O");
   s->Branch("filter_ecalsc",&filterecalsc,"filter_ecalsc/O");
 
   //Jets ========================================
-  s->Branch("pfJet_pt"     ,&pfJet_pt );  
-  s->Branch("pfJet_eta"    ,&pfJet_eta); 
-  s->Branch("pfJet_phi"    ,&pfJet_phi);  
-  s->Branch("pfJet_looseId",&pfJet_looseId );  
-  s->Branch("pfJet_tightId",&pfJet_tightId );  
+  s->Branch("pfJet_pt"                , &pfJet_pt      );  
+  s->Branch("pfJet_eta"               , &pfJet_eta     ); 
+  s->Branch("pfJet_phi"               , &pfJet_phi     );  
+  s->Branch("pfJet_looseId"           , &pfJet_looseId );  
+  s->Branch("pfJet_tightId"           , &pfJet_tightId );  
+  s->Branch("pfJet_tightLepVetoId"    , &pfJet_tlvId   );  
+  s->Branch("pfJet_highestPtFailLoose", &pfJet_hpfl    );  
+  s->Branch("pfJet_highestPtFailTight", &pfJet_hpft    );  
+  s->Branch("pfJet_highestPtFailTLV"  , &pfJet_hpfv    );  
+
 
   //METs ========================================
   s->Branch("caloMETPt",&caloMETPt,"caloMETPt/F");  
@@ -163,13 +170,13 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   iEvent.getByLabel(inputTagHBHER2T_, ifilterhbher2t);
   filterhbher2t = *ifilterhbher2t;
 
-  //Handle<bool> ifilterhbheiso;
-  //iEvent.getByLabel(inputTagHBHEISO_, ifilterhbheiso);
-  //filterhbheiso = *ifilterhbheiso;
-
   Handle<bool> ifilterecaltp;
   iEvent.getByLabel(inputTagECALTP_, ifilterecaltp);
   filterecaltp = *ifilterecaltp;
+
+  Handle<bool> ifilterecalbe;
+  iEvent.getByLabel(inputTagECALBE_, ifilterecalbe);
+  filterecalbe = *ifilterecalbe;
 
   Handle<bool> ifilterecalsc;
   iEvent.getByLabel(inputTagECALSC_, ifilterecalsc);
@@ -197,6 +204,10 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   pfJet_phi    .clear();
   pfJet_looseId.clear();
   pfJet_tightId.clear();
+  pfJet_tlvId  .clear();
+  pfJet_hpfl = -1;
+  pfJet_hpft = -1;
+  pfJet_hpfv = -1;
 
   // get METs
   Handle<reco::CaloMETCollection> caloMET;
@@ -285,9 +296,12 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   //================================================================
 
   //pfJets
+  int maxl = -1;
+  int maxt = -1;
+  int maxv = -1;
   for( size_t ibc=0; ibc<pfJets->size(); ++ibc ) {
 
-    bool looseId = false, tightId = false;
+    bool looseId = false, tightId = false, tlvId = false;
     
     //looseJetID = (NHF<0.99 && NEMF<0.99 && NumConst>1 && MUF<0.8) && ((abs(eta)<=2.4 && CHF>0 && CHM>0 && CEMF<0.99) || abs(eta)>2.4) 
     looseId = ((pfJets->at(ibc).neutralHadronEnergyFraction() < 0.99 && pfJets->at(ibc).neutralEmEnergyFraction() < 0.99 
@@ -300,20 +314,38 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
 
     //tightJetID = (NHF<0.90 && NEMF<0.90 && NumConst>1 && MUF<0.8) && ((abs(eta)<=2.4 && CHF>0 && CHM>0 && CEMF<0.90) || abs(eta)>2.4) 
     tightId = ((pfJets->at(ibc).neutralHadronEnergyFraction() < 0.90 && pfJets->at(ibc).neutralEmEnergyFraction() < 0.90 
-                                                                     && pfJets->at(ibc).nConstituents() > 1
-                                                                     && pfJets->at(ibc).muonEnergyFraction() < 0.8)
+                                                                     && pfJets->at(ibc).nConstituents() > 1)
                && ((std::abs(pfJets->at(ibc).eta()) <= 2.4 && pfJets->at(ibc).chargedHadronEnergyFraction() > 0
                                                            && pfJets->at(ibc).chargedHadronMultiplicity() > 0
                                                            && pfJets->at(ibc).chargedEmEnergyFraction() < 0.9)
                                                            || std::abs(pfJets->at(ibc).eta()) > 2.4));
+
+    //tightLepVetoJetID = (NHF<0.90 && NEMF<0.90 && NumConst>1 && MUF<0.8) && ((abs(eta)<=2.4 && CHF>0 && CHM>0 && CEMF<0.90) || abs(eta)>2.4) 
+    tlvId = ((pfJets->at(ibc).neutralHadronEnergyFraction() < 0.90 && pfJets->at(ibc).neutralEmEnergyFraction() < 0.90 
+                                                                   && pfJets->at(ibc).nConstituents() > 1
+                                                                   && pfJets->at(ibc).muonEnergyFraction() < 0.8)
+               && ((std::abs(pfJets->at(ibc).eta()) <= 2.4 && pfJets->at(ibc).chargedHadronEnergyFraction() > 0
+                                                           && pfJets->at(ibc).chargedHadronMultiplicity() > 0
+                                                           && pfJets->at(ibc).chargedEmEnergyFraction() < 0.9)
+                                                           || std::abs(pfJets->at(ibc).eta()) > 2.4));
+
+
+    //indices of highest pT jets failing loose and tight Id
+    if((maxl == -1 || (maxl > 0 && pfJets->at(maxl).pt() < pfJets->at(ibc).pt())) && looseId == false) maxl = ibc;
+    if((maxt == -1 || (maxt > 0 && pfJets->at(maxt).pt() < pfJets->at(ibc).pt())) && tightId == false) maxt = ibc;
+    if((maxv == -1 || (maxv > 0 && pfJets->at(maxv).pt() < pfJets->at(ibc).pt())) && tlvId   == false) maxv = ibc;
 
     pfJet_pt     .push_back( pfJets->at(ibc).pt()   );
     pfJet_eta    .push_back( pfJets->at(ibc).eta()  );
     pfJet_phi    .push_back( pfJets->at(ibc).phi()  );
     pfJet_looseId.push_back( looseId );
     pfJet_tightId.push_back( tightId );
+    pfJet_tlvId  .push_back( tlvId );
   }
 
+  pfJet_hpfl = maxl;
+  pfJet_hpft = maxt;
+  pfJet_hpfv = maxv;
 
 
   //METs =======================

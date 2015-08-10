@@ -29,7 +29,7 @@ process.source = cms.Source(
     #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/04380D9C-0F24-E511-9772-02163E0127EF.root")
     #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/8CB978A3-1024-E511-A2E5-02163E011BC8.root")
     #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/987/00000/D4337B5F-1224-E511-9969-02163E011BB6.root")
-    #fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/04380D9C-0F24-E511-9772-02163E0127EF.root")
+    fileNames = cms.untracked.vstring("root://eoscms.cern.ch//store/express/Run2015B/ExpressPhysics/FEVT/Express-v1/000/250/985/00000/04380D9C-0F24-E511-9772-02163E0127EF.root")
 
     # Begona's events
     #fileNames = cms.untracked.vstring("file:EvDisplaysPromptRecoEle.root", "file:EvDisplaysPromptRecoMu.root")
@@ -37,11 +37,11 @@ process.source = cms.Source(
     #fileNames = cms.untracked.vstring("file:SingleMuon.root")
 
     # Giulia's talk
-    fileNames = cms.untracked.vstring(
-      "file:private/pickevents_1.root",
-      "file:private/pickevents_2.root",
-      "file:private/pickevents_3.root"
-    )
+    #fileNames = cms.untracked.vstring(
+    #  "file:private/pickevents_1.root",
+    #  "file:private/pickevents_2.root",
+    #  "file:private/pickevents_3.root"
+    #)
 
     )
 
@@ -250,31 +250,6 @@ process.metCounter = cms.EDFilter(
     )
 
 
-##___________________________Flat_Tuple________________________________________||
-process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
-   rootOutputFile=cms.string("tuple.root"),
-   caloMET=cms.InputTag("caloMet"),
-   pfCaloMET=cms.InputTag("pfCaloMet"),
-   pfClusterMET=cms.InputTag("pfClusterMet"),
-   pfMET=cms.InputTag("pfMet"),
-   EcalPFClusterCollection=cms.InputTag("particleFlowClusterECAL"),
-   HcalPFClusterCollection=cms.InputTag("particleFlowClusterHCAL"),
-   HBHEPFClusterCollection=cms.InputTag("particleFlowClusterHBHE"),
-   HOPFClusterCollection=cms.InputTag("particleFlowClusterHO"),
-   HFPFClusterCollection=cms.InputTag("particleFlowClusterHF"),
-   tracksCollection=cms.InputTag("generalTracks"),
-   CSCfilter=cms.InputTag("CSCTightHaloFilter"),
-   HBHEfilterR1=cms.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResultRun1"),
-   HBHEfilterR2L=cms.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResultRun2Loose"),
-   HBHEfilterR2T=cms.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResultRun2Tight"),
-   HBHEfilterISO=cms.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResultRun1"),
-   ECALTPfilter=cms.InputTag("EcalDeadCellTriggerPrimitiveFilter"),
-   ECALSCfilter=cms.InputTag("eeBadScFilter"),
-   EBRecHits=cms.InputTag("reducedEcalRecHitsEB"),
-   EERecHits=cms.InputTag("reducedEcalRecHitsEE"),
-   ESRecHits=cms.InputTag("reducedEcalRecHitsES")
-)
-
 
 ##___________________________PATH______________________________________________||
 process.p = cms.Path(
@@ -285,14 +260,14 @@ process.p = cms.Path(
     process.EcalDeadCellTriggerPrimitiveFilter*
     process.EcalDeadCellBoundaryEnergyFilter*
     process.eeBadScFilter*
-    #process.logErrorTooManyClusters*
-    #process.logErrorTooManyTripletsPairs*
-    #process.logErrorTooManySeeds*
-    #process.logErrorTooManySeedsDefault*
-    #process.manystripclus53X*
-    #process.toomanystripclus53X*
-    #process.logErrorTooManyTripletsPairsMainIterations*
-    #process.logErrorTooManySeedsMainIterations*
+    ~process.logErrorTooManyClusters* # adviced by V.Innocente
+    ~process.logErrorTooManySeeds*    # adviced by V.Innocente
+    ~process.manystripclus53X*        # adviced by V.Innocente
+    ~process.toomanystripclus53X*     # adviced by V.Innocente
+    #~process.logErrorTooManyTripletsPairs*
+    #~process.logErrorTooManySeedsDefault*
+    #~process.logErrorTooManyTripletsPairsMainIterations*
+    #~process.logErrorTooManySeedsMainIterations*
     #process.tobtecfakesfilter*
     #process.goodVertices*
     #process.trackingFailureFilter*
