@@ -5,27 +5,31 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
 
 
   //the input tags
-  inputTagPfJets_         = iConfig.getParameter<edm::InputTag>("pfJets");
-  inputTagCaloMET_        = iConfig.getParameter<edm::InputTag>("caloMET");
-  inputTagPFCaloMET_      = iConfig.getParameter<edm::InputTag>("pfCaloMET");
-  inputTagPFClusterMET_   = iConfig.getParameter<edm::InputTag>("pfClusterMET");
-  inputTagPFMET_          = iConfig.getParameter<edm::InputTag>("pfMET");
+  inputTagPfJets_         = iConfig.getParameter<edm::InputTag>("pfJets"                 );
+  inputTagCaloMET_        = iConfig.getParameter<edm::InputTag>("caloMET"                );
+  inputTagPFCaloMET_      = iConfig.getParameter<edm::InputTag>("pfCaloMET"              );
+  inputTagPFClusterMET_   = iConfig.getParameter<edm::InputTag>("pfClusterMET"           );
+  inputTagPFMET_          = iConfig.getParameter<edm::InputTag>("pfMET"                  );
   inputTagEcalPFClusters_ = iConfig.getParameter<edm::InputTag>("EcalPFClusterCollection");
   inputTagHcalPFClusters_ = iConfig.getParameter<edm::InputTag>("HcalPFClusterCollection");
   inputTagHBHEPFClusters_ = iConfig.getParameter<edm::InputTag>("HBHEPFClusterCollection");
-  inputTagHOPFClusters_   = iConfig.getParameter<edm::InputTag>("HOPFClusterCollection");
-  inputTagHFPFClusters_   = iConfig.getParameter<edm::InputTag>("HFPFClusterCollection");
-  inputTagTracks_         = iConfig.getParameter<edm::InputTag>("tracksCollection");
-  inputTagCSC_            = iConfig.getParameter<edm::InputTag>("CSCfilter");
-  inputTagHBHER1_         = iConfig.getParameter<edm::InputTag>("HBHEfilterR1");
-  inputTagHBHER2L_        = iConfig.getParameter<edm::InputTag>("HBHEfilterR2L");
-  inputTagHBHER2T_        = iConfig.getParameter<edm::InputTag>("HBHEfilterR2T");
-  inputTagECALTP_         = iConfig.getParameter<edm::InputTag>("ECALTPfilter");
-  inputTagECALBE_         = iConfig.getParameter<edm::InputTag>("ECALBEfilter");
-  inputTagECALSC_         = iConfig.getParameter<edm::InputTag>("ECALSCfilter");
-  inputTagRecHitsEB_      = iConfig.getParameter<edm::InputTag>("EBRecHits");
-  inputTagRecHitsEE_      = iConfig.getParameter<edm::InputTag>("EERecHits");
-  inputTagRecHitsES_      = iConfig.getParameter<edm::InputTag>("ESRecHits");
+  inputTagHOPFClusters_   = iConfig.getParameter<edm::InputTag>("HOPFClusterCollection"  );
+  inputTagHFPFClusters_   = iConfig.getParameter<edm::InputTag>("HFPFClusterCollection"  );
+  inputTagTracks_         = iConfig.getParameter<edm::InputTag>("tracksCollection"       );
+  inputTagTrackingLETMC_  = iConfig.getParameter<edm::InputTag>("TRKfilterLETMC"         );
+  inputTagTrackingLETMS_  = iConfig.getParameter<edm::InputTag>("TRKfilterLETMS"         );
+  inputTagTrackingMSC_    = iConfig.getParameter<edm::InputTag>("TRKfilterMSC"           );
+  inputTagTrackingTMSC_   = iConfig.getParameter<edm::InputTag>("TRKfilterTMSC"          );
+  inputTagCSC_            = iConfig.getParameter<edm::InputTag>("CSCfilter"              );
+  inputTagHBHER1_         = iConfig.getParameter<edm::InputTag>("HBHEfilterR1"           );
+  inputTagHBHER2L_        = iConfig.getParameter<edm::InputTag>("HBHEfilterR2L"          );
+  inputTagHBHER2T_        = iConfig.getParameter<edm::InputTag>("HBHEfilterR2T"          );
+  inputTagECALTP_         = iConfig.getParameter<edm::InputTag>("ECALTPfilter"           );
+  inputTagECALBE_         = iConfig.getParameter<edm::InputTag>("ECALBEfilter"           );
+  inputTagECALSC_         = iConfig.getParameter<edm::InputTag>("ECALSCfilter"           );
+  inputTagRecHitsEB_      = iConfig.getParameter<edm::InputTag>("EBRecHits"              );
+  inputTagRecHitsEE_      = iConfig.getParameter<edm::InputTag>("EERecHits"              );
+  inputTagRecHitsES_      = iConfig.getParameter<edm::InputTag>("ESRecHits"              );
 
 
 
@@ -43,15 +47,19 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   s->Branch("event",&event,"event/l");  
   s->Branch("time",&time,"time/l");
 
-  s->Branch("filter_csc",&filtercsc,"filter_csc/O");
-  s->Branch("filter_hbher1",&filterhbher1,"filter_hbher1/O");
-  s->Branch("filter_hbher1nozeros",&filterhbher1nozeros,"filter_hbher1nozeros/O");
-  s->Branch("filter_hbher2l",&filterhbher2l,"filter_hbher2l/O");
-  s->Branch("filter_hbher2t",&filterhbher2t,"filter_hbher2t/O");
-  s->Branch("filter_hbheiso",&filterhbheiso,"filter_hbheiso/O");
-  s->Branch("filter_ecaltp",&filterecaltp,"filter_ecaltp/O");
-  s->Branch("filter_ecalbe",&filterecalbe,"filter_ecalbe/O");
-  s->Branch("filter_ecalsc",&filterecalsc,"filter_ecalsc/O");
+  s->Branch("filter_tracking_letmc", &filtertrackingletmc, "filter_tracking_letmc/O");
+  s->Branch("filter_tracking_letms", &filtertrackingletms, "filter_tracking_letms/O");
+  s->Branch("filter_tracking_msc"  , &filtertrackingmsc  , "filter_tracking_msc/O"  );
+  s->Branch("filter_tracking_tmsc" , &filtertrackingtmsc , "filter_tracking_tmsc/O" );
+  s->Branch("filter_csc"           , &filtercsc          , "filter_csc/O"           );
+  s->Branch("filter_hbher1"        , &filterhbher1       , "filter_hbher1/O"        );
+  s->Branch("filter_hbher1nozeros" , &filterhbher1nozeros, "filter_hbher1nozeros/O" );
+  s->Branch("filter_hbher2l"       , &filterhbher2l      , "filter_hbher2l/O"       );
+  s->Branch("filter_hbher2t"       , &filterhbher2t      , "filter_hbher2t/O"       );
+  s->Branch("filter_hbheiso"       , &filterhbheiso      , "filter_hbheiso/O"       );
+  s->Branch("filter_ecaltp"        , &filterecaltp       , "filter_ecaltp/O"        );
+  s->Branch("filter_ecalbe"        , &filterecalbe       , "filter_ecalbe/O"        );
+  s->Branch("filter_ecalsc"        , &filterecalsc       , "filter_ecalsc/O"        );
 
   //Jets ========================================
   s->Branch("pfJet_pt"                , &pfJet_pt      );  
@@ -154,6 +162,22 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
 
   
   //get filters
+  Handle<bool> ifiltertrackingletmc;
+  iEvent.getByLabel(inputTagTrackingLETMC_, ifiltertrackingletmc);
+  filtertrackingletmc = *ifiltertrackingletmc;
+
+  Handle<bool> ifiltertrackingletms;
+  iEvent.getByLabel(inputTagTrackingLETMS_, ifiltertrackingletms);
+  filtertrackingletms = *ifiltertrackingletms;
+
+  Handle<bool> ifiltertrackingmsc;
+  iEvent.getByLabel(inputTagTrackingMSC_, ifiltertrackingmsc);
+  filtertrackingmsc = *ifiltertrackingmsc;
+
+  Handle<bool> ifiltertrackingtmsc;
+  iEvent.getByLabel(inputTagTrackingTMSC_, ifiltertrackingtmsc);
+  filtertrackingtmsc = *ifiltertrackingtmsc;
+
   Handle<bool> ifiltercsc;
   iEvent.getByLabel(inputTagCSC_, ifiltercsc);
   filtercsc = *ifiltercsc;

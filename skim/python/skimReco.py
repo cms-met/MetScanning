@@ -198,10 +198,6 @@ process.pfCaloMetSequence = cms.Sequence(
    process.pfCaloMet
 )
 
-##___________________________tracking_Failure_Filter___________________________||
-process.load('RecoMET.METFilters.trackingFailureFilter_cfi')
-process.trackingFailureFilter.taggingMode = cms.bool(False)
-
 ##__________________________Tracking_POG_Filters___________________________||
 process.load('RecoMET.METFilters.trackingPOGFilters_cfi')
 
@@ -253,7 +249,7 @@ process.metCounter = cms.EDFilter(
 
 ##___________________________PATH______________________________________________||
 process.p = cms.Path(
-    process.primaryVertexFilter*
+    #process.primaryVertexFilter*
     process.CSCTightHaloFilter*
     process.HBHENoiseFilterResultProducer* #produces bools
     process.ApplyBaselineHBHENoiseFilter* 
