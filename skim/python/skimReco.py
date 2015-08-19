@@ -72,6 +72,7 @@ process.CSCTightHaloFilter.taggingMode = cms.bool(False)
 ##___________________________HCAL_Noise_Filter________________________________||
 process.load('CommonTools.RecoAlgos.HBHENoiseFilterResultProducer_cfi')
 process.HBHENoiseFilterResultProducer.minZeros = cms.int32(99999)
+process.HBHENoiseFilterResultProducer.defaultDecision = cms.string("HBHENoiseFilterResultRun2Tight")
 process.ApplyBaselineHBHENoiseFilter = cms.EDFilter('BooleanFlagFilter',
     inputLabel = cms.InputTag('HBHENoiseFilterResultProducer','HBHENoiseFilterResult'),
     reverseDecision = cms.bool(False)
@@ -249,17 +250,17 @@ process.metCounter = cms.EDFilter(
 
 ##___________________________PATH______________________________________________||
 process.p = cms.Path(
-    #process.primaryVertexFilter*
+    process.primaryVertexFilter*
     process.CSCTightHaloFilter*
     process.HBHENoiseFilterResultProducer* #produces bools
     process.ApplyBaselineHBHENoiseFilter* 
     process.EcalDeadCellTriggerPrimitiveFilter*
-    process.EcalDeadCellBoundaryEnergyFilter*
+    #process.EcalDeadCellBoundaryEnergyFilter*
     process.eeBadScFilter*
-    ~process.logErrorTooManyClusters* # adviced by V.Innocente
-    ~process.logErrorTooManySeeds*    # adviced by V.Innocente
-    ~process.manystripclus53X*        # adviced by V.Innocente
-    ~process.toomanystripclus53X*     # adviced by V.Innocente
+    #~process.logErrorTooManyClusters* # adviced by V.Innocente
+    #~process.logErrorTooManySeeds*    # adviced by V.Innocente
+    #~process.manystripclus53X*        # adviced by V.Innocente
+    #~process.toomanystripclus53X*     # adviced by V.Innocente
     #~process.logErrorTooManyTripletsPairs*
     #~process.logErrorTooManySeedsDefault*
     #~process.logErrorTooManyTripletsPairsMainIterations*
