@@ -275,6 +275,7 @@ process.metCounter = cms.EDFilter(
 ##___________________________Flat_Tuple________________________________________||
 process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
    rootOutputFile=cms.string("tuple.root"),
+   pfCandidates=cms.InputTag("particleFlow"),
    pfJets=cms.InputTag("ak4PFJets"),
    caloMET=cms.InputTag("caloMet"),
    pfCaloMET=cms.InputTag("pfCaloMet"),
@@ -320,7 +321,7 @@ process.p = cms.Path(
     #~process.logErrorTooManySeedsDefault*
     #~process.logErrorTooManyTripletsPairsMainIterations*
     #~process.logErrorTooManySeedsMainIterations*
-    #process.tobtecfakesfilter*
+    #~process.tobtecfakesfilter*
     #process.goodVertices*
     #process.trackingFailureFilter*
     process.pfClusterMetSequence*

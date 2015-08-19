@@ -4,10 +4,10 @@ from CRABClient.UserUtilities import config
 
 ## define only these variables here
 
-production = "/afs/cern.ch/work/c/cheidegg/crab3/2015-08-10_trackingfilterstest"
+production = "/afs/cern.ch/work/c/cheidegg/crab3/2015-08-13_filters_runb_flat"
 json       = "json/Cert_246908-251883_13TeV_PromptReco_Collisions15_JSON.txt"
 site       = "T3_CH_PSI"
-outdir     = "/store/user/cheidegg/crab3/2015-08-10_trackingfilterstest"
+outdir     = "/store/user/cheidegg/crab3/2015-08-13_filters_runb_flat"
 
 
 ## do not touch beyond this point

@@ -5,6 +5,7 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
 
 
   //the input tags
+  inputTagPfCandidates_   = iConfig.getParameter<edm::InputTag>("pfCandidates"           );
   inputTagPfJets_         = iConfig.getParameter<edm::InputTag>("pfJets"                 );
   inputTagCaloMET_        = iConfig.getParameter<edm::InputTag>("caloMET"                );
   inputTagPFCaloMET_      = iConfig.getParameter<edm::InputTag>("pfCaloMET"              );
@@ -47,19 +48,25 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   s->Branch("event",&event,"event/l");  
   s->Branch("time",&time,"time/l");
 
-  s->Branch("filter_tracking_letmc", &filtertrackingletmc, "filter_tracking_letmc/O");
-  s->Branch("filter_tracking_letms", &filtertrackingletms, "filter_tracking_letms/O");
-  s->Branch("filter_tracking_msc"  , &filtertrackingmsc  , "filter_tracking_msc/O"  );
-  s->Branch("filter_tracking_tmsc" , &filtertrackingtmsc , "filter_tracking_tmsc/O" );
-  s->Branch("filter_csc"           , &filtercsc          , "filter_csc/O"           );
-  s->Branch("filter_hbher1"        , &filterhbher1       , "filter_hbher1/O"        );
-  s->Branch("filter_hbher1nozeros" , &filterhbher1nozeros, "filter_hbher1nozeros/O" );
-  s->Branch("filter_hbher2l"       , &filterhbher2l      , "filter_hbher2l/O"       );
-  s->Branch("filter_hbher2t"       , &filterhbher2t      , "filter_hbher2t/O"       );
-  s->Branch("filter_hbheiso"       , &filterhbheiso      , "filter_hbheiso/O"       );
-  s->Branch("filter_ecaltp"        , &filterecaltp       , "filter_ecaltp/O"        );
-  s->Branch("filter_ecalbe"        , &filterecalbe       , "filter_ecalbe/O"        );
-  s->Branch("filter_ecalsc"        , &filterecalsc       , "filter_ecalsc/O"        );
+  s->Branch("filter_tracking_letmc"   , &filtertrackingletmc, "filter_tracking_letmc/O");
+  s->Branch("filter_tracking_letms"   , &filtertrackingletms, "filter_tracking_letms/O");
+  s->Branch("filter_tracking_msc"     , &filtertrackingmsc  , "filter_tracking_msc/O"  );
+  s->Branch("filter_tracking_tmsc"    , &filtertrackingtmsc , "filter_tracking_tmsc/O" );
+  s->Branch("filter_csc"              , &filtercsc          , "filter_csc/O"           );
+  s->Branch("filter_hbher1"           , &filterhbher1       , "filter_hbher1/O"        );
+  s->Branch("filter_hbher1nozeros"    , &filterhbher1nozeros, "filter_hbher1nozeros/O" );
+  s->Branch("filter_hbher2l"          , &filterhbher2l      , "filter_hbher2l/O"       );
+  s->Branch("filter_hbher2t"          , &filterhbher2t      , "filter_hbher2t/O"       );
+  s->Branch("filter_hbheiso"          , &filterhbheiso      , "filter_hbheiso/O"       );
+  s->Branch("filter_ecaltp"           , &filterecaltp       , "filter_ecaltp/O"        );
+  s->Branch("filter_ecalbe"           , &filterecalbe       , "filter_ecalbe/O"        );
+  s->Branch("filter_ecalsc"           , &filterecalsc       , "filter_ecalsc/O"        );
+
+  //Leptons =====================================
+  s->Branch("pfLepton_pt"             , &pfLepton_pt   );  
+  s->Branch("pfLepton_eta"            , &pfLepton_eta  ); 
+  s->Branch("pfLepton_phi"            , &pfLepton_phi  );  
+  s->Branch("pfLepton_pdgId"          , &pfLepton_pdgId);  
 
   //Jets ========================================
   s->Branch("pfJet_pt"                , &pfJet_pt      );  
@@ -219,6 +226,16 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   if( hSummary->maxHPDNoOtherHits()        >= 10                           ) filterhbher1nozeros = false;
   if( hSummary->HasBadRBXTS4TS5() && !hSummary->goodJetFoundInLowBVRegion()) filterhbher1nozeros = false;
 
+  // get Leptons
+  Handle<reco::PFCandidateCollection> pfCandidates;
+  iEvent.getByLabel(inputTagPfCandidates_,pfCandidates);
+
+  pfLepton_pt     .clear();
+  pfLepton_eta    .clear();
+  pfLepton_phi    .clear();
+  pfLepton_pdgId  .clear();
+
+
   // get Jets
   Handle<reco::PFJetCollection> pfJets;
   iEvent.getByLabel(inputTagPfJets_,pfJets);
@@ -314,7 +331,23 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   track_eta.clear();
   track_phi.clear();
 
-  
+
+  //================================================================
+
+  //pfCandidates
+  for( size_t ibc=0; ibc<pfCandidates->size(); ++ibc ) {
+ 
+    int pdgId = pfCandidates->at(ibc).pdgId();
+    if(std::abs(pdgId) < 11 || std::abs(pdgId) > 16) continue;
+
+    pfLepton_pt   .push_back( pfCandidates->at(ibc).pt()  );
+    pfLepton_eta  .push_back( pfCandidates->at(ibc).eta() );
+    pfLepton_phi  .push_back( pfCandidates->at(ibc).phi() );
+    pfLepton_pdgId.push_back( pdgId                   );
+
+  }
+
+
 
 
   //================================================================
