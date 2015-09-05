@@ -19,7 +19,7 @@ Then do
   python crab_4T.py
 ```
 
-## Add the dedicated filters for HALO to the scanning skim (no need to redo evrything if you have set up the release already)
+## Add the dedicated filters for HALO to the scanning skim (no need to redo the first part if you have set up the release already)
 
 scramv1 project -n CMSSW_7_4_7_scanningNick CMSSW CMSSW_7_4_7
 cd CMSSW_7_4_7_scanningNick/src
