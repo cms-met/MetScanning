@@ -37,3 +37,11 @@ git checkout -b NickHcalFilter cmssw-nick/hcal-cell-filter-74X
 git clone git@github.com:cms-met/MetScanning
 scramv1 b -j 20
 ```
+
+then add the filter in skim_4T.py
+  ```                                                                                  
+process.load('RecoMET.METFilters.HcalStripHaloFilter_cfi')
+process.HcalStripHaloFilter.taggingMode = cms.bool(True)
+```
+
+
