@@ -232,6 +232,7 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   if( hSummary->maxHPDNoOtherHits()        >= 10                           ) filterhbher1nozeros = false;
   if( hSummary->HasBadRBXTS4TS5() && !hSummary->goodJetFoundInLowBVRegion()) filterhbher1nozeros = false;
 
+
   // get Leptons
   Handle<reco::PFCandidateCollection> pfCandidates;
   iEvent.getByLabel(inputTagPfCandidates_,pfCandidates);
@@ -241,6 +242,20 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   pfLepton_phi    .clear();
   pfLepton_pdgId  .clear();
 
+
+  // get Jets
+  Handle<reco::PFJetCollection> pfJets;
+  iEvent.getByLabel(inputTagPfJets_,pfJets);
+
+  pfJet_pt     .clear();
+  pfJet_eta    .clear();
+  pfJet_phi    .clear();
+  pfJet_looseId.clear();
+  pfJet_tightId.clear();
+  pfJet_tlvId  .clear();
+  pfJet_hpfl = -1;
+  pfJet_hpft = -1;
+  pfJet_hpfv = -1;
 
   // get Jets
   Handle<reco::PFJetCollection> pfJets;
