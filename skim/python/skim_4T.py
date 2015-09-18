@@ -35,7 +35,8 @@ process.source = cms.Source(
 #"file:/data/rschoefbeck/pickEvents/nick/pickevents_3.root", 
 #"file:/data/rschoefbeck/pickEvents/nick/pickevents_4.root", 
 #"file:/data/rschoefbeck/pickEvents/nick/pickevents_5.root", 
-"file:/data/dspitzbart/Spring15/eventsWjetOutliers/pickevents.root"
+#"file:/data/dspitzbart/Spring15/eventsWjetOutliers/pickevents.root"
+"/store/data/Run2015B/MET/RECO/PromptReco-v1/000/251/252/00000/8CA59489-8D27-E511-A859-02163E014629.root"
 )
     )
 
@@ -258,9 +259,19 @@ process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
    ESRecHits=cms.InputTag("reducedEcalRecHitsES")
 )
 
+# This part is needed if you want to update the BeamHaloSummary information
+from RecoMET.METProducers.CSCHaloData_cfi import *
+from RecoMET.METProducers.EcalHaloData_cfi import *
+from RecoMET.METProducers.HcalHaloData_cfi import *
+from RecoMET.METProducers.GlobalHaloData_cfi import *
+from RecoMET.METProducers.BeamHaloSummary_cfi import *
+
+process.BeamHaloId = cms.Sequence(CSCHaloData*EcalHaloData*HcalHaloData*GlobalHaloData*BeamHaloSummary)
+
 
 ##___________________________PATH______________________________________________||
 process.p = cms.Path(
+    #    process.BeamHaloId* #Uncomment this if you want to rerun the BeamHaloSummary. By default this line should remain commented
     process.primaryVertexFilter*
     process.CSCTightHaloFilter*
     process.HBHENoiseFilterResultProducer* #produces bools
