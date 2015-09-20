@@ -14,13 +14,7 @@ echo  PhysicsTools/PatAlgos/ >> .git/info/sparse-checkout
 echo  RecoMET/METAlgorithms/ >> .git/info/sparse-checkout
 echo  RecoMET/METFilters/ >> .git/info/sparse-checkout
 echo  RecoMET/METProducers >> .git/info/sparse-checkout
-git remote add cmssw-Laurent git@github.com:lathomas/cmssw
-git fetch cmssw-Laurent
-git checkout -b LaurentCSCHaloFilter cmssw-Laurent/cschalofilter_formetscanners
-git remote add cmssw-nick git@github.com:aminnj/cmssw
-git fetch cmssw-nick
-git checkout -b NickHcalFilter cmssw-nick/hcal-cell-filter-74X
-git checkout -b HaloBranch
+git cms-merge-topic -u cms-met:HaloBranch747
 git clone git@github.com:cms-met/MetScanning
 scramv1 b -j 20
 
