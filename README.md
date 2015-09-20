@@ -1,12 +1,43 @@
 # MetScanning
-## Install (4T)
+
+
+
+for RunD analysis you need to install the CMSSW_7_4_12 while for the runA/B/C the CMSSW_7_4_7
 ```
-  cmsrel CMSSW_7_4_7
-  cd CMSSW_7_4_7/src
-  cmsenv
-  git clone git@github.com:cms-met/MetScanning
-  scram b -j9
-  ```
+scramv1 project -n CMSSW_7_4_7_scanningHalo CMSSW CMSSW_7_4_7
+cd CMSSW_7_4_7_scanningHalo/src
+cmsenv
+alias git 'git --exec-path=/cvmfs/cms.cern.ch/slc6_amd64_gcc491/external/git/1.8.3.1-odfocd/libexec/git-core/'
+git cms-init
+echo  DataFormats/METReco > .git/info/sparse-checkout
+echo  PhysicsTools/PatAlgos/ >> .git/info/sparse-checkout
+echo  RecoMET/METAlgorithms/ >> .git/info/sparse-checkout
+echo  RecoMET/METFilters/ >> .git/info/sparse-checkout
+echo  RecoMET/METProducers >> .git/info/sparse-checkout
+git remote add cmssw-Laurent git@github.com:lathomas/cmssw
+git fetch cmssw-Laurent
+git checkout -b LaurentCSCHaloFilter cmssw-Laurent/cschalofilter_formetscanners
+git remote add cmssw-nick git@github.com:aminnj/cmssw
+git fetch cmssw-nick
+git checkout -b NickHcalFilter cmssw-nick/hcal-cell-filter-74X
+git checkout -b HaloBranch
+git clone git@github.com:cms-met/MetScanning
+scramv1 b -j 20
+
+```
+
+There are three new filters to be added to crab_4T.py:
+```                                                                                  
+process.load('RecoMET.METFilters.CSCTightHalo2015Filter_cfi')
+process.load('RecoMET.METFilters.CSCTightHaloTrkMuUnvetoFilter_cfi')
+process.load('RecoMET.METFilters.HcalStripHaloFilter_cfi')
+process.HcalStripHaloFilter.taggingMode = cms.bool(True)
+```
+
+Since these filters are not present in the releases used for the data RECO, it is needed to rerun the BeamHaloId. 
+Do not forget to rerun the BeamHaloId by uncommenting the first line (process.BeamHaloId) in the process path !  
+This will lead to some warnings in the CSCHaloFilter case, but they have no impact on the current filter. 
+
 ## Run on local file (4T)
 ```
   cmsRun MetScanning/skim/python/skim_4T.py
@@ -18,6 +49,19 @@ Then do
   cd MetScanning/skim/crab/
   python crab_4T.py
 ```
+
+
+
+BELOW standAlone installation
+
+## Install default
+```
+  cmsrel CMSSW_7_4_7
+  cd CMSSW_7_4_7/src
+  cmsenv
+  git clone git@github.com:cms-met/MetScanning
+  scram b -j9
+  ```
 
 ## Customized beam halo filters (HCAL strips and updated CSC halo filters)
 Below are some instructions to run the HCAL strip filter and the updated CSC halo filters. Since these filters are not present in the releases used for the data RECO, it is needed to rerun the BeamHaloId. 
