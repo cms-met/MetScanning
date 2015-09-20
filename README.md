@@ -3,6 +3,7 @@
 
 
 for RunD analysis you need to install the CMSSW_7_4_12 while for the runA/B/C the CMSSW_7_4_7
+for the CMSSW_7_4_12 need to use the branch cms-met:HaloBranch7412
 ```
 scramv1 project -n CMSSW_7_4_7_scanningHalo CMSSW CMSSW_7_4_7
 cd CMSSW_7_4_7_scanningHalo/src
@@ -20,10 +21,13 @@ scramv1 b -j 20
 
 ```
 
+
 There are three new filters to be added to crab_4T.py:
 ```                                                                                  
 process.load('RecoMET.METFilters.CSCTightHalo2015Filter_cfi')
+process.CSCTightHalo2015Filter.taggingMode = cms.bool(True)
 process.load('RecoMET.METFilters.CSCTightHaloTrkMuUnvetoFilter_cfi')
+process.CSCTightHaloTrkMuUnvetoFilter.taggingMode = cms.bool(True)
 process.load('RecoMET.METFilters.HcalStripHaloFilter_cfi')
 process.HcalStripHaloFilter.taggingMode = cms.bool(True)
 ```
@@ -46,7 +50,7 @@ Then do
 
 
 
-BELOW standAlone installation
+# BELOW standAlone installation
 
 ## Install default
 ```
