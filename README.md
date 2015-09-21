@@ -22,7 +22,7 @@ scramv1 b -j 20
 ```
 
 
-There are three new filters to be added to crab_4T.py:
+There are three new filters to be added to skim_4T.py:
 ```                                                                                  
 process.load('RecoMET.METFilters.CSCTightHalo2015Filter_cfi')
 process.CSCTightHalo2015Filter.taggingMode = cms.bool(True)
@@ -109,7 +109,7 @@ git checkout -b LaurentCSCHaloFilter cmssw-Laurent/cschalofilter_formetscanners
 git clone git@github.com:cms-met/MetScanning
 scramv1 b -j 20
 ```
-There are two new filters to be added to crab_4T.py:
+There are two new filters to be added to skim_4T.py:
 process.CSCTightHalo2015Filter and process.CSCTightHaloTrkMuUnvetoFilter 
 The following python files should therefore be loaded:
 process.load('RecoMET.METFilters.CSCTightHalo2015Filter_cfi')
