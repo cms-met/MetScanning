@@ -36,6 +36,10 @@ Since these filters are not present in the releases used for the data RECO, it i
 Do not forget to rerun the BeamHaloId by uncommenting the first line (process.BeamHaloId) in the process path !  
 This will lead to some warnings in the CSCHaloFilter case, but they have no impact on the current filter. 
 
+Remember to add the new filters into MetScanning/tuple/test/METScanningNtupleMaker.cc
+
+In case you want to save only the events, you need to put the taggingMode = cms.bool(False)
+
 ## Run on local file (4T)
 ```
   cmsRun MetScanning/skim/python/skim_4T.py
