@@ -5,24 +5,33 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
 
 
   //the input tags
-  inputTagCaloMET_ = iConfig.getParameter<edm::InputTag>("caloMET");
-  inputTagPFCaloMET_ = iConfig.getParameter<edm::InputTag>("pfCaloMET");
-  inputTagPFClusterMET_ = iConfig.getParameter<edm::InputTag>("pfClusterMET");
+  inputTagPfCandidates_   = iConfig.getParameter<edm::InputTag>("pfCandidates"           );
+  inputTagPfJets_         = iConfig.getParameter<edm::InputTag>("pfJets"                 );
+  inputTagCaloMET_        = iConfig.getParameter<edm::InputTag>("caloMET"                );
+  inputTagPFCaloMET_      = iConfig.getParameter<edm::InputTag>("pfCaloMET"              );
+  inputTagPFClusterMET_   = iConfig.getParameter<edm::InputTag>("pfClusterMET"           );
+  inputTagPFMET_          = iConfig.getParameter<edm::InputTag>("pfMET"                  );
   inputTagEcalPFClusters_ = iConfig.getParameter<edm::InputTag>("EcalPFClusterCollection");
   inputTagHcalPFClusters_ = iConfig.getParameter<edm::InputTag>("HcalPFClusterCollection");
   inputTagHBHEPFClusters_ = iConfig.getParameter<edm::InputTag>("HBHEPFClusterCollection");
-  inputTagHOPFClusters_ = iConfig.getParameter<edm::InputTag>("HOPFClusterCollection");
-  inputTagHFPFClusters_ = iConfig.getParameter<edm::InputTag>("HFPFClusterCollection");
-  inputTagTracks_ = iConfig.getParameter<edm::InputTag>("tracksCollection");
-  inputTagCSC_ = iConfig.getParameter<edm::InputTag>("CSCfilter");
-  inputTagHBHER1_ = iConfig.getParameter<edm::InputTag>("HBHEfilterR1");
-  inputTagHBHER2L_ = iConfig.getParameter<edm::InputTag>("HBHEfilterR2L");
-  inputTagHBHER2T_ = iConfig.getParameter<edm::InputTag>("HBHEfilterR2T");
-  inputTagECALTP_ = iConfig.getParameter<edm::InputTag>("ECALTPfilter");
-  inputTagECALSC_ = iConfig.getParameter<edm::InputTag>("ECALSCfilter");
-  inputTagRecHitsEB_ = iConfig.getParameter<edm::InputTag>("EBRecHits");
-  inputTagRecHitsEE_ = iConfig.getParameter<edm::InputTag>("EERecHits");
-  inputTagRecHitsES_ = iConfig.getParameter<edm::InputTag>("ESRecHits");
+  inputTagHOPFClusters_   = iConfig.getParameter<edm::InputTag>("HOPFClusterCollection"  );
+  inputTagHFPFClusters_   = iConfig.getParameter<edm::InputTag>("HFPFClusterCollection"  );
+  inputTagTracks_         = iConfig.getParameter<edm::InputTag>("tracksCollection"       );
+  inputTagTrackingLETMC_  = iConfig.getParameter<edm::InputTag>("TRKfilterLETMC"         );
+  inputTagTrackingLETMS_  = iConfig.getParameter<edm::InputTag>("TRKfilterLETMS"         );
+  inputTagTrackingMSC_    = iConfig.getParameter<edm::InputTag>("TRKfilterMSC"           );
+  inputTagTrackingTMSC_   = iConfig.getParameter<edm::InputTag>("TRKfilterTMSC"          );
+  inputTagCSC_            = iConfig.getParameter<edm::InputTag>("CSCfilter"              );
+  inputTagHalo_           = iConfig.getParameter<edm::InputTag>("HCALHalofilter"         );
+  inputTagHBHER1_         = iConfig.getParameter<edm::InputTag>("HBHEfilterR1"           );
+  inputTagHBHER2L_        = iConfig.getParameter<edm::InputTag>("HBHEfilterR2L"          );
+  inputTagHBHER2T_        = iConfig.getParameter<edm::InputTag>("HBHEfilterR2T"          );
+  inputTagECALTP_         = iConfig.getParameter<edm::InputTag>("ECALTPfilter"           );
+  inputTagECALBE_         = iConfig.getParameter<edm::InputTag>("ECALBEfilter"           );
+  inputTagECALSC_         = iConfig.getParameter<edm::InputTag>("ECALSCfilter"           );
+  inputTagRecHitsEB_      = iConfig.getParameter<edm::InputTag>("EBRecHits"              );
+  inputTagRecHitsEE_      = iConfig.getParameter<edm::InputTag>("EERecHits"              );
+  inputTagRecHitsES_      = iConfig.getParameter<edm::InputTag>("ESRecHits"              );
 
 
 
@@ -40,13 +49,38 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   s->Branch("event",&event,"event/l");  
   s->Branch("time",&time,"time/l");
 
-  s->Branch("filter_csc",&filtercsc,"filter_csc/O");
-  s->Branch("filter_hbher1",&filterhbher1,"filter_hbher1/O");
-  s->Branch("filter_hbher2l",&filterhbher2l,"filter_hbher2l/O");
-  s->Branch("filter_hbher2t",&filterhbher2t,"filter_hbher2t/O");
-  s->Branch("filter_hbheiso",&filterhbheiso,"filter_hbheiso/O");
-  s->Branch("filter_ecaltp",&filterecaltp,"filter_ecaltp/O");
-  s->Branch("filter_ecalsc",&filterecalsc,"filter_ecalsc/O");
+  s->Branch("filter_tracking_letmc"   , &filtertrackingletmc, "filter_tracking_letmc/O");
+  s->Branch("filter_tracking_letms"   , &filtertrackingletms, "filter_tracking_letms/O");
+  s->Branch("filter_tracking_msc"     , &filtertrackingmsc  , "filter_tracking_msc/O"  );
+  s->Branch("filter_tracking_tmsc"    , &filtertrackingtmsc , "filter_tracking_tmsc/O" );
+  s->Branch("filter_csc"              , &filtercsc          , "filter_csc/O"           );
+  s->Branch("filter_halo"             , &filterhalo         , "filter_halo/O"          );
+  s->Branch("filter_hbher1"           , &filterhbher1       , "filter_hbher1/O"        );
+  s->Branch("filter_hbher1nozeros"    , &filterhbher1nozeros, "filter_hbher1nozeros/O" );
+  s->Branch("filter_hbher2l"          , &filterhbher2l      , "filter_hbher2l/O"       );
+  s->Branch("filter_hbher2t"          , &filterhbher2t      , "filter_hbher2t/O"       );
+  s->Branch("filter_hbheiso"          , &filterhbheiso      , "filter_hbheiso/O"       );
+  s->Branch("filter_ecaltp"           , &filterecaltp       , "filter_ecaltp/O"        );
+  s->Branch("filter_ecalbe"           , &filterecalbe       , "filter_ecalbe/O"        );
+  s->Branch("filter_ecalsc"           , &filterecalsc       , "filter_ecalsc/O"        );
+
+  //Leptons =====================================
+  s->Branch("pfLepton_pt"             , &pfLepton_pt   );  
+  s->Branch("pfLepton_eta"            , &pfLepton_eta  ); 
+  s->Branch("pfLepton_phi"            , &pfLepton_phi  );  
+  s->Branch("pfLepton_pdgId"          , &pfLepton_pdgId);  
+
+  //Jets ========================================
+  s->Branch("pfJet_pt"                , &pfJet_pt      );  
+  s->Branch("pfJet_eta"               , &pfJet_eta     ); 
+  s->Branch("pfJet_phi"               , &pfJet_phi     );  
+  s->Branch("pfJet_looseId"           , &pfJet_looseId );  
+  s->Branch("pfJet_tightId"           , &pfJet_tightId );  
+  s->Branch("pfJet_tightLepVetoId"    , &pfJet_tlvId   );  
+  s->Branch("pfJet_highestPtFailLoose", &pfJet_hpfl    );  
+  s->Branch("pfJet_highestPtFailTight", &pfJet_hpft    );  
+  s->Branch("pfJet_highestPtFailTLV"  , &pfJet_hpfv    );  
+
 
   //METs ========================================
   s->Branch("caloMETPt",&caloMETPt,"caloMETPt/F");  
@@ -137,9 +171,29 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
 
   
   //get filters
+  Handle<bool> ifiltertrackingletmc;
+  iEvent.getByLabel(inputTagTrackingLETMC_, ifiltertrackingletmc);
+  filtertrackingletmc = *ifiltertrackingletmc;
+
+  Handle<bool> ifiltertrackingletms;
+  iEvent.getByLabel(inputTagTrackingLETMS_, ifiltertrackingletms);
+  filtertrackingletms = *ifiltertrackingletms;
+
+  Handle<bool> ifiltertrackingmsc;
+  iEvent.getByLabel(inputTagTrackingMSC_, ifiltertrackingmsc);
+  filtertrackingmsc = *ifiltertrackingmsc;
+
+  Handle<bool> ifiltertrackingtmsc;
+  iEvent.getByLabel(inputTagTrackingTMSC_, ifiltertrackingtmsc);
+  filtertrackingtmsc = *ifiltertrackingtmsc;
+
   Handle<bool> ifiltercsc;
   iEvent.getByLabel(inputTagCSC_, ifiltercsc);
   filtercsc = *ifiltercsc;
+
+  Handle<bool> ifilterhalo;
+  iEvent.getByLabel(inputTagHalo_, ifilterhalo);
+  filterhalo = *ifilterhalo;
 
   Handle<bool> ifilterhbher1;
   iEvent.getByLabel(inputTagHBHER1_, ifilterhbher1);
@@ -153,13 +207,13 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   iEvent.getByLabel(inputTagHBHER2T_, ifilterhbher2t);
   filterhbher2t = *ifilterhbher2t;
 
-  //Handle<bool> ifilterhbheiso;
-  //iEvent.getByLabel(inputTagHBHEISO_, ifilterhbheiso);
-  //filterhbheiso = *ifilterhbheiso;
-
   Handle<bool> ifilterecaltp;
   iEvent.getByLabel(inputTagECALTP_, ifilterecaltp);
   filterecaltp = *ifilterecaltp;
+
+  Handle<bool> ifilterecalbe;
+  iEvent.getByLabel(inputTagECALBE_, ifilterecalbe);
+  filterecalbe = *ifilterecalbe;
 
   Handle<bool> ifilterecalsc;
   iEvent.getByLabel(inputTagECALSC_, ifilterecalsc);
@@ -173,7 +227,49 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   if( hSummary->isolatedNoiseSumE()        >= 50 ) filterhbheiso = false;
   if( hSummary->isolatedNoiseSumEt()       >= 25 ) filterhbheiso = false;
 
+  filterhbher1nozeros = true;
+  if( hSummary->maxHPDHits()               >= 17                           ) filterhbher1nozeros = false;
+  if( hSummary->maxHPDNoOtherHits()        >= 10                           ) filterhbher1nozeros = false;
+  if( hSummary->HasBadRBXTS4TS5() && !hSummary->goodJetFoundInLowBVRegion()) filterhbher1nozeros = false;
 
+
+  // get Leptons
+  Handle<reco::PFCandidateCollection> pfCandidates;
+  iEvent.getByLabel(inputTagPfCandidates_,pfCandidates);
+
+  pfLepton_pt     .clear();
+  pfLepton_eta    .clear();
+  pfLepton_phi    .clear();
+  pfLepton_pdgId  .clear();
+
+
+  // get Jets
+  Handle<reco::PFJetCollection> pfJets;
+  iEvent.getByLabel(inputTagPfJets_,pfJets);
+
+  pfJet_pt     .clear();
+  pfJet_eta    .clear();
+  pfJet_phi    .clear();
+  pfJet_looseId.clear();
+  pfJet_tightId.clear();
+  pfJet_tlvId  .clear();
+  pfJet_hpfl = -1;
+  pfJet_hpft = -1;
+  pfJet_hpfv = -1;
+
+  // get Jets
+  Handle<reco::PFJetCollection> pfJets;
+  iEvent.getByLabel(inputTagPfJets_,pfJets);
+
+  pfJet_pt     .clear();
+  pfJet_eta    .clear();
+  pfJet_phi    .clear();
+  pfJet_looseId.clear();
+  pfJet_tightId.clear();
+  pfJet_tlvId  .clear();
+  pfJet_hpfl = -1;
+  pfJet_hpft = -1;
+  pfJet_hpfv = -1;
 
   // get METs
   Handle<reco::CaloMETCollection> caloMET;
@@ -256,10 +352,79 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   track_eta.clear();
   track_phi.clear();
 
-  
+
+  //================================================================
+
+  //pfCandidates
+  for( size_t ibc=0; ibc<pfCandidates->size(); ++ibc ) {
+ 
+    int pdgId = pfCandidates->at(ibc).pdgId();
+    if(std::abs(pdgId) < 11 || std::abs(pdgId) > 16) continue;
+
+    pfLepton_pt   .push_back( pfCandidates->at(ibc).pt()  );
+    pfLepton_eta  .push_back( pfCandidates->at(ibc).eta() );
+    pfLepton_phi  .push_back( pfCandidates->at(ibc).phi() );
+    pfLepton_pdgId.push_back( pdgId                   );
+
+  }
+
+
 
 
   //================================================================
+
+  //pfJets
+  int maxl = -1;
+  int maxt = -1;
+  int maxv = -1;
+  for( size_t ibc=0; ibc<pfJets->size(); ++ibc ) {
+
+    bool looseId = false, tightId = false, tlvId = false;
+    
+    //looseJetID = (NHF<0.99 && NEMF<0.99 && NumConst>1 && MUF<0.8) && ((abs(eta)<=2.4 && CHF>0 && CHM>0 && CEMF<0.99) || abs(eta)>2.4) 
+    looseId = ((pfJets->at(ibc).neutralHadronEnergyFraction() < 0.99 && pfJets->at(ibc).neutralEmEnergyFraction() < 0.99 
+                                                                     && pfJets->at(ibc).nConstituents() > 1
+                                                                     && pfJets->at(ibc).muonEnergyFraction() < 0.8)
+               && ((std::abs(pfJets->at(ibc).eta()) <= 2.4 && pfJets->at(ibc).chargedHadronEnergyFraction() > 0
+                                                           && pfJets->at(ibc).chargedHadronMultiplicity() > 0
+                                                           && pfJets->at(ibc).chargedEmEnergyFraction() < 0.9)
+                                                           || std::abs(pfJets->at(ibc).eta()) > 2.4));
+
+    //tightJetID = (NHF<0.90 && NEMF<0.90 && NumConst>1 && MUF<0.8) && ((abs(eta)<=2.4 && CHF>0 && CHM>0 && CEMF<0.90) || abs(eta)>2.4) 
+    tightId = ((pfJets->at(ibc).neutralHadronEnergyFraction() < 0.90 && pfJets->at(ibc).neutralEmEnergyFraction() < 0.90 
+                                                                     && pfJets->at(ibc).nConstituents() > 1)
+               && ((std::abs(pfJets->at(ibc).eta()) <= 2.4 && pfJets->at(ibc).chargedHadronEnergyFraction() > 0
+                                                           && pfJets->at(ibc).chargedHadronMultiplicity() > 0
+                                                           && pfJets->at(ibc).chargedEmEnergyFraction() < 0.9)
+                                                           || std::abs(pfJets->at(ibc).eta()) > 2.4));
+
+    //tightLepVetoJetID = (NHF<0.90 && NEMF<0.90 && NumConst>1 && MUF<0.8) && ((abs(eta)<=2.4 && CHF>0 && CHM>0 && CEMF<0.90) || abs(eta)>2.4) 
+    tlvId = ((pfJets->at(ibc).neutralHadronEnergyFraction() < 0.90 && pfJets->at(ibc).neutralEmEnergyFraction() < 0.90 
+                                                                   && pfJets->at(ibc).nConstituents() > 1
+                                                                   && pfJets->at(ibc).muonEnergyFraction() < 0.8)
+               && ((std::abs(pfJets->at(ibc).eta()) <= 2.4 && pfJets->at(ibc).chargedHadronEnergyFraction() > 0
+                                                           && pfJets->at(ibc).chargedHadronMultiplicity() > 0
+                                                           && pfJets->at(ibc).chargedEmEnergyFraction() < 0.9)
+                                                           || std::abs(pfJets->at(ibc).eta()) > 2.4));
+
+
+    //indices of highest pT jets failing loose and tight Id
+    if((maxl == -1 || (maxl > 0 && pfJets->at(maxl).pt() < pfJets->at(ibc).pt())) && looseId == false) maxl = ibc;
+    if((maxt == -1 || (maxt > 0 && pfJets->at(maxt).pt() < pfJets->at(ibc).pt())) && tightId == false) maxt = ibc;
+    if((maxv == -1 || (maxv > 0 && pfJets->at(maxv).pt() < pfJets->at(ibc).pt())) && tlvId   == false) maxv = ibc;
+
+    pfJet_pt     .push_back( pfJets->at(ibc).pt()   );
+    pfJet_eta    .push_back( pfJets->at(ibc).eta()  );
+    pfJet_phi    .push_back( pfJets->at(ibc).phi()  );
+    pfJet_looseId.push_back( looseId );
+    pfJet_tightId.push_back( tightId );
+    pfJet_tlvId  .push_back( tlvId );
+  }
+
+  pfJet_hpfl = maxl;
+  pfJet_hpft = maxt;
+  pfJet_hpfv = maxv;
+
 
   //METs =======================
   caloMETPt = caloMET->begin()->pt();
@@ -273,6 +438,10 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   pfClusterMETPt = pfClusterMET->begin()->pt();
   pfClusterMETPhi = pfClusterMET->begin()->phi();
   pfClusterMETSumEt = pfClusterMET->begin()->sumEt();
+
+  pfMETPt = pfMET->begin()->pt();
+  pfMETPhi = pfMET->begin()->phi();
+  pfMETSumEt = pfMET->begin()->sumEt();
 
   //ECAL clusters
   for( size_t ibc=0; ibc<pfClustersEcal->size(); ++ibc ) {
