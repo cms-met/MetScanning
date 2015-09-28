@@ -63,6 +63,11 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10) )
 process.load('RecoMET.METFilters.CSCTightHaloFilter_cfi')
 process.CSCTightHaloFilter.taggingMode = cms.bool(True)
 
+process.load('RecoMET.METFilters.CSCTightHalo2015Filter_cfi')
+process.CSCTightHalo2015Filter.taggingMode = cms.bool(True)
+process.load('RecoMET.METFilters.CSCTightHaloTrkMuUnvetoFilter_cfi')
+process.CSCTightHaloTrkMuUnvetoFilter.taggingMode = cms.bool(True)
+
 
 ##___________________________HCAL_Noise_Filter________________________________||
 process.load('CommonTools.RecoAlgos.HBHENoiseFilterResultProducer_cfi')
@@ -73,6 +78,9 @@ process.HBHENoiseFilterResultProducer.minZeros = cms.int32(99999)
 #    reverseDecision = cms.bool(False)
 #)
 process.load('Configuration.StandardSequences.Reconstruction_Data_cff')
+
+process.load('RecoMET.METFilters.HcalStripHaloFilter_cfi')
+process.HcalStripHaloFilter.taggingMode = cms.bool(True)
 
 
 ##___________________________PFClusterMet_____________________________________||
@@ -269,9 +277,11 @@ from RecoMET.METProducers.BeamHaloSummary_cfi import *
 process.BeamHaloId = cms.Sequence(CSCHaloData*EcalHaloData*HcalHaloData*GlobalHaloData*BeamHaloSummary)
 
 
+
+
 ##___________________________PATH______________________________________________||
 process.p = cms.Path(
-    #    process.BeamHaloId* #Uncomment this if you want to rerun the BeamHaloSummary. By default this line should remain commented
+    process.BeamHaloId* #Uncomment this if you want to rerun the BeamHaloSummary. By default this line should remain commented
     process.primaryVertexFilter*
     process.CSCTightHaloFilter*
     process.HBHENoiseFilterResultProducer* #produces bools
@@ -282,7 +292,10 @@ process.p = cms.Path(
     process.eeBadScFilter*
     process.goodVertices* 
     process.trackingFailureFilter*
-    process.EcalDeadCellBoundaryEnergyFilter
+    process.EcalDeadCellBoundaryEnergyFilter*
+    process.CSCTightHalo2015Filter*
+    process.CSCTightHaloTrkMuUnvetoFilter*
+    process.HcalStripHaloFilter
     *process.condMETSelector
     *process.metCounter
 #   *process.metScanNtupleMaker ##CH: writes a flat tree
