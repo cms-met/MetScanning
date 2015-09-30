@@ -142,15 +142,18 @@ from RecoMET.METProducers.HcalHaloData_cfi import *
 from RecoMET.METProducers.GlobalHaloData_cfi import *
 from RecoMET.METProducers.BeamHaloSummary_cfi import *
 
+
 ##___________________________CSC_Halo_Filter_(old)____________________________||
 process.load('RecoMET.METFilters.CSCTightHaloFilter_cfi')
 process.CSCTightHaloFilter.taggingMode = cms.bool(True)
+
 
 ##___________________________CSC_Halo_Filter_(new)____________________________||
 process.load('RecoMET.METFilters.CSCTightHalo2015Filter_cfi')
 process.CSCTightHalo2015Filter.taggingMode = cms.bool(True)
 process.load('RecoMET.METFilters.CSCTightHaloTrkMuUnvetoFilter_cfi')
 process.CSCTightHaloTrkMuUnvetoFilter.taggingMode = cms.bool(True)
+
 
 ##___________________________Nick's_New_HCAL_Strip_Halo_Filter________________||
 process.load('RecoMET.METFilters.HcalStripHaloFilter_cfi')
@@ -418,8 +421,8 @@ process.p = cms.Path(
     #process.trackingFailureFilter*
     process.pfClusterMetSequence*
     process.pfCaloMetSequence*
-    process.condMETSelector*
-    process.metCounter*
+    #process.condMETSelector*
+    #process.metCounter*
     process.metScanNtupleMaker ##CH: writes a flat tree
     )
 

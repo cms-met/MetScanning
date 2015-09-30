@@ -269,6 +269,7 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   pfJet_hpft = -1;
   pfJet_hpfv = -1;
 
+
   // get METs
   Handle<reco::CaloMETCollection> caloMET;
   iEvent.getByLabel(inputTagCaloMET_, caloMET);
@@ -281,6 +282,7 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
 
   Handle<reco::PFMETCollection> pfMET;
   iEvent.getByLabel(inputTagPFMET_, pfMET);
+
   
   //get PFClusters
   Handle<reco::PFClusterCollection> pfClustersEcal;
