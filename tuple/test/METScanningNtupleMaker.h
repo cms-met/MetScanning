@@ -89,6 +89,8 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
   edm::InputTag inputTagTrackingMSC_;
   edm::InputTag inputTagTrackingTMSC_;
   edm::InputTag inputTagCSC_;
+  edm::InputTag inputTagCSC1_;
+  edm::InputTag inputTagCSC2_;
   edm::InputTag inputTagHalo_;
   edm::InputTag inputTagHBHER1_;
   edm::InputTag inputTagHBHER2L_;
@@ -101,7 +103,7 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
   edm::InputTag inputTagRecHitsES_;
 
   size_t run,event,lumiBlock,time;
-  bool filtertrackingletmc, filtertrackingletms, filtertrackingmsc, filtertrackingtmsc, filtercsc, filterhalo, filterhbher1, filterhbher1nozeros, filterhbher2l, filterhbher2t, filterhbheiso, filterecaltp, filterecalbe, filterecalsc; 
+  bool filtertrackingletmc, filtertrackingletms, filtertrackingmsc, filtertrackingtmsc, filtercsc, filtercsc1, filtercsc2, filterhalo, filterhbher1, filterhbher1nozeros, filterhbher2l, filterhbher2t, filterhbheiso, filterecaltp, filterecalbe, filterecalsc; 
  
   edm::RunNumber_t irun;
   edm::EventNumber_t ievent;

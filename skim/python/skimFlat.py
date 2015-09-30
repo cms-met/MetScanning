@@ -135,9 +135,22 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 50
 process.maxEvents = cms.untracked.PSet()#input = cms.untracked.int32(10))
 
 
-##___________________________CSC_Halo_Filter__________________________________||
+##___________________________Beam_Halo_Summaries______________________________||
+from RecoMET.METProducers.CSCHaloData_cfi import *
+from RecoMET.METProducers.EcalHaloData_cfi import *
+from RecoMET.METProducers.HcalHaloData_cfi import *
+from RecoMET.METProducers.GlobalHaloData_cfi import *
+from RecoMET.METProducers.BeamHaloSummary_cfi import *
+
+##___________________________CSC_Halo_Filter_(old)____________________________||
 process.load('RecoMET.METFilters.CSCTightHaloFilter_cfi')
 process.CSCTightHaloFilter.taggingMode = cms.bool(True)
+
+##___________________________CSC_Halo_Filter_(new)____________________________||
+process.load('RecoMET.METFilters.CSCTightHalo2015Filter_cfi')
+process.CSCTightHalo2015Filter.taggingMode = cms.bool(True)
+process.load('RecoMET.METFilters.CSCTightHaloTrkMuUnvetoFilter_cfi')
+process.CSCTightHaloTrkMuUnvetoFilter.taggingMode = cms.bool(True)
 
 ##___________________________Nick's_New_HCAL_Strip_Halo_Filter________________||
 process.load('RecoMET.METFilters.HcalStripHaloFilter_cfi')
@@ -331,8 +344,10 @@ process.goodVertices = cms.EDFilter("VertexSelector",
 ##_________________________MET_skimming____________________________________||
 process.condMETSelector = cms.EDProducer(
    "CandViewShallowCloneCombiner",
-   decay = cms.string("caloMet pfMet"),
-   cut = cms.string("(daughter(0).pt > 50) || (daughter(1).pt > 50)" ) 
+   #decay = cms.string("caloMet pfMet"),
+   #cut = cms.string("(daughter(0).pt > 50) || (daughter(1).pt > 50)" ) 
+   decay = cms.string("caloMet pfClusterMet pfCaloMet"),
+   cut = cms.string("((daughter(0).pt > 350) || (daughter(1).pt > 350) || (daughter(2).pt > 350)) || (daughter(0).pt/daughter(2).pt > 2.5 && daughter(2).pt > 250) || (daughter(2).pt/daughter(0).pt > 2.5 && daughter(0).pt > 250)" ) 
    )
 
 process.metCounter = cms.EDFilter(
@@ -362,6 +377,8 @@ process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
    TRKfilterMSC=cms.InputTag("manystripclus53X"),
    TRKfilterTMSC=cms.InputTag("toomanystripclus53X"),
    CSCfilter=cms.InputTag("CSCTightHaloFilter"),
+   CSC1filter=cms.InputTag("CSCTightHalo2015Filter"),
+   CSC2filter=cms.InputTag("CSCTightHaloTrkMuUnvetoFilter"),
    HCALHalofilter=cms.InputTag("HcalStripHaloFilter"),
    HBHEfilterR1=cms.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResultRun1"),
    HBHEfilterR2L=cms.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResultRun2Loose"),
@@ -377,8 +394,11 @@ process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
 
 ##___________________________PATH______________________________________________||
 process.p = cms.Path(
+    process.BeamHaloId*
     process.primaryVertexFilter*
     process.CSCTightHaloFilter*
+    process.CSCTightHalo2015Filter*
+    process.CSCTightHaloTrkMuUnvetoFilter*
     process.HcalStripHaloFilter*
     process.HBHENoiseFilterResultProducer* #produces bools
     #process.ApplyBaselineHBHENoiseFilter* 
@@ -398,8 +418,8 @@ process.p = cms.Path(
     #process.trackingFailureFilter*
     process.pfClusterMetSequence*
     process.pfCaloMetSequence*
-    #process.condMETSelector*
-    #process.metCounter*
+    process.condMETSelector*
+    process.metCounter*
     process.metScanNtupleMaker ##CH: writes a flat tree
     )
 

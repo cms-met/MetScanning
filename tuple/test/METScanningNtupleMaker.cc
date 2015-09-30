@@ -22,6 +22,8 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   inputTagTrackingMSC_    = iConfig.getParameter<edm::InputTag>("TRKfilterMSC"           );
   inputTagTrackingTMSC_   = iConfig.getParameter<edm::InputTag>("TRKfilterTMSC"          );
   inputTagCSC_            = iConfig.getParameter<edm::InputTag>("CSCfilter"              );
+  inputTagCSC1_           = iConfig.getParameter<edm::InputTag>("CSC1filter"             );
+  inputTagCSC2_           = iConfig.getParameter<edm::InputTag>("CSC2filter"             );
   inputTagHalo_           = iConfig.getParameter<edm::InputTag>("HCALHalofilter"         );
   inputTagHBHER1_         = iConfig.getParameter<edm::InputTag>("HBHEfilterR1"           );
   inputTagHBHER2L_        = iConfig.getParameter<edm::InputTag>("HBHEfilterR2L"          );
@@ -54,6 +56,8 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   s->Branch("filter_tracking_msc"     , &filtertrackingmsc  , "filter_tracking_msc/O"  );
   s->Branch("filter_tracking_tmsc"    , &filtertrackingtmsc , "filter_tracking_tmsc/O" );
   s->Branch("filter_csc"              , &filtercsc          , "filter_csc/O"           );
+  s->Branch("filter_csc2015"          , &filtercsc1         , "filter_csc2015/O"       );
+  s->Branch("filter_cscTMU"           , &filtercsc2         , "filter_cscTMU/O"        );
   s->Branch("filter_halo"             , &filterhalo         , "filter_halo/O"          );
   s->Branch("filter_hbher1"           , &filterhbher1       , "filter_hbher1/O"        );
   s->Branch("filter_hbher1nozeros"    , &filterhbher1nozeros, "filter_hbher1nozeros/O" );
@@ -191,6 +195,14 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   iEvent.getByLabel(inputTagCSC_, ifiltercsc);
   filtercsc = *ifiltercsc;
 
+  Handle<bool> ifiltercsc1;
+  iEvent.getByLabel(inputTagCSC1_, ifiltercsc1);
+  filtercsc1 = *ifiltercsc1;
+
+  Handle<bool> ifiltercsc2;
+  iEvent.getByLabel(inputTagCSC2_, ifiltercsc2);
+  filtercsc2 = *ifiltercsc2;
+
   Handle<bool> ifilterhalo;
   iEvent.getByLabel(inputTagHalo_, ifilterhalo);
   filterhalo = *ifilterhalo;
@@ -242,20 +254,6 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   pfLepton_phi    .clear();
   pfLepton_pdgId  .clear();
 
-
-  // get Jets
-  Handle<reco::PFJetCollection> pfJets;
-  iEvent.getByLabel(inputTagPfJets_,pfJets);
-
-  pfJet_pt     .clear();
-  pfJet_eta    .clear();
-  pfJet_phi    .clear();
-  pfJet_looseId.clear();
-  pfJet_tightId.clear();
-  pfJet_tlvId  .clear();
-  pfJet_hpfl = -1;
-  pfJet_hpft = -1;
-  pfJet_hpfv = -1;
 
   // get Jets
   Handle<reco::PFJetCollection> pfJets;
