@@ -4,10 +4,11 @@ from CRABClient.UserUtilities import config
 
 ## define only these variables here
 
-production = "/afs/cern.ch/work/c/cheidegg/crab3/2015-07-13_filters_runb_flat/"
-json       = "json/json_DCSONLY_Run2015B.txt"
+production = "/afs/cern.ch/work/c/cheidegg/crab3/2015-09-29_filters_runc_sarahskim_flat"
+json       = "json/Cert_246908-255031_13TeV_PromptReco_Collisions15_25ns_JSON.txt" # RunC 4T
+#json       = "json/Cert_246908-256869_13TeV_PromptReco_Collisions15_25ns_JSON.txt" # RunD 4T
 site       = "T3_CH_PSI"
-outdir     = "/store/user/cheidegg/crab3/2015-07-13_filters_runb_flat/"
+outdir     = "/store/user/cheidegg/crab3/2015-09-29_filters_runc_sarahskim_flat"
 
 
 ## do not touch beyond this point
@@ -31,31 +32,37 @@ config.Data.publication      = False
 #config.Data.publishDataName = ''
 
 config.Data.outLFNDirBase    = outdir
-config.Site.storageSite      = 'T3_CH_PSI'
+config.Site.storageSite      = site
 
 datasets=[
-'/ExpressPhysics/Run2015B-Express-v1/FEVT',
-'/BTagCSV/Run2015B-PromptReco-v1/RECO',
-'/BTagMu/Run2015B-PromptReco-v1/RECO',
-'/DoubleEG/Run2015B-PromptReco-v1/RECO',
-'/EGamma/Run2015B-PromptReco-v1/RECO',
-'/Jet/Run2015B-PromptReco-v1/RECO',
-'/JetHT/Run2015B-PromptReco-v1/RECO',
-'/HighMultiplicity/Run2015B-PromptReco-v1/RECO',
-'/HTMHT/Run2015B-PromptReco-v1/RECO',
-'/MET/Run2015B-PromptReco-v1/RECO',
-'/SingleElectron/Run2015B-PromptReco-v1/RECO',
-'/SingleMu/Run2015B-PromptReco-v1/RECO',
-'/SinglePhoton/Run2015B-PromptReco-v1/RECO',
-'/ZeroBias/Run2015B-PromptReco-v1/RECO',
-'/ZeroBias1/Run2015B-PromptReco-v1/RECO',
-'/ZeroBias2/Run2015B-PromptReco-v1/RECO',
-'/ZeroBias3/Run2015B-PromptReco-v1/RECO',
-'/ZeroBias4/Run2015B-PromptReco-v1/RECO',
-'/ZeroBias5/Run2015B-PromptReco-v1/RECO',
-'/ZeroBias6/Run2015B-PromptReco-v1/RECO',
-'/ZeroBias7/Run2015B-PromptReco-v1/RECO',
-'/ZeroBias8/Run2015B-PromptReco-v1/RECO',
+##'/BTagCSV/Run2015D-PromptReco-v1/RECO',
+##'/BTagMu/Run2015D-PromptReco-v1/RECO',
+##'/Charmonium/Run2015D-PromptReco-v1/RECO',
+##'/DoubleEG/Run2015D-PromptReco-v1/RECO',
+##'/DoubleMuon/Run2015D-PromptReco-v1/RECO',
+##'/EGamma/Run2015D-PromptReco-v1/RECO',
+#'/ExpressPhysics/Run2015D-Express-v3/FEVT',
+##'/Jet/Run2015D-PromptReco-v1/RECO',
+#'/JetHT/Run2015D-PromptReco-v3/RECO',
+#'/HighMultiplicity/Run2015D-PromptReco-v1/RECO',
+'/HTMHT/Run2015D-PromptReco-v3/RECO',
+#'/MET/Run2015D-PromptReco-v3/RECO',
+##'/MinimumBias/Run2015D-PromptReco-v1/RECO',
+##'/MuonEG/Run2015D-PromptReco-v1/RECO',
+#'/SingleElectron/Run2015D-PromptReco-v3/RECO',
+#'/SingleMuon/Run2015D-PromptReco-v3/RECO',
+#'/SinglePhoton/Run2015D-PromptReco-v3/RECO',
+##'/StreamExpress/Tier0_Test_SUPERBUNNIES_vocms015-Hotline-Express-v28/ALCARECO', 
+##'/Tau/Run2015D-PromptReco-v1/RECO',
+##'/ZeroBias/Run2015D-PromptReco-v1/RECO',
+##'/ZeroBias1/Run2015D-PromptReco-v1/RECO',
+##'/ZeroBias2/Run2015D-PromptReco-v1/RECO',
+##'/ZeroBias3/Run2015D-PromptReco-v1/RECO',
+##'/ZeroBias4/Run2015D-PromptReco-v1/RECO',
+##'/ZeroBias5/Run2015D-PromptReco-v1/RECO',
+##'/ZeroBias6/Run2015D-PromptReco-v1/RECO',
+##'/ZeroBias7/Run2015D-PromptReco-v1/RECO',
+##'/ZeroBias8/Run2015D-PromptReco-v1/RECO',
 ]
 
 if __name__ == '__main__':
