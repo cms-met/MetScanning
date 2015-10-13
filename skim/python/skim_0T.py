@@ -45,6 +45,9 @@ process.load('RecoMET.METFilters.CSCTightHaloFilter_cfi')
 process.CSCTightHaloFilter.taggingMode = cms.bool(True)
 ##____________________________________________________________________________||
 process.load('CommonTools.RecoAlgos.HBHENoiseFilterResultProducer_cfi')
+process.HBHENoiseFilterResultProducer.minZeros = cms.int32(99999)
+process.HBHENoiseFilterResultProducer.IgnoreTS4TS5ifJetInLowBVRegion=cms.bool(False)
+
 #process.ApplyBaselineHBHENoiseFilter = cms.EDFilter('BooleanFlagFilter',
 #    inputLabel = cms.InputTag('HBHENoiseFilterResultProducer','HBHENoiseFilterResult'),
 #    reverseDecision = cms.bool(False)
