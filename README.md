@@ -2,11 +2,12 @@
 
 
 
-for RunD analysis you need to install the CMSSW_7_4_12 while for the runA/B/C the CMSSW_7_4_7
-for the CMSSW_7_4_12 need to use the branch cms-met:HaloBranch7412
+for RunD analysis you need to install the CMSSW_7_4_12 and use the branch cms-met:HaloBranch7412
+while for the runA/B/C the CMSSW_7_4_7 need to use the branch cms-met:HaloBranch747
+
 ```
-scramv1 project -n CMSSW_7_4_7_scanningHalo CMSSW CMSSW_7_4_7
-cd CMSSW_7_4_7_scanningHalo/src
+scramv1 project -n CMSSW_7_4_12_scanningHalo CMSSW CMSSW_7_4_12
+cd CMSSW_7_4_12_scanningHalo/src
 cmsenv
 alias git 'git --exec-path=/cvmfs/cms.cern.ch/slc6_amd64_gcc491/external/git/1.8.3.1-odfocd/libexec/git-core/'
 git cms-init
@@ -15,7 +16,7 @@ echo  PhysicsTools/PatAlgos/ >> .git/info/sparse-checkout
 echo  RecoMET/METAlgorithms/ >> .git/info/sparse-checkout
 echo  RecoMET/METFilters/ >> .git/info/sparse-checkout
 echo  RecoMET/METProducers >> .git/info/sparse-checkout
-git cms-merge-topic -u cms-met:HaloBranch747
+git cms-merge-topic -u cms-met:HaloBranch7412
 git clone git@github.com:cms-met/MetScanning
 scramv1 b -j 20
 
