@@ -335,13 +335,14 @@ process.p = cms.Path(
 #    process.BeamHaloId* #Uncomment this if you want to rerun the BeamHaloSummary. By default this line should remain commented
     process.primaryVertexFilter*
     process.bunchSpacingProducer *
+    process.condMETSelector *
+#    process.metCounter* #uncomment this line to apply a met cut
     process.CSCTightHaloFilter*
     process.HBHENoiseFilterResultProducer* #produces bools    
 #    process.ApplyBaselineHBHENoiseFilter* 
     process.EcalDeadCellTriggerPrimitiveFilter*
     process.pfClusterMetSequence*
     process.pfCaloMetSequence*
-    process.condMETSelector *
     process.eeBadScFilter*
     process.goodVertices*
     process.trackingFailureFilter*
@@ -351,7 +352,7 @@ process.p = cms.Path(
     process.globalTightHalo2016Filter * 
     process.globalSuperTightHalo2016Filter * 
     process.HcalStripHaloFilter*
-#    process.metCounter* #uncomment this line to apply a met cut
+
     process.metScanNtupleMaker ##CH: writes a flat tree
     )
 
