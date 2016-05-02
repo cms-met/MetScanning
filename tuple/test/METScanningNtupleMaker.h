@@ -15,9 +15,6 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 
-#include "DataFormats/PatCandidates/interface/Jet.h"
-#include "DataFormats/PatCandidates/interface/PFParticle.h"
-
 #include "DataFormats/EcalRecHit/interface/EcalRecHitCollections.h"
 #include "DataFormats/DetId/interface/DetId.h"
 #include "DataFormats/EcalDetId/interface/EBDetId.h"
@@ -72,58 +69,36 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
 
  private:
   
-  edm::InputTag inputTagPfCandidates_;
-  edm::InputTag inputTagPfJets_;
-  edm::InputTag inputTagCaloMET_;
-  edm::InputTag inputTagPFCaloMET_;
-  edm::InputTag inputTagPFClusterMET_;
-  edm::InputTag inputTagPFMET_;
-  edm::InputTag inputTagEcalPFClusters_;
-  edm::InputTag inputTagHcalPFClusters_;
-  edm::InputTag inputTagHBHEPFClusters_;
-  edm::InputTag inputTagHOPFClusters_;
-  edm::InputTag inputTagHFPFClusters_;
-  edm::InputTag inputTagTracks_;
-  edm::InputTag inputTagTrackingLETMC_;
-  edm::InputTag inputTagTrackingLETMS_;
-  edm::InputTag inputTagTrackingMSC_;
-  edm::InputTag inputTagTrackingTMSC_;
-  edm::InputTag inputTagCSC_;
-  edm::InputTag inputTagCSC1_;
-  edm::InputTag inputTagCSC2_;
-  edm::InputTag inputTagHalo_;
-  edm::InputTag inputTagHBHER1_;
-  edm::InputTag inputTagHBHER2L_;
-  edm::InputTag inputTagHBHER2T_;
-  edm::InputTag inputTagECALTP_;
-  edm::InputTag inputTagECALBE_;
-  edm::InputTag inputTagECALSC_;
-  edm::InputTag inputTagRecHitsEB_;
-  edm::InputTag inputTagRecHitsEE_;
-  edm::InputTag inputTagRecHitsES_;
-
+  edm::EDGetTokenT<reco::CaloMETCollection> CaloMET_token;
+  edm::EDGetTokenT<reco::PFMETCollection> PFCaloMET_token;
+  edm::EDGetTokenT<reco::PFClusterMETCollection> PFClusterMET_token;
+  edm::EDGetTokenT<reco::PFMETCollection> PFMET_token;
+  edm::EDGetTokenT<reco::PFClusterCollection> EcalPFClusters_token;
+  edm::EDGetTokenT<reco::PFClusterCollection> HcalPFClusters_token;
+  edm::EDGetTokenT<reco::PFClusterCollection> HBHEPFClusters_token;
+  edm::EDGetTokenT<reco::PFClusterCollection> HOPFClusters_token;
+  edm::EDGetTokenT<reco::PFClusterCollection> HFPFClusters_token;
+  edm::EDGetTokenT<reco::TrackCollection> Tracks_token;
+  edm::EDGetTokenT<bool> CSC2015_token;
+  edm::EDGetTokenT<bool> GlobalTightHalo2016_token;
+  edm::EDGetTokenT<bool> GlobalSuperTightHalo2016_token;
+  edm::EDGetTokenT<bool> HcalStripHalo_token;
+  edm::EDGetTokenT<bool> HBHER1_token;
+  edm::EDGetTokenT<bool> HBHER2L_token;
+  edm::EDGetTokenT<bool> HBHER2T_token;
+  edm::EDGetTokenT<bool> ECALTP_token;
+  edm::EDGetTokenT<bool> ECALSC_token;
+  edm::EDGetTokenT<EcalRecHitCollection> RecHitsEB_token;
+  edm::EDGetTokenT<EcalRecHitCollection> RecHitsEE_token;
+  edm::EDGetTokenT<EcalRecHitCollection> RecHitsES_token;
+  edm::EDGetTokenT<HcalNoiseSummary> hSummary_token;
   size_t run,event,lumiBlock,time;
-  bool filtertrackingletmc, filtertrackingletms, filtertrackingmsc, filtertrackingtmsc, filtercsc, filtercsc1, filtercsc2, filterhalo, filterhbher1, filterhbher1nozeros, filterhbher2l, filterhbher2t, filterhbheiso, filterecaltp, filterecalbe, filterecalsc; 
+  bool filtercsc2015, filterglobaltighthalo2016,filterglobalsupertighthalo2016, filterhcalstriphalo, filterhbher1, filterhbher2l, filterhbher2t, filterhbheiso, filterecaltp, filterecalsc; 
  
   edm::RunNumber_t irun;
   edm::EventNumber_t ievent;
   edm::LuminosityBlockNumber_t ilumiBlock;
   edm::Timestamp itime;
-
-  std::vector<float>  pfLepton_pt;
-  std::vector<float>  pfLepton_eta;
-  std::vector<float>  pfLepton_phi;
-  std::vector<float>  pfLepton_pdgId;
-
-  std::vector<float>  pfJet_pt;
-  std::vector<float>  pfJet_eta;
-  std::vector<float>  pfJet_phi;
-  std::vector<float>  pfJet_looseId;
-  std::vector<float>  pfJet_tightId;
-  std::vector<float>  pfJet_tlvId;
-  int pfJet_hpfl;
-  int pfJet_hpft;
-  int pfJet_hpfv;
 
   float caloMETPt;
   float caloMETPhi;
