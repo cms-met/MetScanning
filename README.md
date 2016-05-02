@@ -1,5 +1,5 @@
 # MetScanning
-## Install (4T)
+## Install
 ```
   cmsrel CMSSW_8_0_5
   cd CMSSW_8_0_5/src
@@ -7,9 +7,9 @@
   git clone git@github.com:cms-met/MetScanning
   scram b -j9
   ```
-## Run on local file (4T)
+## Run on local file
 ```
-  cmsRun MetScanning/skim/python/skim_4T.py
+  cmsRun MetScanning/skim/python/skim.py
 ```
 You might need to run the following command if you want to access files via XROOT:
 ```
@@ -17,9 +17,9 @@ You might need to run the following command if you want to access files via XROO
 ```
 
 ## Run with crab
-In ``MetScanning/skim/crab/`` edit crab_4T.py and adjust samples, JSON, and the EOS directory. 
+In ``MetScanning/skim/crab/`` edit crab.py and adjust samples, JSON, and the EOS directory. 
 Then do
 ```
   cd MetScanning/skim/crab/
-  python crab_4T.py
+  python crab.py
 ```

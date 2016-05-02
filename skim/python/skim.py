@@ -351,7 +351,7 @@ process.p = cms.Path(
     process.globalTightHalo2016Filter * 
     process.globalSuperTightHalo2016Filter * 
     process.HcalStripHaloFilter*
-#    process.metCounter*
+#    process.metCounter* #uncomment this line to apply a met cut
     process.metScanNtupleMaker ##CH: writes a flat tree
     )
 
