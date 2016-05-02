@@ -11,6 +11,11 @@
 ```
   cmsRun MetScanning/skim/python/skim_4T.py
 ```
+You might need to run the following command if you want to access files via XROOT:
+```
+  voms-proxy-init --voms cms
+```
+
 ## Run with crab
 In ``MetScanning/skim/crab/`` edit crab_4T.py and adjust samples, JSON, and the EOS directory. 
 Then do
