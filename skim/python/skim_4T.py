@@ -21,7 +21,8 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condD
 #process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 #process.GlobalTag.globaltag = 'GR_P_V56::All'
 from RecoLuminosity.LumiProducer.bunchSpacingProducer_cfi import *
-process.GlobalTag.globaltag = '80X_dataRun2_Express_v5'
+process.GlobalTag.globaltag = '80X_dataRun2_Prompt_v8'
+#80X_dataRun2_Express_v5'
 
 
 ##___________________________Input_Files______________________________________||
@@ -273,7 +274,6 @@ process.condMETSelector = cms.EDProducer(
    "CandViewShallowCloneCombiner",
    decay = cms.string("caloMet pfMet"),
    cut = cms.string("(daughter(0).pt > 100) || (daughter(1).pt > 100)" ) 
-#   cut = cms.string("(daughter(0).pt > 100) || (daughter(1).pt > 100)" ) 
    )
 
 process.metCounter = cms.EDFilter(
@@ -286,6 +286,8 @@ process.metCounter = cms.EDFilter(
 ##___________________________Flat_Tuple________________________________________||
 process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
                                             rootOutputFile=cms.string("tuple.root"),
+                                            pfCandidates=cms.InputTag("particleFlow"),
+                                            pfJets=cms.InputTag("ak4PFJets"),
                                             caloMET=cms.InputTag("caloMet"),
                                             pfCaloMET=cms.InputTag("pfCaloMet"),
                                             pfClusterMET=cms.InputTag("pfClusterMet"),
@@ -296,6 +298,10 @@ process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
                                             HOPFClusterCollection=cms.InputTag("particleFlowClusterHO"),
                                             HFPFClusterCollection=cms.InputTag("particleFlowClusterHF"),
                                             tracksCollection=cms.InputTag("generalTracks"),
+                                            TRKfilterLETMC=cms.InputTag("logErrorTooManyClusters"),
+                                            TRKfilterLETMS=cms.InputTag("logErrorTooManySeeds"),
+                                            TRKfilterMSC=cms.InputTag("manystripclus53X"),
+                                            TRKfilterTMSC=cms.InputTag("toomanystripclus53X"),
                                             CSC2015filter=cms.InputTag("CSCTightHalo2015Filter"),
                                             GlobalHalofilterTight=cms.InputTag("globalTightHalo2016Filter"),
                                             GlobalHalofilterSuperTight=cms.InputTag("globalSuperTightHalo2016Filter"),
@@ -327,14 +333,12 @@ process.BeamHaloId = cms.Sequence(CSCHaloData*EcalHaloData*HcalHaloData*GlobalHa
 ##___________________________PATH______________________________________________||
 process.p = cms.Path(
 #    process.BeamHaloId* #Uncomment this if you want to rerun the BeamHaloSummary. By default this line should remain commented
-#    process.primaryVertexFilter*
-
+    process.primaryVertexFilter*
     process.bunchSpacingProducer *
     process.CSCTightHaloFilter*
     process.HBHENoiseFilterResultProducer* #produces bools    
-
 #    process.ApplyBaselineHBHENoiseFilter* 
-    process.EcalDeadCellTriggerPrimitiveFilter* #Laurent comment
+    process.EcalDeadCellTriggerPrimitiveFilter*
     process.pfClusterMetSequence*
     process.pfCaloMetSequence*
     process.condMETSelector *

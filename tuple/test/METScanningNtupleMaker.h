@@ -15,6 +15,9 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 
+#include "DataFormats/PatCandidates/interface/Jet.h"
+#include "DataFormats/PatCandidates/interface/PFParticle.h"
+
 #include "DataFormats/EcalRecHit/interface/EcalRecHitCollections.h"
 #include "DataFormats/DetId/interface/DetId.h"
 #include "DataFormats/EcalDetId/interface/EBDetId.h"
@@ -68,7 +71,8 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
   virtual void beginRun(const edm::Run & r, const edm::EventSetup & c);
 
  private:
-  
+  edm::EDGetTokenT<reco::PFCandidateCollection> PfCandidates_token;
+  edm::EDGetTokenT<reco::PFJetCollection> PfJets_token;
   edm::EDGetTokenT<reco::CaloMETCollection> CaloMET_token;
   edm::EDGetTokenT<reco::PFMETCollection> PFCaloMET_token;
   edm::EDGetTokenT<reco::PFClusterMETCollection> PFClusterMET_token;
@@ -79,6 +83,10 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
   edm::EDGetTokenT<reco::PFClusterCollection> HOPFClusters_token;
   edm::EDGetTokenT<reco::PFClusterCollection> HFPFClusters_token;
   edm::EDGetTokenT<reco::TrackCollection> Tracks_token;
+  edm::EDGetTokenT<bool> TrackingLETMC_token;
+  edm::EDGetTokenT<bool> TrackingLETMS_token;
+  edm::EDGetTokenT<bool> TrackingMSC_token;
+  edm::EDGetTokenT<bool> TrackingTMSC_token;
   edm::EDGetTokenT<bool> CSC2015_token;
   edm::EDGetTokenT<bool> GlobalTightHalo2016_token;
   edm::EDGetTokenT<bool> GlobalSuperTightHalo2016_token;
@@ -93,12 +101,27 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
   edm::EDGetTokenT<EcalRecHitCollection> RecHitsES_token;
   edm::EDGetTokenT<HcalNoiseSummary> hSummary_token;
   size_t run,event,lumiBlock,time;
-  bool filtercsc2015, filterglobaltighthalo2016,filterglobalsupertighthalo2016, filterhcalstriphalo, filterhbher1, filterhbher2l, filterhbher2t, filterhbheiso, filterecaltp, filterecalsc; 
- 
+  bool filtercsc2015, filterglobaltighthalo2016,filterglobalsupertighthalo2016, filterhcalstriphalo, filterhbher1, filterhbher2l, filterhbher2t, filterhbher1nozeros, filterhbheiso, filterecaltp, filterecalsc; 
+  bool filtertrackingletmc, filtertrackingletms, filtertrackingmsc, filtertrackingtmsc;
   edm::RunNumber_t irun;
   edm::EventNumber_t ievent;
   edm::LuminosityBlockNumber_t ilumiBlock;
   edm::Timestamp itime;
+  
+  std::vector<float>  pfLepton_pt;
+  std::vector<float>  pfLepton_eta;
+  std::vector<float>  pfLepton_phi;
+  std::vector<float>  pfLepton_pdgId;
+  
+  std::vector<float>  pfJet_pt;
+  std::vector<float>  pfJet_eta;
+  std::vector<float>  pfJet_phi;
+  std::vector<float>  pfJet_looseId;
+  std::vector<float>  pfJet_tightId;
+  std::vector<float>  pfJet_tlvId;
+  int pfJet_hpfl;
+  int pfJet_hpft;
+  int pfJet_hpfv;
 
   float caloMETPt;
   float caloMETPhi;

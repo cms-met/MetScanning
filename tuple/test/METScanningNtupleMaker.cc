@@ -5,6 +5,8 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
 
 
   //the input tags
+  PfCandidates_token   = consumes<reco::PFCandidateCollection>(iConfig.getParameter<edm::InputTag>("pfCandidates"           ));
+  PfJets_token         = consumes<reco::PFJetCollection>(iConfig.getParameter<edm::InputTag>("pfJets"                 ));
   CaloMET_token = consumes<reco::CaloMETCollection>(iConfig.getParameter<edm::InputTag>("caloMET"));
   PFCaloMET_token = consumes<reco::PFMETCollection>(iConfig.getParameter<edm::InputTag>("pfCaloMET"));
   PFClusterMET_token = consumes<reco::PFClusterMETCollection>(iConfig.getParameter<edm::InputTag>("pfClusterMET"));
@@ -15,6 +17,10 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   HOPFClusters_token = consumes<reco::PFClusterCollection>(iConfig.getParameter<edm::InputTag>("HOPFClusterCollection"));
   HFPFClusters_token = consumes<reco::PFClusterCollection>(iConfig.getParameter<edm::InputTag>("HFPFClusterCollection"));
   Tracks_token = consumes<reco::TrackCollection>(iConfig.getParameter<edm::InputTag>("tracksCollection"));
+  TrackingLETMC_token  = consumes<bool>(iConfig.getParameter<edm::InputTag>("TRKfilterLETMC"         ));
+  TrackingLETMS_token  = consumes<bool>(iConfig.getParameter<edm::InputTag>("TRKfilterLETMS"         ));
+  TrackingMSC_token    = consumes<bool>(iConfig.getParameter<edm::InputTag>("TRKfilterMSC"           ));
+  TrackingTMSC_token   = consumes<bool>(iConfig.getParameter<edm::InputTag>("TRKfilterTMSC"          ));
   CSC2015_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("CSC2015filter"));
   GlobalTightHalo2016_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("GlobalHalofilterTight"));
   GlobalSuperTightHalo2016_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("GlobalHalofilterSuperTight"));
@@ -28,7 +34,7 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   RecHitsEE_token = consumes<EcalRecHitCollection>(iConfig.getParameter<edm::InputTag>("EERecHits"));
   RecHitsES_token = consumes<EcalRecHitCollection>(iConfig.getParameter<edm::InputTag>("ESRecHits"));
   hSummary_token = consumes<HcalNoiseSummary>(iConfig.getParameter<edm::InputTag>("HcalNoise"));
-
+  
 
   // The root tuple
   outputfile_ = iConfig.getParameter<std::string>("rootOutputFile"); 
@@ -43,7 +49,7 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   s->Branch("lumi",&lumiBlock,"lumi/l");  
   s->Branch("event",&event,"event/l");  
   s->Branch("time",&time,"time/l");
-
+  
   s->Branch("filter_csc2015",&filtercsc2015,"filter_csc2015/O");
   s->Branch("filter_globaltighthalo2016",&filterglobaltighthalo2016,"filter_globaltighthalo2016/O");
   s->Branch("filter_globalsupertighthalo2016",&filterglobalsupertighthalo2016,"filter_globalsupertighthalo2016/O");
@@ -54,6 +60,23 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   s->Branch("filter_hbheiso",&filterhbheiso,"filter_hbheiso/O");
   s->Branch("filter_ecaltp",&filterecaltp,"filter_ecaltp/O");
   s->Branch("filter_ecalsc",&filterecalsc,"filter_ecalsc/O");
+
+  //Leptons =====================================
+  s->Branch("pfLepton_pt"             , &pfLepton_pt   );  
+  s->Branch("pfLepton_eta"            , &pfLepton_eta  ); 
+  s->Branch("pfLepton_phi"            , &pfLepton_phi  );  
+  s->Branch("pfLepton_pdgId"          , &pfLepton_pdgId);  
+  
+  //Jets ========================================
+  s->Branch("pfJet_pt"                , &pfJet_pt      );  
+  s->Branch("pfJet_eta"               , &pfJet_eta     ); 
+  s->Branch("pfJet_phi"               , &pfJet_phi     );  
+  s->Branch("pfJet_looseId"           , &pfJet_looseId );  
+  s->Branch("pfJet_tightId"           , &pfJet_tightId );  
+  s->Branch("pfJet_tightLepVetoId"    , &pfJet_tlvId   );  
+  s->Branch("pfJet_highestPtFailLoose", &pfJet_hpfl    );  
+  s->Branch("pfJet_highestPtFailTight", &pfJet_hpft    );  
+  s->Branch("pfJet_highestPtFailTLV"  , &pfJet_hpfv    );  
 
   //METs ========================================
   s->Branch("caloMETPt",&caloMETPt,"caloMETPt/F");  
@@ -145,10 +168,27 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
 
   
   //get filters
+  /*
+  Handle<bool> ifiltertrackingletmc;
+  iEvent.getByToken(TrackingLETMC_token, ifiltertrackingletmc);
+  filtertrackingletmc = *ifiltertrackingletmc;
+  
+  Handle<bool> ifiltertrackingletms;
+  iEvent.getByToken(TrackingLETMS_token, ifiltertrackingletms);
+  filtertrackingletms = *ifiltertrackingletms;
+  
+  Handle<bool> ifiltertrackingmsc;
+  iEvent.getByToken(TrackingMSC_token, ifiltertrackingmsc);
+  filtertrackingmsc = *ifiltertrackingmsc;
+  
+  Handle<bool> ifiltertrackingtmsc;
+  iEvent.getByToken(TrackingTMSC_token, ifiltertrackingtmsc);
+  filtertrackingtmsc = *ifiltertrackingtmsc;
+  */
   Handle<bool> ifiltercsc2015;
   iEvent.getByToken(CSC2015_token, ifiltercsc2015);
   filtercsc2015 = *ifiltercsc2015;
-
+  
   Handle<bool> ifilterglobaltighthalo2016;
   iEvent.getByToken(GlobalTightHalo2016_token, ifilterglobaltighthalo2016);
   filterglobaltighthalo2016 = *ifilterglobaltighthalo2016;
@@ -193,8 +233,36 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   if( hSummary->isolatedNoiseSumE()        >= 50 ) filterhbheiso = false;
   if( hSummary->isolatedNoiseSumEt()       >= 25 ) filterhbheiso = false;
 
-
-
+  filterhbher1nozeros = true;
+  if( hSummary->maxHPDHits()               >= 17                           ) filterhbher1nozeros = false;
+  if( hSummary->maxHPDNoOtherHits()        >= 10                           ) filterhbher1nozeros = false;
+  if( hSummary->HasBadRBXTS4TS5() && !hSummary->goodJetFoundInLowBVRegion()) filterhbher1nozeros = false;
+  
+  
+  // get Leptons
+  Handle<reco::PFCandidateCollection> pfCandidates;
+  iEvent.getByToken(PfCandidates_token,pfCandidates);
+  
+  pfLepton_pt     .clear();
+  pfLepton_eta    .clear();
+  pfLepton_phi    .clear();
+  pfLepton_pdgId  .clear();
+  
+  
+  // get Jets
+  Handle<reco::PFJetCollection> pfJets;
+  iEvent.getByToken(PfJets_token,pfJets);
+  
+  pfJet_pt     .clear();
+  pfJet_eta    .clear();
+  pfJet_phi    .clear();
+  pfJet_looseId.clear();
+  pfJet_tightId.clear();
+  pfJet_tlvId  .clear();
+  pfJet_hpfl = -1;
+  pfJet_hpft = -1;
+  pfJet_hpfv = -1;
+  
   // get METs
   Handle<reco::CaloMETCollection> caloMET;
   iEvent.getByToken(CaloMET_token, caloMET);
@@ -276,24 +344,93 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   track_eta.clear();
   track_phi.clear();
 
+  //================================================================
+  
+  //pfCandidates
+  for( size_t ibc=0; ibc<pfCandidates->size(); ++ibc ) {
+    
+    int pdgId = pfCandidates->at(ibc).pdgId();
+    if(std::abs(pdgId) < 11 || std::abs(pdgId) > 16) continue;
+    
+    pfLepton_pt   .push_back( pfCandidates->at(ibc).pt()  );
+    pfLepton_eta  .push_back( pfCandidates->at(ibc).eta() );
+    pfLepton_phi  .push_back( pfCandidates->at(ibc).phi() );
+    pfLepton_pdgId.push_back( pdgId                   );
+    
+  }
+  
+  
+  //================================================================
+  //pfJets
+  int maxl = -1;
+  int maxt = -1;
+  int maxv = -1;
+  for( size_t ibc=0; ibc<pfJets->size(); ++ibc ) {
+    
+    bool looseId = false, tightId = false, tlvId = false;
+    
+    //looseJetID = (NHF<0.99 && NEMF<0.99 && NumConst>1 && MUF<0.8) && ((abs(eta)<=2.4 && CHF>0 && CHM>0 && CEMF<0.99) || abs(eta)>2.4) 
+    looseId = ((pfJets->at(ibc).neutralHadronEnergyFraction() < 0.99 && pfJets->at(ibc).neutralEmEnergyFraction() < 0.99 
+		&& pfJets->at(ibc).nConstituents() > 1
+		&& pfJets->at(ibc).muonEnergyFraction() < 0.8)
+	       && ((std::abs(pfJets->at(ibc).eta()) <= 2.4 && pfJets->at(ibc).chargedHadronEnergyFraction() > 0
+		    && pfJets->at(ibc).chargedHadronMultiplicity() > 0
+		    && pfJets->at(ibc).chargedEmEnergyFraction() < 0.9)
+		   || std::abs(pfJets->at(ibc).eta()) > 2.4));
+    
+    //tightJetID = (NHF<0.90 && NEMF<0.90 && NumConst>1 && MUF<0.8) && ((abs(eta)<=2.4 && CHF>0 && CHM>0 && CEMF<0.90) || abs(eta)>2.4) 
+    tightId = ((pfJets->at(ibc).neutralHadronEnergyFraction() < 0.90 && pfJets->at(ibc).neutralEmEnergyFraction() < 0.90 
+		&& pfJets->at(ibc).nConstituents() > 1)
+	       && ((std::abs(pfJets->at(ibc).eta()) <= 2.4 && pfJets->at(ibc).chargedHadronEnergyFraction() > 0
+		    && pfJets->at(ibc).chargedHadronMultiplicity() > 0
+		    && pfJets->at(ibc).chargedEmEnergyFraction() < 0.9)
+		   || std::abs(pfJets->at(ibc).eta()) > 2.4));
+    
+    //tightLepVetoJetID = (NHF<0.90 && NEMF<0.90 && NumConst>1 && MUF<0.8) && ((abs(eta)<=2.4 && CHF>0 && CHM>0 && CEMF<0.90) || abs(eta)>2.4) 
+    tlvId = ((pfJets->at(ibc).neutralHadronEnergyFraction() < 0.90 && pfJets->at(ibc).neutralEmEnergyFraction() < 0.90 
+	      && pfJets->at(ibc).nConstituents() > 1
+	      && pfJets->at(ibc).muonEnergyFraction() < 0.8)
+	     && ((std::abs(pfJets->at(ibc).eta()) <= 2.4 && pfJets->at(ibc).chargedHadronEnergyFraction() > 0
+		  && pfJets->at(ibc).chargedHadronMultiplicity() > 0
+		  && pfJets->at(ibc).chargedEmEnergyFraction() < 0.9)
+		 || std::abs(pfJets->at(ibc).eta()) > 2.4));
   
 
+    //indices of highest pT jets failing loose and tight Id
+    if((maxl == -1 || (maxl > 0 && pfJets->at(maxl).pt() < pfJets->at(ibc).pt())) && looseId == false) maxl = ibc;
+    if((maxt == -1 || (maxt > 0 && pfJets->at(maxt).pt() < pfJets->at(ibc).pt())) && tightId == false) maxt = ibc;
+    if((maxv == -1 || (maxv > 0 && pfJets->at(maxv).pt() < pfJets->at(ibc).pt())) && tlvId   == false) maxv = ibc;
+    
+    pfJet_pt     .push_back( pfJets->at(ibc).pt()   );
+    pfJet_eta    .push_back( pfJets->at(ibc).eta()  );
+    pfJet_phi    .push_back( pfJets->at(ibc).phi()  );
+    pfJet_looseId.push_back( looseId );
+    pfJet_tightId.push_back( tightId );
+    pfJet_tlvId  .push_back( tlvId );
+  }
+  
+  pfJet_hpfl = maxl;
+  pfJet_hpft = maxt;
+  pfJet_hpfv = maxv;  
 
-  //================================================================
-
+  
   //METs =======================
   caloMETPt = caloMET->begin()->pt();
   caloMETPhi = caloMET->begin()->phi();
   caloMETSumEt = caloMET->begin()->sumEt();
-
+  
   pfCaloMETPt = pfCaloMET->begin()->pt();
   pfCaloMETPhi = pfCaloMET->begin()->phi();
   pfCaloMETSumEt = pfCaloMET->begin()->sumEt();
-
+  
   pfClusterMETPt = pfClusterMET->begin()->pt();
   pfClusterMETPhi = pfClusterMET->begin()->phi();
   pfClusterMETSumEt = pfClusterMET->begin()->sumEt();
 
+  pfMETPt = pfMET->begin()->pt();
+  pfMETPhi = pfMET->begin()->phi();
+  pfMETSumEt = pfMET->begin()->sumEt();
+  
   //ECAL clusters
   for( size_t ibc=0; ibc<pfClustersEcal->size(); ++ibc ) {
     reco::PFClusterRef bcRef( pfClustersEcal, ibc );
@@ -301,7 +438,7 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
     pfClusterEcal_time.push_back( bcRef->time() );
     pfClusterEcal_eta.push_back( bcRef->eta() );
     pfClusterEcal_phi.push_back( bcRef->phi() );
-
+    
     // retrieve the id in the list of rechits and get the severity level
     bool status13 = false;
     bool status14 = false;
