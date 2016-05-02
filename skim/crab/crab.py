@@ -9,7 +9,7 @@ config.General.transferOutputs = True
 config.General.transferLogs = True
 
 config.JobType.pluginName = 'Analysis'
-config.JobType.psetName = '../python/skim_4T.py'
+config.JobType.psetName = '../python/skim.py'
 
 config.Data.inputDataset = '/ZeroBias1/Run2015A-PromptReco-v1/RECO'
 config.Data.inputDBS = 'global'
