@@ -21,11 +21,15 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condD
 #process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 #process.GlobalTag.globaltag = 'GR_P_V56::All'
 from RecoLuminosity.LumiProducer.bunchSpacingProducer_cfi import *
-process.GlobalTag.globaltag = '80X_dataRun2_Prompt_v8'
+process.GlobalTag.globaltag = '80X_dataRun2_Express_v6'    #'80X_dataRun2_Prompt_v8'
 #80X_dataRun2_Express_v5'
 
 
 ##___________________________Input_Files______________________________________||
+
+process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring())
+
+'''
 process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
@@ -72,7 +76,7 @@ process.source = cms.Source(
 #"/store/data/Run2015B/MET/RECO/PromptReco-v1/000/251/252/00000/8CA59489-8D27-E511-A859-02163E014629.root"
 )
     )
-
+'''
 
 ##___________________________EDM_Output_File__________________________________||
 process.out = cms.OutputModule(
@@ -273,7 +277,7 @@ process.EcalDeadCellBoundaryEnergyFilter.limitDeadCellToChannelStatusEE=cms.vint
 process.condMETSelector = cms.EDProducer(
    "CandViewShallowCloneCombiner",
    decay = cms.string("caloMet pfMet"),
-   cut = cms.string("(daughter(0).pt > 100) || (daughter(1).pt > 100)" ) 
+   cut = cms.string("(daughter(0).pt > 80) || (daughter(1).pt > 80)" ) 
    )
 
 process.metCounter = cms.EDFilter(
@@ -336,7 +340,7 @@ process.p = cms.Path(
     process.primaryVertexFilter*
     process.bunchSpacingProducer *
     process.condMETSelector *
-#    process.metCounter* #uncomment this line to apply a met cut
+    process.metCounter* #uncomment this line to apply a met cut
     process.CSCTightHaloFilter*
     process.HBHENoiseFilterResultProducer* #produces bools    
 #    process.ApplyBaselineHBHENoiseFilter* 
