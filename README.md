@@ -1,4 +1,5 @@
 # MetScanning
+###For recent instruction please visit: https://twiki.cern.ch/twiki/bin/view/CMS/MissingETScanners
 ## Install
 ```
   cmsrel CMSSW_8_0_5
