@@ -268,10 +268,13 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   iEvent.getByToken(CaloMET_token, caloMET);
 
   Handle<reco::PFMETCollection> pfCaloMET;
-  iEvent.getByToken(PFCaloMET_token, pfCaloMET);
-
+  try {
+      iEvent.getByToken(PFCaloMET_token, pfCaloMET);
+  } catch (...) {}
   Handle<reco::PFClusterMETCollection> pfClusterMET;
-  iEvent.getByToken(PFClusterMET_token, pfClusterMET);
+  try{
+      iEvent.getByToken(PFClusterMET_token, pfClusterMET);
+  } catch (...) {}
 
   Handle<reco::PFMETCollection> pfMET;
   iEvent.getByToken(PFMET_token, pfMET);
@@ -418,15 +421,17 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   caloMETPt = caloMET->begin()->pt();
   caloMETPhi = caloMET->begin()->phi();
   caloMETSumEt = caloMET->begin()->sumEt();
-  
-  pfCaloMETPt = pfCaloMET->begin()->pt();
-  pfCaloMETPhi = pfCaloMET->begin()->phi();
-  pfCaloMETSumEt = pfCaloMET->begin()->sumEt();
-  
-  pfClusterMETPt = pfClusterMET->begin()->pt();
-  pfClusterMETPhi = pfClusterMET->begin()->phi();
-  pfClusterMETSumEt = pfClusterMET->begin()->sumEt();
-
+ 
+  if (pfCaloMET.isValid()) { 
+      pfCaloMETPt = pfCaloMET->begin()->pt();
+      pfCaloMETPhi = pfCaloMET->begin()->phi();
+      pfCaloMETSumEt = pfCaloMET->begin()->sumEt();
+  }
+  if (pfClusterMET.isValid()) {
+      pfClusterMETPt = pfClusterMET->begin()->pt();
+      pfClusterMETPhi = pfClusterMET->begin()->phi();
+      pfClusterMETSumEt = pfClusterMET->begin()->sumEt();
+  }
   pfMETPt = pfMET->begin()->pt();
   pfMETPhi = pfMET->begin()->phi();
   pfMETSumEt = pfMET->begin()->sumEt();
