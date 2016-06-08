@@ -20,17 +20,20 @@ def bold(s):
 #s0 = FWLiteSample.fromFiles("bobak", files = ["./data/bobak_pickevents.root"] )
 #products = {
 #    'pfJets':{'type':'vector<reco::PFJet>', 'label':( "ak4PFJets" ) },
-#    'pf':{'type':'vector<reco::PFCandidate>', 'label':( "particleFlow" ) },
 #    'gen':{'type':'vector<reco::GenParticle>', 'label':( "genParticles" ) },
 #    'pfMet':{'type':'vector<reco::PFMET>', 'label':( "pfMet" )},
+#    'pf':{'type':'vector<reco::PFCandidate>', 'label':( "particleFlow" ) },
 #    'muons':{'type':'vector<reco::Muon>', 'label': ("muons") }
 #}
 
-s0 = FWLiteSample.fromFiles("bobak", files = ["./data/bobak_pickevents_miniAOD.root"] )
+#s0 = FWLiteSample.fromFiles("bobak", files = ["./data/bobak_pickevents_miniAOD.root"] )
+s0 = FWLiteSample.fromFiles("bobak", files = ["./data/pickevents_maria_badMuon.root"] )
 
 products = {
-    'muons':{'type':'vector<pat::Muon>', 'label': "slimmedMuons"},
-    'pf':{'type':'vector<pat::PackedCandidate>', 'label':( "packedPFCandidates" ) },
+#    'muons':{'type':'vector<pat::Muon>', 'label': "slimmedMuons"},
+#    'pf':{'type':'vector<pat::PackedCandidate>', 'label':( "packedPFCandidates" ) },
+    'pf':{'type':'vector<reco::PFCandidate>', 'label':( "particleFlow" ) },
+    'muons':{'type':'vector<reco::Muon>', 'label': ("muons") }
 }
 
 r = s0.fwliteReader( products = products )
@@ -54,51 +57,45 @@ def deltaPhi(phi1, phi2):
 def deltaR(eta1, phi1, eta2, phi2):
     return sqrt( (eta1-eta2)**2 + deltaPhi(phi1, phi2)**2 )
  
-#while r.run():
-#    print "%i:%i:%i"%r.evt
-#    pf = list(r.products['pf'])
-#    pf.sort(key = lambda p: -p.pt())
-#    print "Leading pf candidate pdgId %i pt %3.2f eta %3.2f phi %3.2f" %( pf[0].pdgId(), pf[0].pt(), pf[0].eta(), pf[0].phi() )
-#    if abs(pf[0].pdgId())==211:
-#        track = pf[0].trackRef()
-#        print "  Charged hadron track pt %3.2f +/- %3.2f eta %3.2f phi %3.2f"%( track.pt(), track.ptError(), track.eta(), track.phi() )
-#    muons = list(r.products['muons'])
-#    muons.sort(key = lambda p: -p.pt())
-#    if len(muons)>0:
-#        muon = muons[0]
-#        print "reco::muon pdgId %i pt %3.2f eta %3.2f phi %3.2f global track pt %3.2f +/- %3.2f" %( muon.pdgId(), muon.pt(), muon.eta(), muon.phi(), muon.globalTrack().pt(), muon.globalTrack().ptError()  )
-#    # closest gen particle
-#    l = [ (g, ROOT.Math.VectorUtil.DeltaR(pf[0].p4(),g.p4())) for g in r.products['gen'] if g.status()==1 ]
-#    l.sort( key = lambda pair:pair[1] )
-#    print "Status 1 gen particles within 0.2 of leading pf candidate:"
-#    for p, dr in l:
-#        if dr<0.4:
-#            print "  pdgId %i pt %3.2f eta %3.2f phi %3.2f deltaR to pfCand %3.2f"%( p.pdgId(), p.pt(), p.eta(), p.phi(), dr )
-#         
-#    print
 
-maxDR = 0.001
-minMuonTrackRelErr = 0.5
-minPtDiffRel = -0.5
-minMuPt = 20
-def badChargedHadronFilter( muons, packedCandidates ):
+def badChargedHadronFilter( muons, pf ):
+    maxDR = 0.001
+    minMuonTrackRelErr = 0.5
+    minPtDiffRel = -0.5
+    minMuPt = 100
     flagged = False
     for muon in muons:
         if muon.pt()<minMuPt : continue
-        it = muon.innerTrack()
-        if not it: continue
-        # All events had a drastically high pt error on the inner muon track (fac. ~10). Require at least 0.5
-        if it.ptError()/it.pt() < minMuonTrackRelErr: continue
-        for c in packedCandidates:
-            if abs(c.pdgId()) == 211:
-                # Require very loose similarity in pt (one-sided). 
-                dPtRel =  ( c.pt() - it.pt() )/(0.5*(c.pt() + it.pt()))
-                # Flag the event bad if dR is tiny
-                if deltaR( it.eta(), it.phi(), c.eta(), c.phi() ) < maxDR and dPtRel > minPtDiffRel:
-                    flagged = True
-                    break
-        if flagged: break
-    return flagged
+        if muon.innerTrack().isNonnull():
+            it = muon.innerTrack()
+            if it.quality(it.highPurity): continue
+            # All events had a drastically high pt error on the inner muon track (fac. ~10). Require at least 0.5
+            if it.ptError()/it.pt() < minMuonTrackRelErr: continue
+            for c in pf:
+                if abs(c.pdgId()) == 211:
+                    # Require very loose similarity in pt (one-sided). 
+                    dPtRel =  ( c.pt() - it.pt() )/(0.5*(c.pt() + it.pt()))
+                    # Flag the event bad if dR is tiny
+                    if deltaR( it.eta(), it.phi(), c.eta(), c.phi() ) < maxDR and dPtRel > minPtDiffRel:
+                        flagged = True
+                        break
+
+
+def badPFMuonFilter( pf ):
+    minMuPt = 100
+    minMuPtError = -1
+    minDZ = 0.1
+    pfMuons = filter(lambda p: abs(p.pdgId())==13 and p.pt()>minMuPt, pf)
+    if len(pfMuons)==0: return True
+    for pfMu in pfMuons:
+        tref = pfMu.muonRef().innerTrack()
+        if tref.isNull() or tref.quality(tref.highPurity):
+            continue 
+        if abs(tref.dz()) < minDZ: continue
+        if tref.ptError()<minMuPtError: continue
+        #print "reco::muon NON HP IT pdgId %i pt %3.2f eta %3.2f phi %3.2f track pt %3.2f +/- %3.2f dxy %3.2f dz %3.2f" %( pfMu.pdgId(), pfMu.pt(), pfMu.eta(), pfMu.phi(), tref.pt(), tref.ptError(), tref.dxy(), tref.dz() )
+        return False
+    return True
 
 while r.run():
     print "%i:%i:%i"%r.evt
@@ -107,10 +104,12 @@ while r.run():
     print "Leading pf candidate pdgId %i pt %3.2f eta %3.2f phi %3.2f" %( pf[0].pdgId(), pf[0].pt(), pf[0].eta(), pf[0].phi() )
     muons = list(r.products['muons'])
     muons.sort(key = lambda p: -p.pt())
-    if len(muons)>0:
-        muon = muons[0]
-        print "reco::muon pdgId %i pt %3.2f eta %3.2f phi %3.2f global track pt %3.2f +/- %3.2f inner track pt %3.2f +/- %3.2f. Flagged? %r" %( muon.pdgId(), muon.pt(), muon.eta(), muon.phi(), muon.globalTrack().pt(), muon.globalTrack().ptError(), muon.innerTrack().pt(), muon.innerTrack().ptError(), badChargedHadronFilter(muons, pf) )
-    if 50185777 in r.evt: break
+    print "badChargedHadronFilter? ", badChargedHadronFilter(muons, pf)
+    #if len(muons)>0:
+    #    muon = muons[0]
+    #    print "reco::muon pdgId %i pt %3.2f eta %3.2f phi %3.2f inner track pt %3.2f +/- %3.2f. Flagged? %r" %( muon.pdgId(), muon.pt(), muon.eta(), muon.phi(), muon.innerTrack().pt(), muon.innerTrack().ptError(), badChargedHadronFilter(muons, pf) )
+    print "badPFMuonFilter? ", badPFMuonFilter( pf )
+    
 
 #Type                                  Module                      Label             Process   
 #----------------------------------------------------------------------------------------------
