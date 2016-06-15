@@ -27,13 +27,19 @@ def bold(s):
 #}
 
 #s0 = FWLiteSample.fromFiles("bobak", files = ["./data/bobak_pickevents_miniAOD.root"] )
-s0 = FWLiteSample.fromFiles("bobak", files = ["./data/pickevents_maria_badMuon.root"] )
+#s0 = FWLiteSample.fromFiles("bobak", files = ["./data/pickevents_maria_badMuon.root"] )
+s0 = FWLiteSample.fromFiles("bobak", files = ["./data/maria_badevents_mAOD.root "] )
+#s0 = FWLiteSample.fromFiles("bobak", files = ["./data/raman_pickevents_BadMuFilterFailed.root "] )
+#s0 = FWLiteSample.fromFiles("bobak", files = ["root://eoscms.cern.ch//store/data/Run2016B/JetHT/MINIAOD/PromptReco-v2/000/273/150/00000/66051AAF-D819-E611-BD3D-02163E011D55.root"] )
+#s0 = FWLiteSample.fromFiles("T1tttt", files = ["root://eoscms.cern.ch//store/mc/RunIISpring16MiniAODv1/SMS-T1tttt_mGluino-1500_mLSP-100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/60000/26C76166-0FFE-E511-BA96-0025905D1D60.root"] )
+#s0 = FWLiteSample.fromFiles("ece", files = ["/afs/cern.ch/user/e/easilar/public/forMETScanners/pickevents_basChargedFail_10TeVPfMET.root"] )
 
 products = {
-#    'muons':{'type':'vector<pat::Muon>', 'label': "slimmedMuons"},
-#    'pf':{'type':'vector<pat::PackedCandidate>', 'label':( "packedPFCandidates" ) },
-    'pf':{'type':'vector<reco::PFCandidate>', 'label':( "particleFlow" ) },
-    'muons':{'type':'vector<reco::Muon>', 'label': ("muons") }
+    'muons':{'type':'vector<pat::Muon>', 'label': "slimmedMuons"},
+    'pf':{'type':'vector<pat::PackedCandidate>', 'label':( "packedPFCandidates" ) },
+#    'pf':{'type':'vector<reco::PFCandidate>', 'label':( "particleFlow" ) },
+#    'muons':{'type':'vector<reco::Muon>', 'label': ("muons") }
+    'pfMet':{'type':'vector<pat::MET>', 'label':( "slimmedMETs" )},
 }
 
 r = s0.fwliteReader( products = products )
@@ -58,7 +64,7 @@ def deltaR(eta1, phi1, eta2, phi2):
     return sqrt( (eta1-eta2)**2 + deltaPhi(phi1, phi2)**2 )
  
 
-def badChargedHadronFilter( muons, pf ):
+def badChargedHadronFilter( muons, pf, discardHPTracks = True):
     maxDR = 0.001
     minMuonTrackRelErr = 0.5
     minPtDiffRel = -0.5
@@ -68,7 +74,8 @@ def badChargedHadronFilter( muons, pf ):
         if muon.pt()<minMuPt : continue
         if muon.innerTrack().isNonnull():
             it = muon.innerTrack()
-            if it.quality(it.highPurity): continue
+            if it.quality(it.highPurity): 
+                if discardHPTracks:continue
             # All events had a drastically high pt error on the inner muon track (fac. ~10). Require at least 0.5
             if it.ptError()/it.pt() < minMuonTrackRelErr: continue
             for c in pf:
@@ -79,6 +86,7 @@ def badChargedHadronFilter( muons, pf ):
                     if deltaR( it.eta(), it.phi(), c.eta(), c.phi() ) < maxDR and dPtRel > minPtDiffRel:
                         flagged = True
                         break
+    return not flagged
 
 
 def badPFMuonFilter( pf ):
@@ -93,22 +101,108 @@ def badPFMuonFilter( pf ):
             continue 
         if abs(tref.dz()) < minDZ: continue
         if tref.ptError()<minMuPtError: continue
-        #print "reco::muon NON HP IT pdgId %i pt %3.2f eta %3.2f phi %3.2f track pt %3.2f +/- %3.2f dxy %3.2f dz %3.2f" %( pfMu.pdgId(), pfMu.pt(), pfMu.eta(), pfMu.phi(), tref.pt(), tref.ptError(), tref.dxy(), tref.dz() )
+        #print "PFMu NON HP IT pdgId %i pt %3.2f eta %3.2f phi %3.2f track pt %3.2f +/- %3.2f dxy %3.2f dz %3.2f" %( pfMu.pdgId(), pfMu.pt(), pfMu.eta(), pfMu.phi(), tref.pt(), tref.ptError(), tref.dxy(), tref.dz() )
         return False
     return True
 
+def badPFMuonFilter2( muons, pf, verbose = False, discardHPTracks = False):
+    minMuPt = 100
+    minMuPtRelError = 0.3
+    maxDR = 0.001
+   
+    #minDZ = 0.1
+    if len(muons)==0: return True
+    for i_muon, muon in enumerate(muons):
+        #if verbose: print "Testing ", i_muon
+        it = muon.innerTrack()
+        if it.isNull(): continue
+        if discardHPTracks and ( it.quality(it.highPurity) ):
+            if verbose: print "muon pt %3.2f Inner track is HP -> continue"%muon.pt()
+            continue 
+
+        reco_muon_is_bad = ( (it.pt()> minMuPt) and it.ptError()/it.pt() > minMuPtRelError ) 
+        gt = muon.globalTrack()
+        if (not reco_muon_is_bad) and ( (not gt.isNull()) and (gt.pt()> minMuPt) and gt.ptError()/gt.pt()>minMuPtRelError ):
+            reco_muon_is_bad = True
+        
+        if verbose: 
+            print "reco::muon bad?  %r IT-HP? %r pdgId %i pt %3.2f eta %3.2f phi %3.2f track pt %3.2f +/- %3.2f " %( reco_muon_is_bad, it.quality(it.highPurity), muon.pdgId(), muon.pt(), muon.eta(), muon.phi(), it.pt(), it.ptError() )
+            if not gt.isNull(): print "global pt %3.2f +/- %3.2f"% (gt.pt(), gt.ptError())
+
+        pfMuons = filter(lambda p: abs(p.pdgId())==13 and p.pt()>minMuPt, pf )
+
+        if len(pfMuons)>0:
+            minDR = min([deltaR( muon.eta(), muon.phi(), c.eta(), c.phi() ) for c in pfMuons] )
+            if verbose: print "minDR", minDR
+            flagged = minDR<maxDR
+        else:
+            flagged = False
+            if verbose: print "no PF muon found"
+        if flagged: return False
+
+    return True
+
+verbose = False
+
+c_total = 0
+c_inf = 0
+c_badChargedHadronFilter = 0
+c_badChargedHadronFilter_HP = 0
+c_badPFMuonFilter = 0
+c_badPFMuonFilter_HP = 0
 while r.run():
-    print "%i:%i:%i"%r.evt
+    if 23672899 in r.evt: break
+
+    c_total += 1
     pf = list(r.products['pf'])
-    pf.sort(key = lambda p: -p.pt())
-    print "Leading pf candidate pdgId %i pt %3.2f eta %3.2f phi %3.2f" %( pf[0].pdgId(), pf[0].pt(), pf[0].eta(), pf[0].phi() )
+    pfMuons = filter(lambda p: abs(p.pdgId())==13, pf)
+    #pf.sort(key = lambda p: -p.pt())
     muons = list(r.products['muons'])
-    muons.sort(key = lambda p: -p.pt())
-    print "badChargedHadronFilter? ", badChargedHadronFilter(muons, pf)
     #if len(muons)>0:
     #    muon = muons[0]
     #    print "reco::muon pdgId %i pt %3.2f eta %3.2f phi %3.2f inner track pt %3.2f +/- %3.2f. Flagged? %r" %( muon.pdgId(), muon.pt(), muon.eta(), muon.phi(), muon.innerTrack().pt(), muon.innerTrack().ptError(), badChargedHadronFilter(muons, pf) )
-    print "badPFMuonFilter? ", badPFMuonFilter( pf )
+    # print "badPFMuonFilter? %r badPFMuonFilter2 %r"%( badPFMuonFilter( pf ), badPFMuonFilter2( muons) )
+    print "%30s"%("%i:%i:%i"% r.evt), 
+    if not badChargedHadronFilter(muons, pf, discardHPTracks = True): 
+        #print "Failed badChargedHadronFilter"
+        c_badChargedHadronFilter += 1
+        print "badCh: 0",
+    else:
+        print "badCh: 1",
+      
+    if not badChargedHadronFilter(muons, pf, discardHPTracks = False):
+        # print "Failed badChargedHadronFilter if HP tracks are also considered!"
+        c_badChargedHadronFilter_HP += 1
+        print "badCh(HP): 0",
+    else:
+        print "badCh(HP): 1",
+
+    if not badPFMuonFilter2( muons, pf, verbose = verbose, discardHPTracks = True):
+        c_badPFMuonFilter += 1
+        # print "Flagged %i:%i:%i"% r.evt,"MET %3.2f"%r.products['pfMet'][0].pt()
+        print "bad PF Mu: 0",
+    else:
+        print "bad PF Mu: 1",
+    if not badPFMuonFilter2( muons, pf, verbose = verbose, discardHPTracks = False): 
+        c_badPFMuonFilter_HP += 1
+        print "bad PF Mu (HP): 0",
+    else:
+        print "bad PF Mu (HP): 1",
+        # print "Failed badPFMuonFilter if HP tracks are also considered!"
+    #else:
+    #    if verbose: print "Not Flagged %i:%i:%i"% r.evt,"MET %3.2f"%r.products['pfMet'][0].pt()
+    pfInf = filter(lambda p: not p.pt()<float('Inf'), pf)
+    if len(pfInf)>0:
+        #for p in pfInf:
+            # print "Found INF opt particle pdgId %i eta %3.2f phi %3.2f" % (p.pdgId(), p.eta(), p.phi())
+        c_inf += 1
+        print "Inf Cand: 0"
+    else:
+        print "Inf Cand: 1"
+
+print "total %i inf-cand %i badChargedHadronFilter %i badChargedHadronFilter_HP %i badPFMuonFilter %i badPFMuonFilter_HP %i"\
+        %( c_total, c_inf, c_badChargedHadronFilter, c_badChargedHadronFilter_HP, c_badPFMuonFilter, c_badPFMuonFilter_HP) 
+         
     
 
 #Type                                  Module                      Label             Process   
