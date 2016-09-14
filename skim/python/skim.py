@@ -27,56 +27,39 @@ process.GlobalTag.globaltag = '80X_dataRun2_Express_v6'    #'80X_dataRun2_Prompt
 
 ##___________________________Input_Files______________________________________||
 
-process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring())
+#process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring())
 
-'''
+
 process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/007/00000/4CD1BB37-160F-E611-A1FC-02163E0137AC.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/008/00000/B67DEFBD-3B0F-E611-ADE1-02163E014771.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/010/00000/608A7811-350F-E611-8DB3-02163E014678.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/011/00000/1472B1C0-2310-E611-96D8-02163E0119DA.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/011/00000/14F0D632-3110-E611-933D-02163E01181D.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/011/00000/1EA0366E-3110-E611-80D8-02163E01249A.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/011/00000/44C1F798-2B10-E611-BF46-02163E01451F.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/011/00000/4A3B752F-1F10-E611-A035-02163E011CDA.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/011/00000/C47D98AD-2A10-E611-B6EB-02163E014469.root',
-'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/012/00000/6A4AFDBA-6E0F-E611-B2C5-02163E0118E4.root',
-'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/012/00000/6E789AB1-760F-E611-A25D-02163E0143CD.root',
-'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/012/00000/9A2FA24F-750F-E611-B070-02163E013771.root',
-'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/012/00000/9C1C71C4-740F-E611-AECE-02163E01359B.root',
-'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/012/00000/BCBD6558-800F-E611-A943-02163E01345F.root',
-'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/012/00000/C62D5E92-7E0F-E611-8A53-02163E0141D0.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/014/00000/18C7BC2F-970F-E611-81E0-02163E0118A8.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/014/00000/2AD65F62-9B0F-E611-BB79-02163E0142BE.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/014/00000/F4C31765-E70F-E611-A4CD-02163E011B93.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/016/00000/E80C2BE4-C70F-E611-8B2E-02163E01443E.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/017/00000/B87B5C29-9A0F-E611-9D52-02163E0129FC.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/018/00000/7E0C893D-A30F-E611-8F96-02163E0119EA.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/019/00000/8620D70B-980F-E611-BA11-02163E013494.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/021/00000/0C72517D-B60F-E611-BE19-02163E012B89.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/021/00000/14F40ABE-B40F-E611-8505-02163E0121B1.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/021/00000/284A38A4-BE0F-E611-90B7-02163E01464C.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/021/00000/4E056A46-AF0F-E611-86B7-02163E0135A9.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/021/00000/6279125D-B30F-E611-B35E-02163E01199C.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/021/00000/8CD6C812-B10F-E611-AE2D-02163E012941.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/021/00000/A27F93CA-B00F-E611-B906-02163E01364F.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/021/00000/CCF3F67F-B80F-E611-B19C-02163E0140DF.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/022/00000/9861F5D8-E00F-E611-99B0-02163E014413.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/022/00000/BEF59AD9-DF0F-E611-9B8B-02163E011C79.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/022/00000/C84194BB-CC0F-E611-95EA-02163E011848.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/022/00000/DCDC9F37-E10F-E611-9EED-02163E0123E8.root',
-#'/store/data/Run2016B/HLTPhysics/RECO/PromptReco-v1/000/272/023/00000/062E181F-D90F-E611-BDAE-02163E01416D.root',
-
-#'/store/express/Run2016B/ExpressPhysics/FEVT/Express-v1/000/272/012/00000/FEB65CA6-980D-E611-B0FA-02163E0135A3.root'
-
-
-#'/store/express/Run2016A/ExpressPhysics/FEVT/Express-v2/000/271/170/00000/00D3C1BC-9409-E611-A2C6-02163E014408.root'
-#"/store/data/Run2015B/MET/RECO/PromptReco-v1/000/251/252/00000/8CA59489-8D27-E511-A859-02163E014629.root"
+        #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/src/MetScanning/skim/python/crab_pickevents_FRB/crab_pickEvents/results/skim.root'
+        #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/src/MetScanning/skim/crab/Run2016B_int/filter_comp/pickevents/crab_pickevents_filterbyNew/crab_pickEvents/results/skim_FNew.root'
+        #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/RECO_RAW2DIGI_L1Reco_RECO_ALCA_SKIM_EI_PAT_DQM_inRECO.root'
+        #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/src/MetScanning/skim/crab/crab_pickevents_overlapHM/crab_pickEvents/results/pickSkim.root'
+        #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/src/MetScanning/skim/crab/crab_pickevents_filterOverlap/crab_pickEvents/results/pickSkim.root'
+        #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/remainlastRB/RECO_RAW2DIGI_L1Reco_RECO_ALCA_SKIM_EI_PAT_DQM_inRECO.root'
+        'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/lastRB/RECO_RAW2DIGI_L1Reco_RECO_ALCA_SKIM_EI_PAT_DQM_inRECO.root'
+        #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/edgeMuons/RECO_RAW2DIGI_L1Reco_RECO_ALCA_SKIM_EI_PAT_DQM_inRECO.root'
+        #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/src/crab_pickevents_EdgeRAW/crab_pickEvents/results/pickevents_EdgeMuonRAW_1.root'
+        #'file:/nfs/dust/cms/user/singha/MET_scan_8/CMSSW808_bugfix/CMSSW_8_0_8/src/MetScanning/skim/python/edmpick/crab_pickevents_AOD/crab_pickEvents/results/pickevents_1.root' #to check error message for AOD
+        #'file:/nfs/dust/cms/user/singha/MET_scan_8/CMSSW808_bugfix/CMSSW_8_0_8/src/MetScanning/skim/python/edmpick/crab_pickevents_FEVT/crab_pickEvents/results/pickevents_1.root' #GlobalReport
+        #'file:/nfs/dust/cms/user/singha/MET_scan_8/CMSSW808_bugfix/CMSSW_8_0_8/src/MetScanning/skim/python/edmpick/crab_pickevents_muonRB/crab_pickEvents/results/pickevents_1.root' #GlobalReport
+        #'file:/nfs/dust/cms/user/singha/SUSY_2016C/CMSSW_8_0_11/src/CMGTools/TTHAnalysis/python/plotter/pick_DMD.root'
+        #'file:/nfs/dust/cms/user/singha/MET_scan_8/CMSSW808_bugfix/CMSSW_8_0_8/src/MetScanning/skim/crab/crab_pickevents_22jul-jun_allpass/crab_pickEvents_26jul/results/skim_22Jul-Jun.root'
+        #'file:/nfs/dust/cms/user/singha/MET_scan_8/CMSSW808_bugfix/CMSSW_8_0_8/src/MetScanning/skim/crab/crab_pickevents_22jul-jun_allpass/crab_pickEvents_26jul/results/skim_22Jul-Jun.root'
+        #'file:/nfs/dust/cms/group/susy-desy/Run2/Data/2016/ICHEP_12p88fb_2016BCD_HT350Skim_fromDESY/Friends/teste/pickevents.root'
+        #'file:/nfs/dust/cms/user/singha/MET_scan_8/CMSSW808_bugfix/CMSSW_8_0_8/src/MetScanning/skim/python/zeynep/pickevents_blackholes.root'
+        #'file:/nfs/dust/cms/user/singha/MET_scan_8/CMSSW808_bugfix/CMSSW_8_0_8/src/MetScanning/skim/python/ece/pickevents_4Muonevent_rereco.root'
+       #'file:/nfs/dust/cms/user/singha/MET_scan_8/CMSSW808_bugfix/CMSSW_8_0_8/src/MetScanning/skim/python/ece/ece_single_Muon_rereco.root'
+        #'file:/nfs/dust/cms/user/singha/MET_scan_8/CMSSW808_bugfix/CMSSW_8_0_8/src/MetScanning/skim/crab/crab_pickevents_allPass/crab_pickEvents_all/results/Pickskim_allPass.root' 
+#        'file:/nfs/dust/cms/user/singha/MET_scan_8/CMSSW_8_0_8/src/MetScanning/skim/crab/raman_events/pickeventsAllFilters.root'
+        #'file:/hdfs/store/user/khurana/MET/crab_MET_Run2016B-PromptReco-v2_RECO/160524_134615/0000/skim_406.root'
+        #'root://xrootd.unl.edu//store/express/Run2016B/ExpressPhysics/FEVT/Express-v1/000/272/007/00000/84DC1CFA-830D-E611-9BFC-02163E012058.root'
+       # 'root://xrootd.unl.edu//store/express/Run2016B/ExpressPhysics/FEVT/Express-v1/000/272/008/00000/00100D61-870D-E611-9B62-02163E01470B.root'
 )
     )
-'''
+
 
 ##___________________________EDM_Output_File__________________________________||
 process.out = cms.OutputModule(
@@ -91,6 +74,9 @@ process.out = cms.OutputModule(
 
 
 ##____________________________________________________________________________||
+
+#process.options = cms.untracked.PSet(SkipEvent = cms.untracked.vstring('ProductNotFound'))
+
 process.options   = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 process.MessageLogger.cerr.FwkReport.reportEvery = 50
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
@@ -116,7 +102,6 @@ process.globalSuperTightHalo2016Filter.taggingMode = cms.bool(True)
 process.load('CommonTools.RecoAlgos.HBHENoiseFilterResultProducer_cfi')
 process.HBHENoiseFilterResultProducer.minZeros = cms.int32(99999)
 process.HBHENoiseFilterResultProducer.IgnoreTS4TS5ifJetInLowBVRegion=cms.bool(False)
-
 
 #process.ApplyBaselineHBHENoiseFilter = cms.EDFilter('BooleanFlagFilter',
 #    inputLabel = cms.InputTag('HBHENoiseFilterResultProducer','HBHENoiseFilterResult'),
@@ -262,6 +247,20 @@ process.EcalDeadCellTriggerPrimitiveFilter.taggingMode = cms.bool(True)
 process.load('RecoMET.METFilters.eeBadScFilter_cfi')
 process.eeBadScFilter.taggingMode = cms.bool(True)
 
+process.load('RecoMET.METFilters.BadChargedCandidateFilter_cfi')
+process.BadChargedCandidateFilter.taggingMode = cms.bool(True)
+
+process.load('RecoMET.METFilters.BadPFMuonFilter_cfi')
+process.BadPFMuonFilter.taggingMode = cms.bool(True)
+#process.BadPFMuonFilter.debug = cms.bool(True)
+
+process.load('RecoMET.METFilters.BadChargedCandidateFilterOld_cfi')
+process.BadChargedCandidateFilterOld.taggingMode = cms.bool(True)
+
+process.load('RecoMET.METFilters.BadPFMuonFilterOld_cfi')
+process.BadPFMuonFilterOld.taggingMode = cms.bool(True)
+#process.BadPFMuonFilter.debug = cms.bool(True)
+
 process.primaryVertexFilter = cms.EDFilter("GoodVertexFilter",
                                            vertexCollection = cms.InputTag('offlinePrimaryVertices'),
                                            minimumNDOF = cms.uint32(4) ,
@@ -277,7 +276,7 @@ process.EcalDeadCellBoundaryEnergyFilter.limitDeadCellToChannelStatusEE=cms.vint
 process.condMETSelector = cms.EDProducer(
    "CandViewShallowCloneCombiner",
    decay = cms.string("caloMet pfMet"),
-   cut = cms.string("(daughter(0).pt > 80) || (daughter(1).pt > 80)" ) 
+   cut = cms.string("(daughter(0).pt > 200) || (daughter(1).pt > 200)" ) 
    )
 
 process.metCounter = cms.EDFilter(
@@ -290,6 +289,7 @@ process.metCounter = cms.EDFilter(
 ##___________________________Flat_Tuple________________________________________||
 process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
                                             rootOutputFile=cms.string("tuple.root"),
+#                                            muons = cms.InputTag(""),
                                             pfCandidates=cms.InputTag("particleFlow"),
                                             pfJets=cms.InputTag("ak4PFJets"),
                                             caloMET=cms.InputTag("caloMet"),
@@ -319,7 +319,14 @@ process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
                                             EBRecHits=cms.InputTag("reducedEcalRecHitsEB"),
                                             EERecHits=cms.InputTag("reducedEcalRecHitsEE"),
                                             ESRecHits=cms.InputTag("reducedEcalRecHitsES"),
-                                            HcalNoise=cms.InputTag("hcalnoise")
+                                            HcalNoise=cms.InputTag("hcalnoise"),
+                                            BadChCandFilter=cms.InputTag("BadChargedCandidateFilter"),
+                                            BadPFMuon=cms.InputTag("BadPFMuonFilter"),
+                                            BadChCandFilterOld=cms.InputTag("BadChargedCandidateFilterOld"),
+                                            BadPFMuonOld=cms.InputTag("BadPFMuonFilterOld"),
+                                            OfflinePrimaryVertices = cms.InputTag("offlinePrimaryVertices")
+                                            
+
 )
 
 # This part is needed if you want to update the BeamHaloSummary information
@@ -356,17 +363,15 @@ process.p = cms.Path(
     process.globalTightHalo2016Filter * 
     process.globalSuperTightHalo2016Filter * 
     process.HcalStripHaloFilter*
-
+    process.BadChargedCandidateFilter*
+    process.BadPFMuonFilter*
+    process.BadChargedCandidateFilterOld*
+    process.BadPFMuonFilterOld*
     process.metScanNtupleMaker ##CH: writes a flat tree
     )
 
-process.e1 = cms.EndPath(
-    process.out ##CH: write the skimmed edm file 
-    )
+#process.e1 = cms.EndPath(
+ #   process.out ##CH: write the skimmed edm file 
+  #  )
 
 ##____________________________________________________________________________||
-
-
-
-
-

@@ -5,6 +5,7 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
 
 
   //the input tags
+  //  tokenMuons_          = consumes<edm::View<reco::Muon> >(iConfig.getParameter<edm::InputTag> ("muons")  );
   PfCandidates_token   = consumes<reco::PFCandidateCollection>(iConfig.getParameter<edm::InputTag>("pfCandidates"           ));
   PfJets_token         = consumes<reco::PFJetCollection>(iConfig.getParameter<edm::InputTag>("pfJets"                 ));
   CaloMET_token = consumes<reco::CaloMETCollection>(iConfig.getParameter<edm::InputTag>("caloMET"));
@@ -34,6 +35,13 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   RecHitsEE_token = consumes<EcalRecHitCollection>(iConfig.getParameter<edm::InputTag>("EERecHits"));
   RecHitsES_token = consumes<EcalRecHitCollection>(iConfig.getParameter<edm::InputTag>("ESRecHits"));
   hSummary_token = consumes<HcalNoiseSummary>(iConfig.getParameter<edm::InputTag>("HcalNoise"));
+  BadChCandF_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("BadChCandFilter"));
+  BadPFMuon_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("BadPFMuon"));
+
+  BadChCandFOld_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("BadChCandFilterOld"));
+  BadPFMuonOld_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("BadPFMuonOld"));
+
+  vertex_token = consumes<vector<reco::Vertex> >(iConfig.getParameter<edm::InputTag>("OfflinePrimaryVertices"));
   
 
   // The root tuple
@@ -50,6 +58,7 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   s->Branch("event",&event,"event/l");  
   s->Branch("time",&time,"time/l");
   
+  s->Branch("nVtx", &nVtx, "nVtx/l");
   s->Branch("filter_csc2015",&filtercsc2015,"filter_csc2015/O");
   s->Branch("filter_globaltighthalo2016",&filterglobaltighthalo2016,"filter_globaltighthalo2016/O");
   s->Branch("filter_globalsupertighthalo2016",&filterglobalsupertighthalo2016,"filter_globalsupertighthalo2016/O");
@@ -60,13 +69,24 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   s->Branch("filter_hbheiso",&filterhbheiso,"filter_hbheiso/O");
   s->Branch("filter_ecaltp",&filterecaltp,"filter_ecaltp/O");
   s->Branch("filter_ecalsc",&filterecalsc,"filter_ecalsc/O");
+  s->Branch("filter_badChCand",&filterbadChCandidate,"filter_badChCand/O");
+  s->Branch("filter_badPFMuon",&filterbadPFMuon,"filter_badPFMuon/O");
+
+  s->Branch("filter_badChCandOld",&filterbadChCandidateOld,"filter_badChCandOld/O");
+  s->Branch("filter_badPFMuonOld",&filterbadPFMuonOld,"filter_badPFMuonOld/O");
+
 
   //Leptons =====================================
   s->Branch("pfLepton_pt"             , &pfLepton_pt   );  
   s->Branch("pfLepton_eta"            , &pfLepton_eta  ); 
   s->Branch("pfLepton_phi"            , &pfLepton_phi  );  
-  s->Branch("pfLepton_pdgId"          , &pfLepton_pdgId);  
-  
+  s->Branch("pfLepton_pdgId"          , &pfLepton_pdgId);
+
+  //Muons  ======================================
+
+  // s->Branch("muon_pt"             , &muon_pt   );
+
+  //s->Branch("pfLepton_d0"             , &pfLepton_d0   );
   //Jets ========================================
   s->Branch("pfJet_pt"                , &pfJet_pt      );  
   s->Branch("pfJet_eta"               , &pfJet_eta     ); 
@@ -127,10 +147,19 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   s->Branch("track_pt",&track_pt);
   s->Branch("track_eta",&track_eta);
   s->Branch("track_phi",&track_phi);
-  
+  s->Branch("track_d0",&track_d0);
+  s->Branch("track_d0Error" ,&track_d0Error);
+  s->Branch("track_dz",&track_dz);
+  s->Branch("track_dzError" ,&track_dzError);
+  s->Branch("track_ptError",&track_ptError);
+
+
+
+
+
+
 
 }
-
 
 
 METScanningNtupleMaker::~METScanningNtupleMaker() { 
@@ -145,12 +174,12 @@ METScanningNtupleMaker::~METScanningNtupleMaker() {
 
 void 
 METScanningNtupleMaker::beginRun(const edm::Run& run, 
-				  const edm::EventSetup & es) { }
+				 const edm::EventSetup & es) { }
 
 
 void 
 METScanningNtupleMaker::analyze(const Event& iEvent, 
-				 const EventSetup& iSetup) {
+				const EventSetup& iSetup) {
   
 
   edm::ESHandle<EcalSeverityLevelAlgo> sevlv;
@@ -165,6 +194,14 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   event = (size_t)ievent;
   lumiBlock = (size_t)ilumiBlock;
   time = (size_t)((iEvent.time().value())>>32);
+
+  Handle<vector<reco::Vertex> > offlineVtx;
+  iEvent.getByToken(vertex_token, offlineVtx);
+  nVtx = (size_t) offlineVtx->size();
+  std::cout<<" nVtx = "<<offlineVtx->size()
+           <<" " <<nVtx<<std::endl;
+
+
 
   
   //get filters
@@ -185,6 +222,8 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   iEvent.getByToken(TrackingTMSC_token, ifiltertrackingtmsc);
   filtertrackingtmsc = *ifiltertrackingtmsc;
   */
+  
+
   Handle<bool> ifiltercsc2015;
   iEvent.getByToken(CSC2015_token, ifiltercsc2015);
   filtercsc2015 = *ifiltercsc2015;
@@ -237,17 +276,43 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   if( hSummary->maxHPDHits()               >= 17                           ) filterhbher1nozeros = false;
   if( hSummary->maxHPDNoOtherHits()        >= 10                           ) filterhbher1nozeros = false;
   if( hSummary->HasBadRBXTS4TS5() && !hSummary->goodJetFoundInLowBVRegion()) filterhbher1nozeros = false;
+
+  Handle<bool> ifilterbadChCand;
+  iEvent.getByToken(BadChCandF_token, ifilterbadChCand);
+  filterbadChCandidate = *ifilterbadChCand;
   
+  Handle<bool> ifilterbadPFMuon;
+  iEvent.getByToken(BadPFMuon_token, ifilterbadPFMuon);
+  filterbadPFMuon = *ifilterbadPFMuon;
+
+  Handle<bool> ifilterbadChCandOld;
+  iEvent.getByToken(BadChCandFOld_token, ifilterbadChCandOld);
+  filterbadChCandidateOld = *ifilterbadChCandOld;
+
+  Handle<bool> ifilterbadPFMuonOld;
+  iEvent.getByToken(BadPFMuonOld_token, ifilterbadPFMuonOld);
+  filterbadPFMuonOld = *ifilterbadPFMuonOld;
+
+
+
   
   // get Leptons
   Handle<reco::PFCandidateCollection> pfCandidates;
   iEvent.getByToken(PfCandidates_token,pfCandidates);
-  
+
+
   pfLepton_pt     .clear();
   pfLepton_eta    .clear();
   pfLepton_phi    .clear();
   pfLepton_pdgId  .clear();
-  
+
+  // get muons
+
+  // Handle<reco::Muon> muons;
+  // iEvent.getByToken(tokenMuons_,muons);
+
+  // muon_pt         .clear();
+
   
   // get Jets
   Handle<reco::PFJetCollection> pfJets;
@@ -268,13 +333,10 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   iEvent.getByToken(CaloMET_token, caloMET);
 
   Handle<reco::PFMETCollection> pfCaloMET;
-  try {
-      iEvent.getByToken(PFCaloMET_token, pfCaloMET);
-  } catch (...) {}
+  iEvent.getByToken(PFCaloMET_token, pfCaloMET);
+
   Handle<reco::PFClusterMETCollection> pfClusterMET;
-  try{
-      iEvent.getByToken(PFClusterMET_token, pfClusterMET);
-  } catch (...) {}
+  iEvent.getByToken(PFClusterMET_token, pfClusterMET);
 
   Handle<reco::PFMETCollection> pfMET;
   iEvent.getByToken(PFMET_token, pfMET);
@@ -343,25 +405,42 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   pfClusterHF_phi.clear();
   pfClusterHF_time.clear();
 
+  track_ptError.clear();
   track_pt.clear();
   track_eta.clear();
   track_phi.clear();
-
+  track_d0.clear();
+  track_d0Error.clear();
+  track_dz.clear();
+  track_dzError.clear();
   //================================================================
-  
+
+
   //pfCandidates
   for( size_t ibc=0; ibc<pfCandidates->size(); ++ibc ) {
     
     int pdgId = pfCandidates->at(ibc).pdgId();
     if(std::abs(pdgId) < 11 || std::abs(pdgId) > 16) continue;
     
+
     pfLepton_pt   .push_back( pfCandidates->at(ibc).pt()  );
     pfLepton_eta  .push_back( pfCandidates->at(ibc).eta() );
     pfLepton_phi  .push_back( pfCandidates->at(ibc).phi() );
     pfLepton_pdgId.push_back( pdgId                   );
+    //pfLepton_d0   .push_back( d0                      );
     
   }
-  
+
+  //Muons
+  // for( size_t ibc=0; ibc<muons->size(); ++ibc ) {
+    //  int pdgId = pfCandidates->at(ibc).pdgId();
+
+    // reco::TrackRef innerMuonTrack = muon.innerTrack();
+    // reco::TrackRef globalMuonTrack = muon.globalTrack();
+    // reco::TrackRef bestMuonTrack = muon.muonBestTrack();
+
+    //muon_pt    .push_back( muons->at(ibc).pt()   );
+  // }
   
   //================================================================
   //pfJets
@@ -421,20 +500,20 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   caloMETPt = caloMET->begin()->pt();
   caloMETPhi = caloMET->begin()->phi();
   caloMETSumEt = caloMET->begin()->sumEt();
- 
-  if (pfCaloMET.isValid()) { 
-      pfCaloMETPt = pfCaloMET->begin()->pt();
-      pfCaloMETPhi = pfCaloMET->begin()->phi();
-      pfCaloMETSumEt = pfCaloMET->begin()->sumEt();
-  }
-  if (pfClusterMET.isValid()) {
-      pfClusterMETPt = pfClusterMET->begin()->pt();
-      pfClusterMETPhi = pfClusterMET->begin()->phi();
-      pfClusterMETSumEt = pfClusterMET->begin()->sumEt();
-  }
+  
+  pfCaloMETPt = pfCaloMET->begin()->pt();
+  pfCaloMETPhi = pfCaloMET->begin()->phi();
+  pfCaloMETSumEt = pfCaloMET->begin()->sumEt();
+  
+  pfClusterMETPt = pfClusterMET->begin()->pt();
+  pfClusterMETPhi = pfClusterMET->begin()->phi();
+  pfClusterMETSumEt = pfClusterMET->begin()->sumEt();
+
   pfMETPt = pfMET->begin()->pt();
   pfMETPhi = pfMET->begin()->phi();
   pfMETSumEt = pfMET->begin()->sumEt();
+
+
   
   //ECAL clusters
   for( size_t ibc=0; ibc<pfClustersEcal->size(); ++ibc ) {
@@ -514,9 +593,14 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   //tracks
   for( size_t ibc=0; ibc<tracks->size(); ++ibc ) {
     reco::TrackRef trkRef( tracks, ibc );
+    track_ptError.push_back( trkRef->ptError() );
     track_pt.push_back( trkRef->pt() );
     track_eta.push_back( trkRef->eta() );
     track_phi.push_back( trkRef->phi() );
+    track_d0.push_back( trkRef->d0() );
+    track_d0Error.push_back( trkRef->d0Error() );
+    track_dz.push_back( trkRef->dz() );
+    track_dzError.push_back( trkRef->dzError() );
   }
 
 
@@ -527,3 +611,9 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
 
 
 DEFINE_FWK_MODULE(METScanningNtupleMaker);
+
+
+
+
+
+
