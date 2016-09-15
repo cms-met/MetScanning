@@ -5,7 +5,10 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
 
 
   //the input tags
-  //  tokenMuons_          = consumes<edm::View<reco::Muon> >(iConfig.getParameter<edm::InputTag> ("muons")  );
+
+  
+  // :tokenMuons_          ( consumes<edm::View<reco::Muon> >(iConfig.getParameter<edm::InputTag> ("muons")  ))
+  Muon_token           = consumes<reco::MuonCollection>(iConfig.getParameter<edm::InputTag>("muonCandidates"           ));
   PfCandidates_token   = consumes<reco::PFCandidateCollection>(iConfig.getParameter<edm::InputTag>("pfCandidates"           ));
   PfJets_token         = consumes<reco::PFJetCollection>(iConfig.getParameter<edm::InputTag>("pfJets"                 ));
   CaloMET_token = consumes<reco::CaloMETCollection>(iConfig.getParameter<edm::InputTag>("caloMET"));
@@ -76,15 +79,24 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   s->Branch("filter_badPFMuonOld",&filterbadPFMuonOld,"filter_badPFMuonOld/O");
 
 
-  //Leptons =====================================
+  //pfLeptons =====================================
   s->Branch("pfLepton_pt"             , &pfLepton_pt   );  
   s->Branch("pfLepton_eta"            , &pfLepton_eta  ); 
   s->Branch("pfLepton_phi"            , &pfLepton_phi  );  
   s->Branch("pfLepton_pdgId"          , &pfLepton_pdgId);
 
+
+  //pfHadrons ==================================
+
+  s->Branch("pfHadron_pt"             , &pfHadron_pt   );
+  s->Branch("pfHadron_eta"            , &pfHadron_eta  );
+  s->Branch("pfHadron_phi"            , &pfHadron_phi  );
+  s->Branch("pfHadron_pdgId"          , &pfHadron_pdgId);
+
   //Muons  ======================================
 
-  // s->Branch("muon_pt"             , &muon_pt   );
+  s->Branch("muon_pt"             , &muon_pt   );
+  // s->Branch("muon_ptError"        , &muon_ptError   );
 
   //s->Branch("pfLepton_d0"             , &pfLepton_d0   );
   //Jets ========================================
@@ -293,8 +305,6 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   iEvent.getByToken(BadPFMuonOld_token, ifilterbadPFMuonOld);
   filterbadPFMuonOld = *ifilterbadPFMuonOld;
 
-
-
   
   // get Leptons
   Handle<reco::PFCandidateCollection> pfCandidates;
@@ -306,13 +316,31 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   pfLepton_phi    .clear();
   pfLepton_pdgId  .clear();
 
+  // get charged Hadrons (pdgId=211)
+
+  pfHadron_pt     .clear();
+  pfHadron_eta    .clear();
+  pfHadron_phi    .clear();
+  pfHadron_pdgId  .clear();
+
+
+
+
+
+
+
   // get muons
 
-  // Handle<reco::Muon> muons;
-  // iEvent.getByToken(tokenMuons_,muons);
+  //  typedef View<reco::MuonCollection> MuonCollectionView;
+  Handle<reco::MuonCollection> muonCandidates;
+  iEvent.getByToken(Muon_token,muonCandidates);
 
-  // muon_pt         .clear();
 
+
+
+
+  muon_pt         .clear();
+  // muon_ptError    .clear();
   
   // get Jets
   Handle<reco::PFJetCollection> pfJets;
@@ -431,17 +459,46 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
     
   }
 
+  //pfHadrons
+
+  for( size_t ibc=0; ibc<pfCandidates->size(); ++ibc ) {
+    int pdgId = pfCandidates->at(ibc).pdgId();
+    if(std::abs(pdgId) != 211 ) continue;
+
+    pfHadron_pt   .push_back( pfCandidates->at(ibc).pt() );
+    pfHadron_eta  .push_back( pfCandidates->at(ibc).eta() );
+    pfHadron_phi  .push_back( pfCandidates->at(ibc).phi() );
+    pfHadron_pdgId.push_back( pdgId                   );
+  }
+
+
   //Muons
-  // for( size_t ibc=0; ibc<muons->size(); ++ibc ) {
-    //  int pdgId = pfCandidates->at(ibc).pdgId();
+  for( size_t ibc=0; ibc<muonCandidates->size(); ++ibc ) {
+     //int pdgId = muonCandidates->at(ibc).pdgId();
 
     // reco::TrackRef innerMuonTrack = muon.innerTrack();
     // reco::TrackRef globalMuonTrack = muon.globalTrack();
+
+    //    const reco::Muon & muon = (*muonCandidates)[ibc];
     // reco::TrackRef bestMuonTrack = muon.muonBestTrack();
 
-    //muon_pt    .push_back( muons->at(ibc).pt()   );
-  // }
+    muon_pt    .push_back( muonCandidates->at(ibc).pt()   );
+     //  muon_ptError    .push_back( muonCandidates->at(ibc).ptError()   );
+  }
   
+     //======================================================================
+  //  for ( unsigned i=0; i < muons->size(); ++i ) { // loop over all muons                                                                              
+
+  //const reco::Muon & muon = (*muons)[i];
+
+  //    reco::TrackRef bestMuonTrack = muon.muonBestTrack();
+  //muon_pt    .push_back( bestMuonTrack->pt()   ); 
+  //}
+
+
+
+
+
   //================================================================
   //pfJets
   int maxl = -1;

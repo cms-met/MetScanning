@@ -289,7 +289,7 @@ process.metCounter = cms.EDFilter(
 ##___________________________Flat_Tuple________________________________________||
 process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
                                             rootOutputFile=cms.string("tuple.root"),
-#                                            muons = cms.InputTag(""),
+                                            muonCandidates = cms.InputTag("muons"),
                                             pfCandidates=cms.InputTag("particleFlow"),
                                             pfJets=cms.InputTag("ak4PFJets"),
                                             caloMET=cms.InputTag("caloMet"),

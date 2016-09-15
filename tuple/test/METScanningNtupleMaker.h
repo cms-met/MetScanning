@@ -71,7 +71,8 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
   virtual void beginRun(const edm::Run & r, const edm::EventSetup & c);
 
  private:
-  edm::EDGetTokenT<edm::View<reco::Muon> >  tokenMuons_;
+  //  edm::EDGetTokenT<edm::View<reco::Muon> >  tokenMuons_;
+  edm::EDGetTokenT<reco::MuonCollection> Muon_token;
   edm::EDGetTokenT<reco::PFCandidateCollection> PfCandidates_token;
   edm::EDGetTokenT<reco::PFJetCollection> PfJets_token;
   edm::EDGetTokenT<reco::CaloMETCollection> CaloMET_token;
@@ -124,13 +125,18 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
 
  
   std::vector<float>  muon_pt;
+  std::vector<float>  muon_ptError;
 
 
   std::vector<float>  pfLepton_pt;
   std::vector<float>  pfLepton_eta;
   std::vector<float>  pfLepton_phi;
   std::vector<float>  pfLepton_pdgId;
-  
+
+  std::vector<float>  pfHadron_pt;
+  std::vector<float>  pfHadron_eta;
+  std::vector<float>  pfHadron_phi;
+  std::vector<float>  pfHadron_pdgId;  
     
 
   std::vector<float>  pfJet_pt;
