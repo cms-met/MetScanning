@@ -1,6 +1,25 @@
 #include "MetScanning/tuple/test/METScanningNtupleMaker.h"
 #include <iostream>
 
+//User
+
+#include "FWCore/Framework/interface/Frameworkfwd.h"
+#include "FWCore/Framework/interface/global/EDFilter.h"
+
+#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/MakerMacros.h"
+
+#include "FWCore/ParameterSet/interface/ParameterSet.h"
+
+#include "DataFormats/Math/interface/deltaR.h"
+#include "DataFormats/MuonReco/interface/Muon.h"
+#include "DataFormats/MuonReco/interface/MuonFwd.h"
+#include "DataFormats/MuonReco/interface/MuonSelectors.h"
+#include "DataFormats/TrackReco/interface/Track.h"
+#include "DataFormats/TrackReco/interface/TrackFwd.h"
+#include "DataFormats/ParticleFlowCandidate/interface/PFCandidate.h"
+#include "DataFormats/ParticleFlowCandidate/interface/PFCandidateFwd.h"
+
 METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig) {
 
 
@@ -96,7 +115,11 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   //Muons  ======================================
 
   s->Branch("muon_pt"             , &muon_pt   );
-  // s->Branch("muon_ptError"        , &muon_ptError   );
+  s->Branch("muon_ptError"        , &muon_ptError   );
+  s->Branch("imuon_pt"             , &imuon_pt   );
+  s->Branch("imuon_ptError"        , &imuon_ptError   );
+  s->Branch("muon_SC"              , &muon_SC    );
+
 
   //s->Branch("pfLepton_d0"             , &pfLepton_d0   );
   //Jets ========================================
@@ -332,7 +355,7 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   // get muons
 
   //  typedef View<reco::MuonCollection> MuonCollectionView;
-  Handle<reco::MuonCollection> muonCandidates;
+  Handle<MuonCollection> muonCandidates;
   iEvent.getByToken(Muon_token,muonCandidates);
 
 
@@ -340,8 +363,11 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
 
 
   muon_pt         .clear();
-  // muon_ptError    .clear();
-  
+  muon_ptError    .clear();
+  imuon_pt         .clear();
+  imuon_ptError    .clear();  
+  muon_SC          .clear();
+
   // get Jets
   Handle<reco::PFJetCollection> pfJets;
   iEvent.getByToken(PfJets_token,pfJets);
@@ -476,14 +502,21 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   for( size_t ibc=0; ibc<muonCandidates->size(); ++ibc ) {
      //int pdgId = muonCandidates->at(ibc).pdgId();
 
-    // reco::TrackRef innerMuonTrack = muon.innerTrack();
+    reco::TrackRef innerMuonTrack = muonCandidates->at(ibc).innerTrack();
     // reco::TrackRef globalMuonTrack = muon.globalTrack();
 
-    //    const reco::Muon & muon = (*muonCandidates)[ibc];
-    // reco::TrackRef bestMuonTrack = muon.muonBestTrack();
+    // const reco::MuonCollection & muon = (*muons)[ibc];
+    reco::TrackRef bestMuonTrack = muonCandidates->at(ibc).muonBestTrack();
 
-    muon_pt    .push_back( muonCandidates->at(ibc).pt()   );
-     //  muon_ptError    .push_back( muonCandidates->at(ibc).ptError()   );
+    muon_pt    .push_back( bestMuonTrack->pt()   );
+    muon_ptError    .push_back( bestMuonTrack->ptError()   );
+    imuon_pt    .push_back( innerMuonTrack->pt()   );
+    imuon_ptError    .push_back( innerMuonTrack->ptError()   );
+    muon_SC          .push_back(muon::segmentCompatibility(muonCandidates->at(ibc)));
+
+
+
+
   }
   
      //======================================================================

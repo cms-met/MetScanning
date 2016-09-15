@@ -1,5 +1,6 @@
 <library   name="METScanningNutpleMaker" file="METScanningNtupleMaker.cc">
   <use   name="DataFormats/METReco"/>
+  <use   name="DataFormats/MuonReco" />
   <use   name="DataFormats/ParticleFlowReco"/>
   <use   name="FWCore/Framework"/>
   <use   name="FWCore/MessageLogger"/>

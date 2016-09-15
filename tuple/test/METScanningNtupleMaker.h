@@ -47,6 +47,29 @@
 #include "FWCore/Utilities/interface/Exception.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 
+
+
+
+#include "FWCore/Framework/interface/Frameworkfwd.h"
+#include "FWCore/Framework/interface/global/EDFilter.h"
+
+#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/MakerMacros.h"
+
+#include "FWCore/ParameterSet/interface/ParameterSet.h"
+
+#include "DataFormats/Math/interface/deltaR.h"
+#include "DataFormats/MuonReco/interface/Muon.h"
+#include "DataFormats/MuonReco/interface/MuonFwd.h"
+#include "DataFormats/MuonReco/interface/MuonSelectors.h"
+#include "DataFormats/TrackReco/interface/Track.h"
+#include "DataFormats/TrackReco/interface/TrackFwd.h"
+#include "DataFormats/ParticleFlowCandidate/interface/PFCandidate.h"
+#include "DataFormats/ParticleFlowCandidate/interface/PFCandidateFwd.h"
+
+
+
+
 #include <math.h>
 
 #include <TFile.h>
@@ -126,7 +149,9 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
  
   std::vector<float>  muon_pt;
   std::vector<float>  muon_ptError;
-
+  std::vector<float>  imuon_pt;
+  std::vector<float>  imuon_ptError;
+  std::vector<float>  muon_SC;
 
   std::vector<float>  pfLepton_pt;
   std::vector<float>  pfLepton_eta;
