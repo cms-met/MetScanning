@@ -115,8 +115,12 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   //Muons  ======================================
 
   s->Branch("muon_pt"             , &muon_pt   );
+  s->Branch("muon_eta"             , &muon_eta   );
+  s->Branch("muon_phi"             , &muon_phi   );
   s->Branch("muon_ptError"        , &muon_ptError   );
   s->Branch("imuon_pt"             , &imuon_pt   );
+  s->Branch("imuon_eta"             , &imuon_eta   );
+  s->Branch("imuon_phi"             , &imuon_phi   );
   s->Branch("imuon_ptError"        , &imuon_ptError   );
   s->Branch("muon_SC"              , &muon_SC    );
 
@@ -363,8 +367,12 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
 
 
   muon_pt         .clear();
+  muon_eta         .clear();
+  muon_phi         .clear();
   muon_ptError    .clear();
   imuon_pt         .clear();
+  imuon_eta         .clear();
+  imuon_phi         .clear();
   imuon_ptError    .clear();  
   muon_SC          .clear();
 
@@ -507,10 +515,18 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
 
     // const reco::MuonCollection & muon = (*muons)[ibc];
     reco::TrackRef bestMuonTrack = muonCandidates->at(ibc).muonBestTrack();
-
+    
+    if( innerMuonTrack.isNull() ) continue;
+    if( bestMuonTrack.isNull()  ) continue;
+    
     muon_pt    .push_back( bestMuonTrack->pt()   );
+    muon_eta    .push_back( bestMuonTrack->eta()   );
+    muon_phi    .push_back( bestMuonTrack->phi()   );
     muon_ptError    .push_back( bestMuonTrack->ptError()   );
     imuon_pt    .push_back( innerMuonTrack->pt()   );
+    imuon_eta    .push_back( innerMuonTrack->eta()   );
+    imuon_phi    .push_back( innerMuonTrack->phi()   );
+
     imuon_ptError    .push_back( innerMuonTrack->ptError()   );
     muon_SC          .push_back(muon::segmentCompatibility(muonCandidates->at(ibc)));
 

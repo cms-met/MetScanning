@@ -148,8 +148,12 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
 
  
   std::vector<float>  muon_pt;
+  std::vector<float>  muon_eta;
+  std::vector<float>  muon_phi;
   std::vector<float>  muon_ptError;
   std::vector<float>  imuon_pt;
+  std::vector<float>  imuon_eta;
+  std::vector<float>  imuon_phi;
   std::vector<float>  imuon_ptError;
   std::vector<float>  muon_SC;
 
