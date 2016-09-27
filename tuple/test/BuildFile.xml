@@ -9,3 +9,7 @@
   <use   name="RecoLocalCalo/EcalRecAlgos"/>
   <flags   EDM_PLUGIN="1"/>
 </library>
+
+
+
+

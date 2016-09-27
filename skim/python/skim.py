@@ -33,13 +33,19 @@ process.GlobalTag.globaltag = '80X_dataRun2_Express_v6'    #'80X_dataRun2_Prompt
 process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
+        
+        #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/src/MetScanning/skim/crab/Run2016B_int/filter_comp/crab_SingleMuon_2016B_RECO_GlobalAndPFcheck/results/crab_pickevents_TL/crab_pickEvents_TL/results/pickevents_1.root'
+        'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/src/MetScanning/skim/crab/Run2016B_int/filter_comp/crab_SingleMuon_2016B_RECO_GlobalAndPFcheck/results/crab_pickevents_TL/crab_pickEvents_TL/results/pickevents_2.root'
+        #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/src/MetScanning/skim/crab/Run2016B_int/filter_comp/crab_SingleMuon_2016B_RECO_GlobalAndPFcheck/results/crab_pickevents_TL/crab_pickEvents_TL/results/pickevents_3.root'
+
+
         #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/src/MetScanning/skim/python/crab_pickevents_FRB/crab_pickEvents/results/skim.root'
         #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/src/MetScanning/skim/crab/Run2016B_int/filter_comp/pickevents/crab_pickevents_filterbyNew/crab_pickEvents/results/skim_FNew.root'
         #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/RECO_RAW2DIGI_L1Reco_RECO_ALCA_SKIM_EI_PAT_DQM_inRECO.root'
         #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/src/MetScanning/skim/crab/crab_pickevents_overlapHM/crab_pickEvents/results/pickSkim.root'
         #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/src/MetScanning/skim/crab/crab_pickevents_filterOverlap/crab_pickEvents/results/pickSkim.root'
         #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/remainlastRB/RECO_RAW2DIGI_L1Reco_RECO_ALCA_SKIM_EI_PAT_DQM_inRECO.root'
-        'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/lastRB/RECO_RAW2DIGI_L1Reco_RECO_ALCA_SKIM_EI_PAT_DQM_inRECO.root'
+        #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/lastRB/RECO_RAW2DIGI_L1Reco_RECO_ALCA_SKIM_EI_PAT_DQM_inRECO.root'
         #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/edgeMuons/RECO_RAW2DIGI_L1Reco_RECO_ALCA_SKIM_EI_PAT_DQM_inRECO.root'
         #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/src/crab_pickevents_EdgeRAW/crab_pickEvents/results/pickevents_EdgeMuonRAW_1.root'
         #'file:/nfs/dust/cms/user/singha/MET_scan_8/CMSSW808_bugfix/CMSSW_8_0_8/src/MetScanning/skim/python/edmpick/crab_pickevents_AOD/crab_pickEvents/results/pickevents_1.root' #to check error message for AOD

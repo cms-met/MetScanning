@@ -1,3 +1,6 @@
+
+
+
 #include "MetScanning/tuple/test/METScanningNtupleMaker.h"
 #include <iostream>
 
@@ -114,6 +117,8 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
 
   //Muons  ======================================
 
+
+  s->Branch("muon_PF"             , &muon_PF);
   s->Branch("muon_pt"             , &muon_pt   );
   s->Branch("muon_eta"             , &muon_eta   );
   s->Branch("muon_phi"             , &muon_phi   );
@@ -365,7 +370,7 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
 
 
 
-
+  muon_PF         .clear();
   muon_pt         .clear();
   muon_eta         .clear();
   muon_phi         .clear();
@@ -435,6 +440,7 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   // Endcaps
   edm::Handle< EcalRecHitCollection > eeRecHits_h_;
   iEvent.getByToken( RecHitsEE_token, eeRecHits_h_ );
+
 
   // Preshower
   edm::Handle< EcalRecHitCollection > esRecHits_h_;
@@ -519,6 +525,7 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
     if( innerMuonTrack.isNull() ) continue;
     if( bestMuonTrack.isNull()  ) continue;
     
+    muon_PF    .push_back(muonCandidates->at(ibc).isPFMuon());
     muon_pt    .push_back( bestMuonTrack->pt()   );
     muon_eta    .push_back( bestMuonTrack->eta()   );
     muon_phi    .push_back( bestMuonTrack->phi()   );

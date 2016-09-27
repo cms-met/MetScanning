@@ -146,7 +146,7 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
   
   size_t nVtx;
 
- 
+  std::vector<bool>   muon_PF;
   std::vector<float>  muon_pt;
   std::vector<float>  muon_eta;
   std::vector<float>  muon_phi;
