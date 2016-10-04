@@ -260,11 +260,11 @@ process.load('RecoMET.METFilters.BadPFMuonFilter_cfi')
 process.BadPFMuonFilter.taggingMode = cms.bool(True)
 #process.BadPFMuonFilter.debug = cms.bool(True)
 
-process.load('RecoMET.METFilters.BadChargedCandidateFilterOld_cfi')
-process.BadChargedCandidateFilterOld.taggingMode = cms.bool(True)
+process.load('RecoMET.METFilters.BadChargedCandidateSummer16Filter_cfi')
+process.BadChargedCandidateSummer16Filter.taggingMode = cms.bool(True)
 
-process.load('RecoMET.METFilters.BadPFMuonFilterOld_cfi')
-process.BadPFMuonFilterOld.taggingMode = cms.bool(True)
+process.load('RecoMET.METFilters.BadPFMuonSummer16Filter_cfi')
+process.BadPFMuonSummer16Filter.taggingMode = cms.bool(True)
 #process.BadPFMuonFilter.debug = cms.bool(True)
 
 process.primaryVertexFilter = cms.EDFilter("GoodVertexFilter",
@@ -328,8 +328,8 @@ process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
                                             HcalNoise=cms.InputTag("hcalnoise"),
                                             BadChCandFilter=cms.InputTag("BadChargedCandidateFilter"),
                                             BadPFMuon=cms.InputTag("BadPFMuonFilter"),
-                                            BadChCandFilterOld=cms.InputTag("BadChargedCandidateFilterOld"),
-                                            BadPFMuonOld=cms.InputTag("BadPFMuonFilterOld"),
+                                            BadChCandSummer16Filter=cms.InputTag("BadChargedCandidateSummer16Filter"),
+                                            BadPFMuonOld=cms.InputTag("BadPFMuonSummer16Filter"),
                                             OfflinePrimaryVertices = cms.InputTag("offlinePrimaryVertices")
                                             
 
@@ -371,8 +371,8 @@ process.p = cms.Path(
     process.HcalStripHaloFilter*
     process.BadChargedCandidateFilter*
     process.BadPFMuonFilter*
-    process.BadChargedCandidateFilterOld*
-    process.BadPFMuonFilterOld*
+    process.BadChargedCandidateSummer16Filter*
+    process.BadPFMuonSummer16Filter*
     process.metScanNtupleMaker ##CH: writes a flat tree
     )
 

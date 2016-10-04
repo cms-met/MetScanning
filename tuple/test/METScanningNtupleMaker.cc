@@ -63,7 +63,7 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   BadChCandF_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("BadChCandFilter"));
   BadPFMuon_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("BadPFMuon"));
 
-  BadChCandFOld_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("BadChCandFilterOld"));
+  BadChCandFOld_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("BadChCandSummer16Filter"));
   BadPFMuonOld_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("BadPFMuonOld"));
 
   vertex_token = consumes<vector<reco::Vertex> >(iConfig.getParameter<edm::InputTag>("OfflinePrimaryVertices"));
