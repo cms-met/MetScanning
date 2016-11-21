@@ -94,7 +94,6 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
   virtual void beginRun(const edm::Run & r, const edm::EventSetup & c);
 
  private:
-  //  edm::EDGetTokenT<edm::View<reco::Muon> >  tokenMuons_;
   edm::EDGetTokenT<reco::MuonCollection> Muon_token;
   edm::EDGetTokenT<reco::PFCandidateCollection> PfCandidates_token;
   edm::EDGetTokenT<reco::PFJetCollection> PfJets_token;
@@ -135,6 +134,7 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
 
   edm::EDGetTokenT<vector<reco::Vertex> >  vertex_token;
 
+  bool isReco_token;
 
   size_t run,event,lumiBlock,time;
   bool filtercsc2015, filterglobaltighthalo2016,filterglobalsupertighthalo2016, filterhcalstriphalo, filterhbher1, filterhbher2l, filterhbher2t, filterhbher1nozeros, filterhbheiso, filterecaltp, filterecalsc; 
