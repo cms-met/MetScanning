@@ -27,22 +27,20 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
 
 
   //the input tags
-
-  
-  // :tokenMuons_          ( consumes<edm::View<reco::Muon> >(iConfig.getParameter<edm::InputTag> ("muons")  ))
+  isReco_token         = iConfig.getParameter<bool>("isReco");
   Muon_token           = consumes<reco::MuonCollection>(iConfig.getParameter<edm::InputTag>("muonCandidates"           ));
   PfCandidates_token   = consumes<reco::PFCandidateCollection>(iConfig.getParameter<edm::InputTag>("pfCandidates"           ));
   PfJets_token         = consumes<reco::PFJetCollection>(iConfig.getParameter<edm::InputTag>("pfJets"                 ));
-  CaloMET_token = consumes<reco::CaloMETCollection>(iConfig.getParameter<edm::InputTag>("caloMET"));
-  PFCaloMET_token = consumes<reco::PFMETCollection>(iConfig.getParameter<edm::InputTag>("pfCaloMET"));
-  PFClusterMET_token = consumes<reco::PFClusterMETCollection>(iConfig.getParameter<edm::InputTag>("pfClusterMET"));
+  CaloMET_token        = consumes<reco::CaloMETCollection>(iConfig.getParameter<edm::InputTag>("caloMET"));
+  PFCaloMET_token      = consumes<reco::PFMETCollection>(iConfig.getParameter<edm::InputTag>("pfCaloMET"));
+  PFClusterMET_token   = consumes<reco::PFClusterMETCollection>(iConfig.getParameter<edm::InputTag>("pfClusterMET"));
   PFMET_token          = consumes<reco::PFMETCollection>(iConfig.getParameter<edm::InputTag>("pfMET"                  ));
   EcalPFClusters_token = consumes<reco::PFClusterCollection>(iConfig.getParameter<edm::InputTag>("EcalPFClusterCollection"));
   HcalPFClusters_token = consumes<reco::PFClusterCollection>(iConfig.getParameter<edm::InputTag>("HcalPFClusterCollection"));
   HBHEPFClusters_token = consumes<reco::PFClusterCollection>(iConfig.getParameter<edm::InputTag>("HBHEPFClusterCollection"));
-  HOPFClusters_token = consumes<reco::PFClusterCollection>(iConfig.getParameter<edm::InputTag>("HOPFClusterCollection"));
-  HFPFClusters_token = consumes<reco::PFClusterCollection>(iConfig.getParameter<edm::InputTag>("HFPFClusterCollection"));
-  Tracks_token = consumes<reco::TrackCollection>(iConfig.getParameter<edm::InputTag>("tracksCollection"));
+  HOPFClusters_token   = consumes<reco::PFClusterCollection>(iConfig.getParameter<edm::InputTag>("HOPFClusterCollection"));
+  HFPFClusters_token   = consumes<reco::PFClusterCollection>(iConfig.getParameter<edm::InputTag>("HFPFClusterCollection"));
+  Tracks_token         = consumes<reco::TrackCollection>(iConfig.getParameter<edm::InputTag>("tracksCollection"));
   TrackingLETMC_token  = consumes<bool>(iConfig.getParameter<edm::InputTag>("TRKfilterLETMC"         ));
   TrackingLETMS_token  = consumes<bool>(iConfig.getParameter<edm::InputTag>("TRKfilterLETMS"         ));
   TrackingMSC_token    = consumes<bool>(iConfig.getParameter<edm::InputTag>("TRKfilterMSC"           ));
@@ -73,7 +71,6 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   outputfile_ = iConfig.getParameter<std::string>("rootOutputFile"); 
   tf1 = new TFile(outputfile_.c_str(), "RECREATE");  
   s = new TTree("tree","tree");
-
 
 
 
@@ -147,18 +144,15 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   s->Branch("caloMETPhi",&caloMETPhi,"caloMETPhi/F"); 
   s->Branch("caloMETSumEt",&caloMETSumEt,"caloMETSumEt/F");  
 
-  s->Branch("pfCaloMETPt",&pfCaloMETPt,"pfCaloMETPt/F");  
-  s->Branch("pfCaloMETPhi",&pfCaloMETPhi,"pfCaloMETPhi/F"); 
-  s->Branch("pfCaloMETSumEt",&pfCaloMETSumEt,"pfCaloMETSumEt/F");  
+  if(isReco_token){
+      s->Branch("pfCaloMETPt",&pfCaloMETPt,"pfCaloMETPt/F");  
+      s->Branch("pfCaloMETPhi",&pfCaloMETPhi,"pfCaloMETPhi/F"); 
+      s->Branch("pfCaloMETSumEt",&pfCaloMETSumEt,"pfCaloMETSumEt/F");  
 
-  s->Branch("pfClusterMETPt",&pfClusterMETPt,"pfClusterMETPt/F");  
-  s->Branch("pfClusterMETPhi",&pfClusterMETPhi,"pfClusterMETPhi/F"); 
-  s->Branch("pfClusterMETSumEt",&pfClusterMETSumEt,"pfClusterMETSumEt/F"); 
+      s->Branch("pfClusterMETPt",&pfClusterMETPt,"pfClusterMETPt/F");  
+      s->Branch("pfClusterMETPhi",&pfClusterMETPhi,"pfClusterMETPhi/F"); 
+      s->Branch("pfClusterMETSumEt",&pfClusterMETSumEt,"pfClusterMETSumEt/F"); 
 
-  s->Branch("pfMETPt",&pfMETPt,"pfMETPt/F");  
-  s->Branch("pfMETPhi",&pfMETPhi,"pfMETPhi/F"); 
-  s->Branch("pfMETSumEt",&pfMETSumEt,"pfMETSumEt/F"); 
-  
   //clusters ==========================================
   s->Branch("pfClusterEcal_energy",&pfClusterEcal_energy);
   s->Branch("pfClusterEcal_time",&pfClusterEcal_time);
@@ -186,6 +180,13 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   s->Branch("pfClusterHF_time",&pfClusterHF_time);
   s->Branch("pfClusterHF_eta",&pfClusterHF_eta);
   s->Branch("pfClusterHF_phi",&pfClusterHF_phi);
+
+  }
+
+  s->Branch("pfMETPt",&pfMETPt,"pfMETPt/F");  
+  s->Branch("pfMETPhi",&pfMETPhi,"pfMETPhi/F"); 
+  s->Branch("pfMETSumEt",&pfMETSumEt,"pfMETSumEt/F"); 
+  
   
   //tracks ============================================
   s->Branch("track_pt",&track_pt);
@@ -356,18 +357,11 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   pfHadron_pdgId  .clear();
 
 
-
-
-
-
-
   // get muons
 
   //  typedef View<reco::MuonCollection> MuonCollectionView;
   Handle<MuonCollection> muonCandidates;
   iEvent.getByToken(Muon_token,muonCandidates);
-
-
 
 
   muon_PF         .clear();
@@ -399,15 +393,22 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   Handle<reco::CaloMETCollection> caloMET;
   iEvent.getByToken(CaloMET_token, caloMET);
 
-  Handle<reco::PFMETCollection> pfCaloMET;
-  iEvent.getByToken(PFCaloMET_token, pfCaloMET);
+  if (isReco_token){
+      Handle<reco::PFMETCollection> pfCaloMET;
+      iEvent.getByToken(PFCaloMET_token, pfCaloMET);
 
-  Handle<reco::PFClusterMETCollection> pfClusterMET;
-  iEvent.getByToken(PFClusterMET_token, pfClusterMET);
+      pfCaloMETPt = pfCaloMET->begin()->pt();
+      pfCaloMETPhi = pfCaloMET->begin()->phi();
+      pfCaloMETSumEt = pfCaloMET->begin()->sumEt();
 
-  Handle<reco::PFMETCollection> pfMET;
-  iEvent.getByToken(PFMET_token, pfMET);
-  
+      Handle<reco::PFClusterMETCollection> pfClusterMET;
+      iEvent.getByToken(PFClusterMET_token, pfClusterMET);
+
+      pfClusterMETPt = pfClusterMET->begin()->pt();
+      pfClusterMETPhi = pfClusterMET->begin()->phi();
+      pfClusterMETSumEt = pfClusterMET->begin()->sumEt();
+
+
   //get PFClusters
   Handle<reco::PFClusterCollection> pfClustersEcal;
   iEvent.getByToken(EcalPFClusters_token,pfClustersEcal);
@@ -423,28 +424,6 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
 
   Handle<reco::PFClusterCollection> pfClustersHF;
   iEvent.getByToken(HFPFClusters_token,pfClustersHF);
-
-  //get tracks
-  Handle<reco::TrackCollection> tracks;
-  iEvent.getByToken(Tracks_token,tracks);
-
-  //get Ecal RecHits
-  //not super sure it is useful, keep commeted for now
-  //edm::ESHandle<EcalChannelStatus> chStatus_;
-  //iSetup.get<EcalChannelStatusRcd>().get(chStatus_);
-
-  // Barrel
-  edm::Handle< EcalRecHitCollection > ebRecHits_h_;
-  iEvent.getByToken( RecHitsEB_token, ebRecHits_h_ );
-
-  // Endcaps
-  edm::Handle< EcalRecHitCollection > eeRecHits_h_;
-  iEvent.getByToken( RecHitsEE_token, eeRecHits_h_ );
-
-
-  // Preshower
-  edm::Handle< EcalRecHitCollection > esRecHits_h_;
-  iEvent.getByToken( RecHitsES_token, esRecHits_h_ );
 
   pfClusterEcal_energy.clear();
   pfClusterEcal_eta.clear();
@@ -473,6 +452,111 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   pfClusterHF_phi.clear();
   pfClusterHF_time.clear();
 
+  // Barrel
+  edm::Handle< EcalRecHitCollection > ebRecHits_h_;
+  iEvent.getByToken( RecHitsEB_token, ebRecHits_h_ );
+
+  // Endcaps
+  edm::Handle< EcalRecHitCollection > eeRecHits_h_;
+  iEvent.getByToken( RecHitsEE_token, eeRecHits_h_ );
+
+
+  // Preshower
+  edm::Handle< EcalRecHitCollection > esRecHits_h_;
+  iEvent.getByToken( RecHitsES_token, esRecHits_h_ );
+
+
+  //ECAL clusters
+  for( size_t ibc=0; ibc<pfClustersEcal->size(); ++ibc ) {
+    reco::PFClusterRef bcRef( pfClustersEcal, ibc );
+    pfClusterEcal_energy.push_back( bcRef->energy() );
+    pfClusterEcal_time.push_back( bcRef->time() );
+    pfClusterEcal_eta.push_back( bcRef->eta() );
+    pfClusterEcal_phi.push_back( bcRef->phi() );
+    
+    // retrieve the id in the list of rechits and get the severity level
+    bool status13 = false;
+    bool status14 = false;
+    vector<std::pair<DetId, float> > detId_v = bcRef->hitsAndFractions();
+    unsigned nhits = detId_v.size();
+    for ( size_t ihit=0; ihit<nhits; ihit++ ) {
+      int sev = 0;
+      if( (detId_v[ihit].first).subdetId() == EcalBarrel) {
+        EBDetId id( (detId_v[ihit].first).rawId() ); 
+        sev =  (Int_t) sevlv->severityLevel( id, *ebRecHits_h_);
+        //sev =  (Int_t) sevlv->severityLevel( id, *(ebRecHits_h_.product()) );
+      }
+      else if( (detId_v[ihit].first).subdetId() == EcalEndcap) {
+        EEDetId id( (detId_v[ihit].first).rawId() );
+        sev =  (Int_t) sevlv->severityLevel( id, *eeRecHits_h_ );
+        //sev =  (Int_t) sevlv->severityLevel( id, *(eeRecHits_h_.product()) );
+      }
+      else if( (detId_v[ihit].first).subdetId() == EcalPreshower) {
+        ESDetId id( (detId_v[ihit].first).rawId() );
+        sev =  (Int_t) sevlv->severityLevel( id, *esRecHits_h_ );
+        //sev =  (Int_t) sevlv->severityLevel( id, *(esRecHits_h_.product()) );
+      }
+      if     (sev == 13) status13 = true;
+      else if(sev == 14) status14 = true;
+    }
+
+    pfClusterEcal_status13.push_back( status13 );
+    pfClusterEcal_status14.push_back( status14 );
+  }
+
+  //HCAL clusters
+  for( size_t ibc=0; ibc<pfClustersHcal->size(); ++ibc ) {
+    reco::PFClusterRef bcRef( pfClustersHcal, ibc );
+    pfClusterHcal_energy.push_back( bcRef->energy() );
+    pfClusterHcal_time.push_back( bcRef->time() );
+    pfClusterHcal_eta.push_back( bcRef->eta() );
+    pfClusterHcal_phi.push_back( bcRef->phi() );
+  }
+
+  //HBHE clusters
+  for( size_t ibc=0; ibc<pfClustersHBHE->size(); ++ibc ) {
+    reco::PFClusterRef bcRef( pfClustersHBHE, ibc );
+    pfClusterHBHE_energy.push_back( bcRef->energy() );
+    pfClusterHBHE_time.push_back( bcRef->time() );
+    pfClusterHBHE_eta.push_back( bcRef->eta() );
+    pfClusterHBHE_phi.push_back( bcRef->phi() );
+  }
+
+  //HO clusters
+  for( size_t ibc=0; ibc<pfClustersHO->size(); ++ibc ) {
+    reco::PFClusterRef bcRef( pfClustersHO, ibc );
+    pfClusterHO_energy.push_back( bcRef->energy() );
+    pfClusterHO_time.push_back( bcRef->time() );
+    pfClusterHO_eta.push_back( bcRef->eta() );
+    pfClusterHO_phi.push_back( bcRef->phi() );
+  }
+
+  //HF clusters
+  for( size_t ibc=0; ibc<pfClustersHF->size(); ++ibc ) {
+    reco::PFClusterRef bcRef( pfClustersHF, ibc );
+    pfClusterHF_energy.push_back( bcRef->energy() );
+    pfClusterHF_time.push_back( bcRef->time() );
+    pfClusterHF_eta.push_back( bcRef->eta() );
+    pfClusterHF_phi.push_back( bcRef->phi() );
+  }
+
+
+  }
+
+
+  Handle<reco::PFMETCollection> pfMET;
+  iEvent.getByToken(PFMET_token, pfMET);
+  
+
+  //get tracks
+  Handle<reco::TrackCollection> tracks;
+  iEvent.getByToken(Tracks_token,tracks);
+
+  //get Ecal RecHits
+  //not super sure it is useful, keep commeted for now
+  //edm::ESHandle<EcalChannelStatus> chStatus_;
+  //iSetup.get<EcalChannelStatusRcd>().get(chStatus_);
+
   track_ptError.clear();
   track_pt.clear();
   track_eta.clear();
@@ -482,6 +566,7 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   track_dz.clear();
   track_dzError.clear();
   //================================================================
+
 
 
   //pfCandidates
@@ -614,95 +699,12 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   caloMETPhi = caloMET->begin()->phi();
   caloMETSumEt = caloMET->begin()->sumEt();
   
-  pfCaloMETPt = pfCaloMET->begin()->pt();
-  pfCaloMETPhi = pfCaloMET->begin()->phi();
-  pfCaloMETSumEt = pfCaloMET->begin()->sumEt();
-  
-  pfClusterMETPt = pfClusterMET->begin()->pt();
-  pfClusterMETPhi = pfClusterMET->begin()->phi();
-  pfClusterMETSumEt = pfClusterMET->begin()->sumEt();
-
   pfMETPt = pfMET->begin()->pt();
   pfMETPhi = pfMET->begin()->phi();
   pfMETSumEt = pfMET->begin()->sumEt();
 
 
   
-  //ECAL clusters
-  for( size_t ibc=0; ibc<pfClustersEcal->size(); ++ibc ) {
-    reco::PFClusterRef bcRef( pfClustersEcal, ibc );
-    pfClusterEcal_energy.push_back( bcRef->energy() );
-    pfClusterEcal_time.push_back( bcRef->time() );
-    pfClusterEcal_eta.push_back( bcRef->eta() );
-    pfClusterEcal_phi.push_back( bcRef->phi() );
-    
-    // retrieve the id in the list of rechits and get the severity level
-    bool status13 = false;
-    bool status14 = false;
-    vector<std::pair<DetId, float> > detId_v = bcRef->hitsAndFractions();
-    unsigned nhits = detId_v.size();
-    for ( size_t ihit=0; ihit<nhits; ihit++ ) {
-      int sev = 0;
-      if( (detId_v[ihit].first).subdetId() == EcalBarrel) {
-        EBDetId id( (detId_v[ihit].first).rawId() ); 
-        sev =  (Int_t) sevlv->severityLevel( id, *ebRecHits_h_);
-        //sev =  (Int_t) sevlv->severityLevel( id, *(ebRecHits_h_.product()) );
-      }
-      else if( (detId_v[ihit].first).subdetId() == EcalEndcap) {
-        EEDetId id( (detId_v[ihit].first).rawId() );
-        sev =  (Int_t) sevlv->severityLevel( id, *eeRecHits_h_ );
-        //sev =  (Int_t) sevlv->severityLevel( id, *(eeRecHits_h_.product()) );
-      }
-      else if( (detId_v[ihit].first).subdetId() == EcalPreshower) {
-        ESDetId id( (detId_v[ihit].first).rawId() );
-        sev =  (Int_t) sevlv->severityLevel( id, *esRecHits_h_ );
-        //sev =  (Int_t) sevlv->severityLevel( id, *(esRecHits_h_.product()) );
-      }
-      if     (sev == 13) status13 = true;
-      else if(sev == 14) status14 = true;
-    }
-
-    pfClusterEcal_status13.push_back( status13 );
-    pfClusterEcal_status14.push_back( status14 );
-  }
-
-  //HCAL clusters
-  for( size_t ibc=0; ibc<pfClustersHcal->size(); ++ibc ) {
-    reco::PFClusterRef bcRef( pfClustersHcal, ibc );
-    pfClusterHcal_energy.push_back( bcRef->energy() );
-    pfClusterHcal_time.push_back( bcRef->time() );
-    pfClusterHcal_eta.push_back( bcRef->eta() );
-    pfClusterHcal_phi.push_back( bcRef->phi() );
-  }
-
-  //HBHE clusters
-  for( size_t ibc=0; ibc<pfClustersHBHE->size(); ++ibc ) {
-    reco::PFClusterRef bcRef( pfClustersHBHE, ibc );
-    pfClusterHBHE_energy.push_back( bcRef->energy() );
-    pfClusterHBHE_time.push_back( bcRef->time() );
-    pfClusterHBHE_eta.push_back( bcRef->eta() );
-    pfClusterHBHE_phi.push_back( bcRef->phi() );
-  }
-
-  //HO clusters
-  for( size_t ibc=0; ibc<pfClustersHO->size(); ++ibc ) {
-    reco::PFClusterRef bcRef( pfClustersHO, ibc );
-    pfClusterHO_energy.push_back( bcRef->energy() );
-    pfClusterHO_time.push_back( bcRef->time() );
-    pfClusterHO_eta.push_back( bcRef->eta() );
-    pfClusterHO_phi.push_back( bcRef->phi() );
-  }
-
-  //HF clusters
-  for( size_t ibc=0; ibc<pfClustersHF->size(); ++ibc ) {
-    reco::PFClusterRef bcRef( pfClustersHF, ibc );
-    pfClusterHF_energy.push_back( bcRef->energy() );
-    pfClusterHF_time.push_back( bcRef->time() );
-    pfClusterHF_eta.push_back( bcRef->eta() );
-    pfClusterHF_phi.push_back( bcRef->phi() );
-  }
-
-
   //tracks
   for( size_t ibc=0; ibc<tracks->size(); ++ibc ) {
     reco::TrackRef trkRef( tracks, ibc );
