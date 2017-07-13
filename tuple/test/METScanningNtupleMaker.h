@@ -132,13 +132,15 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
 
   edm::EDGetTokenT<bool> BadPFMuonOld_token;
 
+  edm::EDGetTokenT<bool> EcalBadCalib_token;
+
   edm::EDGetTokenT<vector<reco::Vertex> >  vertex_token;
 
   bool isReco_token;
 
   size_t run,event,lumiBlock,time;
   bool filtercsc2015, filterglobaltighthalo2016,filterglobalsupertighthalo2016, filterhcalstriphalo, filterhbher1, filterhbher2l, filterhbher2t, filterhbher1nozeros, filterhbheiso, filterecaltp, filterecalsc; 
-  bool filtertrackingletmc, filtertrackingletms, filtertrackingmsc, filtertrackingtmsc, filterbadChCandidate, filterbadPFMuon, filterbadChCandidateOld, filterbadPFMuonOld  ;
+  bool filtertrackingletmc, filtertrackingletms, filtertrackingmsc, filtertrackingtmsc, filterbadChCandidate, filterbadPFMuon, filterbadChCandidateOld, filterbadPFMuonOld, filterEcalBadCalib  ;
   edm::RunNumber_t irun;
   edm::EventNumber_t ievent;
   edm::LuminosityBlockNumber_t ilumiBlock;
