@@ -23,18 +23,23 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condD
 #process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 #process.GlobalTag.globaltag = 'GR_P_V56::All'
 process.load("RecoLuminosity.LumiProducer.bunchSpacingProducer_cfi")
-process.GlobalTag.globaltag = '80X_dataRun2_Express_v6'    #'80X_dataRun2_Prompt_v8'
+process.GlobalTag.globaltag =  '92X_dataRun2_Prompt_v2'   #'80X_dataRun2_Express_v6'    #'80X_dataRun2_Prompt_v8'
 #80X_dataRun2_Express_v5'
 
 
 ##___________________________Input_Files______________________________________||
 
-#process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring())
+process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring())
 
 process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
-        "/store/data/Run2016B/MET/AOD/01Jul2016-v1/20000/B0368187-794F-E611-9A86-02163E01156C.root"
+        "file:/nfs/dust/cms/user/singha/METscanning_17/CMSSW_9_2_0_patch3/src/MetScanning/skim/crab/Run2017A_int/crab_First_collisions_17/results/skim296174.root"
+#        "root://cms-xrd-global.cern.ch///store/data/Run2017A/Cosmics/RECO/PromptReco-v1/000/294/696/00000/E6193F77-083F-E711-B466-02163E019C25.root"
+#        "root://cms-xrd-global.cern.ch///store/data/Run2017A/MinimumBias/AOD/PromptReco-v1/000/295/586/00000/1E5AC415-6F46-E711-8161-02163E01A1E0.root"
+#        "root://cms-xrd-global.cern.ch///store/data/Run2017A/MinimumBias/AOD/PromptReco-v1/000/295/586/00000/1E5AC415-6F46-E711-8161-02163E01A1E0.root"
+#        "root://cms-xrd-global.cern.ch///store/data/Run2017A/MinimumBias/AOD/PromptReco-v1/000/294/645/00000/0EE278A2-4E3F-E711-8780-02163E01211B.root"
+#        "/store/data/Run2016B/MET/AOD/01Jul2016-v1/20000/B0368187-794F-E611-9A86-02163E01156C.root"
 
 )
     )
@@ -58,7 +63,7 @@ process.options   = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 #process.options = cms.untracked.PSet(SkipEvent = cms.untracked.vstring('ProductNotFound'))
 
 process.MessageLogger.cerr.FwkReport.reportEvery = 50
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(20000) )
 
 
 ##___________________________CSC_Halo_Filter__________________________________||
@@ -120,6 +125,11 @@ process.BadChargedCandidateSummer16Filter.taggingMode = cms.bool(True)
 process.load('RecoMET.METFilters.BadPFMuonSummer16Filter_cfi')
 process.BadPFMuonSummer16Filter.taggingMode = cms.bool(True)
 
+#introduced in 2017
+
+process.load("RecoMET.METFilters.EcalBadCalibFilter_cfi")
+process.EcalBadCalibFilter.taggingMode = cms.bool(True)
+
 process.primaryVertexFilter = cms.EDFilter("GoodVertexFilter",
                                            isReco = cms.bool(False),
                                            vertexCollection = cms.InputTag('offlinePrimaryVertices'),
@@ -137,7 +147,7 @@ process.condMETSelector = cms.EDProducer(
    "CandViewShallowCloneCombiner",
    isReco = cms.bool(False),
    decay = cms.string("caloMet pfMet"),
-   cut = cms.string("(daughter(0).pt > 80) || (daughter(1).pt > 80)" ) 
+   cut = cms.string("(daughter(0).pt > 200) || (daughter(1).pt > 200)" ) 
    )
 
 process.metCounter = cms.EDFilter(
@@ -185,6 +195,7 @@ process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
                                             BadPFMuon=cms.InputTag("BadPFMuonFilter"),
                                             BadChCandSummer16Filter=cms.InputTag("BadChargedCandidateSummer16Filter"),
                                             BadPFMuonOld=cms.InputTag("BadPFMuonSummer16Filter"),
+                                            EcalBadCalibSummer17Filter=cms.InputTag("EcalBadCalibFilter"),  
                                             OfflinePrimaryVertices = cms.InputTag("offlinePrimaryVertices"),
                                             HcalNoise=cms.InputTag("hcalnoise")
                                             
@@ -207,7 +218,7 @@ process.p = cms.Path(
     process.primaryVertexFilter*
     process.bunchSpacingProducer *
     process.condMETSelector *
-    process.metCounter* #uncomment this line to apply a met cut
+#    process.metCounter* #uncomment this line to apply a met cut
     process.CSCTightHaloFilter*
     process.HBHENoiseFilterResultProducer* #produces bools    
 #    process.ApplyBaselineHBHENoiseFilter* 
@@ -225,6 +236,7 @@ process.p = cms.Path(
     process.BadPFMuonFilter*
     process.BadChargedCandidateSummer16Filter*
     process.BadPFMuonSummer16Filter*
+    process.EcalBadCalibFilter*
     process.metScanNtupleMaker ##CH: writes a flat tree
     )
 

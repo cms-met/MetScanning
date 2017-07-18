@@ -63,7 +63,7 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
 
   BadChCandFOld_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("BadChCandSummer16Filter"));
   BadPFMuonOld_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("BadPFMuonOld"));
-
+  EcalBadCalib_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("EcalBadCalibSummer17Filter"));
   vertex_token = consumes<vector<reco::Vertex> >(iConfig.getParameter<edm::InputTag>("OfflinePrimaryVertices"));
   
 
@@ -97,6 +97,7 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   s->Branch("filter_badChCandOld",&filterbadChCandidateOld,"filter_badChCandOld/O");
   s->Branch("filter_badPFMuonOld",&filterbadPFMuonOld,"filter_badPFMuonOld/O");
 
+  s->Branch("filter_EcalBadCalibSummer17",&filterEcalBadCalib,"filter_EcalBadCalibSummer17/O");
 
   //pfLeptons =====================================
   s->Branch("pfLepton_pt"             , &pfLepton_pt   );  
@@ -338,6 +339,9 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   iEvent.getByToken(BadPFMuonOld_token, ifilterbadPFMuonOld);
   filterbadPFMuonOld = *ifilterbadPFMuonOld;
 
+  Handle<bool> ifilterEcalBadCalib;
+  iEvent.getByToken(EcalBadCalib_token,ifilterEcalBadCalib);
+  filterEcalBadCalib = *ifilterEcalBadCalib;
   
   // get Leptons
   Handle<reco::PFCandidateCollection> pfCandidates;
