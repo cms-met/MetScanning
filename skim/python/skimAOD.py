@@ -281,7 +281,7 @@ process.metCounter = cms.EDFilter(
 
 
 process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
-                                            #isReco = cms.bool(False),
+                                            isReco = cms.bool(False),
                                             rootOutputFile=cms.string("tuple.root"),
                                             muonCandidates=cms.InputTag("muons"),
                                             pfCandidates=cms.InputTag("particleFlow"),

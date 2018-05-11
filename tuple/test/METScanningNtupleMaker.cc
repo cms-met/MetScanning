@@ -45,7 +45,7 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   TrackingLETMS_token  = consumes<bool>(iConfig.getParameter<edm::InputTag>("TRKfilterLETMS"         ));
   TrackingMSC_token    = consumes<bool>(iConfig.getParameter<edm::InputTag>("TRKfilterMSC"           ));
   TrackingTMSC_token   = consumes<bool>(iConfig.getParameter<edm::InputTag>("TRKfilterTMSC"          ));
-  CSC2015_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("CSC2015filter"));
+  //CSC2015_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("CSC2015filter"));
   GlobalTightHalo2016_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("GlobalHalofilterTight"));
   GlobalSuperTightHalo2016_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("GlobalHalofilterSuperTight"));
   HcalStripHalo_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("HcalStripHaloFilter"));
@@ -61,8 +61,8 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   BadChCandF_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("BadChCandFilter"));
   BadPFMuon_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("BadPFMuon"));
 
-  BadChCandFOld_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("BadChCandSummer16Filter"));
-  BadPFMuonOld_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("BadPFMuonOld"));
+  //BadChCandFOld_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("BadChCandSummer16Filter"));
+  //BadPFMuonOld_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("BadPFMuonOld"));
   EcalBadCalib_token = consumes<bool>(iConfig.getParameter<edm::InputTag>("EcalBadCalibFilter"));
   vertex_token = consumes<vector<reco::Vertex> >(iConfig.getParameter<edm::InputTag>("OfflinePrimaryVertices"));
   
@@ -81,7 +81,7 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   s->Branch("time",&time,"time/l");
   
   s->Branch("nVtx", &nVtx, "nVtx/l");
-  s->Branch("filter_csc2015",&filtercsc2015,"filter_csc2015/O");
+  //s->Branch("filter_csc2015",&filtercsc2015,"filter_csc2015/O");
   s->Branch("filter_globaltighthalo2016",&filterglobaltighthalo2016,"filter_globaltighthalo2016/O");
   s->Branch("filter_globalsupertighthalo2016",&filterglobalsupertighthalo2016,"filter_globalsupertighthalo2016/O");
   s->Branch("filter_hcalstriphalo",&filterhcalstriphalo,"filter_hcalstriphalo/O");
@@ -94,8 +94,8 @@ METScanningNtupleMaker::METScanningNtupleMaker(const edm::ParameterSet& iConfig)
   s->Branch("filter_badChCand",&filterbadChCandidate,"filter_badChCand/O");
   s->Branch("filter_badPFMuon",&filterbadPFMuon,"filter_badPFMuon/O");
 
-  s->Branch("filter_badChCandOld",&filterbadChCandidateOld,"filter_badChCandOld/O");
-  s->Branch("filter_badPFMuonOld",&filterbadPFMuonOld,"filter_badPFMuonOld/O");
+  //s->Branch("filter_badChCandOld",&filterbadChCandidateOld,"filter_badChCandOld/O");
+  //s->Branch("filter_badPFMuonOld",&filterbadPFMuonOld,"filter_badPFMuonOld/O");
 
   s->Branch("filter_EcalBadCalib",&filterEcalBadCalib,"filter_EcalBadCalib/O");
 
@@ -269,10 +269,10 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   filtertrackingtmsc = *ifiltertrackingtmsc;
   */
   
-
-  Handle<bool> ifiltercsc2015;
-  iEvent.getByToken(CSC2015_token, ifiltercsc2015);
-  filtercsc2015 = *ifiltercsc2015;
+  //Drop CSC2015 Filter ~ Isabell Suggestion
+  //Handle<bool> ifiltercsc2015;
+  //iEvent.getByToken(CSC2015_token, ifiltercsc2015);
+  //filtercsc2015 = *ifiltercsc2015;
   
   Handle<bool> ifilterglobaltighthalo2016;
   iEvent.getByToken(GlobalTightHalo2016_token, ifilterglobaltighthalo2016);
@@ -331,13 +331,13 @@ METScanningNtupleMaker::analyze(const Event& iEvent,
   iEvent.getByToken(BadPFMuon_token, ifilterbadPFMuon);
   filterbadPFMuon = *ifilterbadPFMuon;
 
-  Handle<bool> ifilterbadChCandOld;
-  iEvent.getByToken(BadChCandFOld_token, ifilterbadChCandOld);
-  filterbadChCandidateOld = *ifilterbadChCandOld;
+  //Handle<bool> ifilterbadChCandOld;
+  //iEvent.getByToken(BadChCandFOld_token, ifilterbadChCandOld);
+  //filterbadChCandidateOld = *ifilterbadChCandOld;
 
-  Handle<bool> ifilterbadPFMuonOld;
-  iEvent.getByToken(BadPFMuonOld_token, ifilterbadPFMuonOld);
-  filterbadPFMuonOld = *ifilterbadPFMuonOld;
+  //Handle<bool> ifilterbadPFMuonOld;
+  //iEvent.getByToken(BadPFMuonOld_token, ifilterbadPFMuonOld);
+  //filterbadPFMuonOld = *ifilterbadPFMuonOld;
 
   Handle<bool> ifilterEcalBadCalib;
   iEvent.getByToken(EcalBadCalib_token,ifilterEcalBadCalib);
