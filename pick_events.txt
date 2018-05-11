@@ -1,0 +1,1 @@
+edmPickEvents.py "/MET/Run2015A-PromptReco-v1/RECO" events.txt

@@ -21,7 +21,7 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condD
 #process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 #process.GlobalTag.globaltag = 'GR_P_V56::All'
 from RecoLuminosity.LumiProducer.bunchSpacingProducer_cfi import *
-process.GlobalTag.globaltag = '80X_dataRun2_Express_v6'    #'80X_dataRun2_Prompt_v8'
+process.GlobalTag.globaltag = "100X_dataRun2_Prompt_v1"    #'80X_dataRun2_Prompt_v8'
 #80X_dataRun2_Express_v5'
 
 
@@ -35,10 +35,19 @@ process.source = cms.Source(
     fileNames = cms.untracked.vstring(
         
         #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/src/MetScanning/skim/crab/Run2016B_int/filter_comp/crab_SingleMuon_2016B_RECO_GlobalAndPFcheck/results/crab_pickevents_TL/crab_pickEvents_TL/results/pickevents_1.root'
-        'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/src/MetScanning/skim/crab/Run2016B_int/filter_comp/crab_SingleMuon_2016B_RECO_GlobalAndPFcheck/results/crab_pickevents_TL/crab_pickEvents_TL/results/pickevents_2.root'
+        #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/src/MetScanning/skim/crab/Run2016B_int/filter_comp/crab_SingleMuon_2016B_RECO_GlobalAndPFcheck/results/crab_pickevents_TL/crab_pickEvents_TL/results/pickevents_2.root'
         #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/src/MetScanning/skim/crab/Run2016B_int/filter_comp/crab_SingleMuon_2016B_RECO_GlobalAndPFcheck/results/crab_pickevents_TL/crab_pickEvents_TL/results/pickevents_3.root'
-
-
+	#"root://xrootd-cms.infn.it///store/data/Run2018A/SingleMuon/MINIAOD/PromptReco-v1/000/315/252/00000/A4345B88-404B-E811-894C-FA163EECC2C3.roor"
+	"root://cms-xrd-global.cern.ch///store/data/Run2018A/SingleMuon/MINIAOD/PromptReco-v1/000/315/264/00000/12AB3330-A44B-E811-92A8-02163E012E66.root"
+	#"root://xrootd-cms.infn.it///store/data/Run2018A/SingleMuon/MINIAOD/PromptReco-v1/000/315/257/00000/1C3A2CCE-604B-E811-99DA-FA163E1FBD5A.root",
+	#"root://xrootd-cms.infn.it///store/data/Run2018A/SingleMuon/MINIAOD/PromptReco-v1/000/315/257/00000/50AE2707-524B-E811-8B45-FA163E39DB61.root",
+	#"root://xrootd-cms.infn.it///store/data/Run2018A/SingleMuon/MINIAOD/PromptReco-v1/000/315/257/00000/9618A647-6F4B-E811-8C23-FA163E355512.root",
+	#"root://xrootd-cms.infn.it///store/data/Run2018A/SingleMuon/MINIAOD/PromptReco-v1/000/315/258/00000/8041ACE6-344B-E811-92B0-FA163E6E32F8.root",
+	#"root://xrootd-cms.infn.it///store/data/Run2018A/SingleMuon/MINIAOD/PromptReco-v1/000/315/259/00000/78C5BDC7-614B-E811-882D-FA163E47F3B0.root",
+	#"root://xrootd-cms.infn.it///store/data/Run2018A/SingleMuon/MINIAOD/PromptReco-v1/000/315/259/00000/8250BBFF-694B-E811-839F-FA163E10001E.root",
+	#"root://xrootd-cms.infn.it///store/data/Run2018A/SingleMuon/MINIAOD/PromptReco-v1/000/315/259/00000/CE9909F1-5D4B-E811-BB1A-FA163E761665.root",
+	#"root://xrootd-cms.infn.it///store/data/Run2018A/SingleMuon/MINIAOD/PromptReco-v1/000/315/259/00000/D46C9006-664B-E811-AA92-FA163EC9355E.root",
+	#"root://xrootd-cms.infn.it///store/data/Run2018A/SingleMuon/MINIAOD/PromptReco-v1/000/315/259/00000/D46C9006-664B-E811-AA92-FA163EC9355E.root"
         #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/src/MetScanning/skim/python/crab_pickevents_FRB/crab_pickEvents/results/skim.root'
         #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/src/MetScanning/skim/crab/Run2016B_int/filter_comp/pickevents/crab_pickevents_filterbyNew/crab_pickEvents/results/skim_FNew.root'
         #'file:/nfs/dust/cms/user/singha/MET_scan_8/rereco/CMSSW_8_0_13_patch1/RECO_RAW2DIGI_L1Reco_RECO_ALCA_SKIM_EI_PAT_DQM_inRECO.root'
@@ -81,9 +90,8 @@ process.out = cms.OutputModule(
 
 ##____________________________________________________________________________||
 
-#process.options = cms.untracked.PSet(SkipEvent = cms.untracked.vstring('ProductNotFound'))
-
-process.options   = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
+process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
+process.options = cms.untracked.PSet(SkipEvent = cms.untracked.vstring('ProductNotFound'))
 process.MessageLogger.cerr.FwkReport.reportEvery = 50
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
@@ -328,7 +336,8 @@ process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
                                             ESRecHits=cms.InputTag("reducedEcalRecHitsES"),
                                             HcalNoise=cms.InputTag("hcalnoise"),
                                             BadChCandFilter=cms.InputTag("BadChargedCandidateFilter"),
-                                            BadPFMuon=cms.InputTag("BadPFMuonFilter"),
+                                            EcalBadCalibSummer17Filter = cms.InputTag("EcalBadCalibSummer17Filter"),
+					    BadPFMuon=cms.InputTag("BadPFMuonFilter"),
                                             BadChCandSummer16Filter=cms.InputTag("BadChargedCandidateSummer16Filter"),
                                             BadPFMuonOld=cms.InputTag("BadPFMuonSummer16Filter"),
                                             OfflinePrimaryVertices = cms.InputTag("offlinePrimaryVertices")
