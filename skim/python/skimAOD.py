@@ -25,8 +25,7 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condD
 #process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 #process.GlobalTag.globaltag = 'GR_P_V56::All'
 process.load("RecoLuminosity.LumiProducer.bunchSpacingProducer_cfi")
-process.GlobalTag.globaltag = "100X_dataRun2_Prompt_v1"# '92X_dataRun2_Prompt_v2'   #'80X_dataRun2_Express_v6'    #'80X_dataRun2_Prompt_v8'
-#80X_dataRun2_Express_v5'
+process.GlobalTag.globaltag = "100X_dataRun2_Prompt_v1"
 
 
 ##___________________________Input_Files______________________________________||
@@ -188,8 +187,10 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(20000) )
 process.load('RecoMET.METFilters.CSCTightHaloFilter_cfi')
 process.CSCTightHaloFilter.taggingMode = cms.bool(True)
 
-process.load('RecoMET.METFilters.CSCTightHalo2015Filter_cfi')
-process.CSCTightHalo2015Filter.taggingMode = cms.bool(True)
+#Isabell suggestion
+#process.load('RecoMET.METFilters.CSCTightHalo2015Filter_cfi')
+#process.CSCTightHalo2015Filter.taggingMode = cms.bool(True)
+
 process.load('RecoMET.METFilters.CSCTightHaloTrkMuUnvetoFilter_cfi')
 process.CSCTightHaloTrkMuUnvetoFilter.taggingMode = cms.bool(True)
 
@@ -265,7 +266,7 @@ process.condMETSelector = cms.EDProducer(
    "CandViewShallowCloneCombiner",
    isReco = cms.bool(False),
    decay = cms.string("caloMet pfMet"),
-   cut = cms.string("(daughter(0).pt > 200) || (daughter(1).pt > 200)" ) 
+   cut = cms.string("(daughter(0).pt > -100) || (daughter(1).pt > -100)" ) 
    )
 
 process.metCounter = cms.EDFilter(
@@ -274,10 +275,13 @@ process.metCounter = cms.EDFilter(
     src = cms.InputTag("condMETSelector"),
     minNumber = cms.uint32(1),
     )
+    
+
+
 
 
 process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
-                                            isReco = cms.bool(False),
+                                            #isReco = cms.bool(False),
                                             rootOutputFile=cms.string("tuple.root"),
                                             muonCandidates=cms.InputTag("muons"),
                                             pfCandidates=cms.InputTag("particleFlow"),
@@ -296,7 +300,7 @@ process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
                                             TRKfilterLETMS=cms.InputTag("logErrorTooManySeeds"),
                                             TRKfilterMSC=cms.InputTag("manystripclus53X"),
                                             TRKfilterTMSC=cms.InputTag("toomanystripclus53X"),
-                                            CSC2015filter=cms.InputTag("CSCTightHalo2015Filter"),
+                                            #CSC2015filter=cms.InputTag("CSCTightHalo2015Filter"),
                                             GlobalHalofilterTight=cms.InputTag("globalTightHalo2016Filter"),
                                             GlobalHalofilterSuperTight=cms.InputTag("globalSuperTightHalo2016Filter"),
                                             HcalStripHaloFilter=cms.InputTag("HcalStripHaloFilter"),
@@ -311,8 +315,10 @@ process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
                                             ESRecHits=cms.InputTag("reducedEcalRecHitsES"),
                                             BadChCandFilter=cms.InputTag("BadChargedCandidateFilter"),
                                             BadPFMuon=cms.InputTag("BadPFMuonFilter"),
-                                            BadChCandSummer16Filter=cms.InputTag("BadChargedCandidateSummer16Filter"),
-                                            BadPFMuonOld=cms.InputTag("BadPFMuonSummer16Filter"),
+                                            
+                                            #BadChCandSummer16Filter=cms.InputTag("BadChargedCandidateSummer16Filter"),
+                                            #BadPFMuonOld=cms.InputTag("BadPFMuonSummer16Filter"),
+                                            
                                             #EcalBadCalibSummer17Filter=cms.InputTag("EcalBadCalibSummer17Filter"),  
                                             EcalBadCalibFilter=cms.InputTag("EcalBadCalibFilter"),
 					                        OfflinePrimaryVertices = cms.InputTag("offlinePrimaryVertices"),
@@ -346,15 +352,15 @@ process.p = cms.Path(
     process.goodVertices*
     process.trackingFailureFilter*
     process.EcalDeadCellBoundaryEnergyFilter*
-    process.CSCTightHalo2015Filter*
+    #process.CSCTightHalo2015Filter*
     process.CSCTightHaloTrkMuUnvetoFilter*
     process.globalTightHalo2016Filter * 
     process.globalSuperTightHalo2016Filter * 
     process.HcalStripHaloFilter*
     process.BadChargedCandidateFilter*
     process.BadPFMuonFilter*
-    process.BadChargedCandidateSummer16Filter*
-    process.BadPFMuonSummer16Filter*
+    #process.BadChargedCandidateSummer16Filter*
+    #process.BadPFMuonSummer16Filter*
     process.EcalBadCalibFilter*
     process.metScanNtupleMaker ##CH: writes a flat tree
     )
