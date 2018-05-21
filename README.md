@@ -2,8 +2,8 @@
 For recent instruction please visit: https://twiki.cern.ch/twiki/bin/view/CMS/MissingETScanners
 ## Install
 ```
-  cmsrel CMSSW_10_0_1_patch2
-  cd CMSSW_10_0_1_patch2/src
+  cmsrel CMSSW_10_1_2_patch2
+  cd CMSSW_10_1_2_patch2/src
   cmsenv
   git clone git@github.com:cms-met/MetScanning
   scram b -j9
