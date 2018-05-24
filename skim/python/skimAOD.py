@@ -232,8 +232,8 @@ process.BadPFMuonSummer16Filter.taggingMode = cms.bool(True)
 
 #introduced in 2017
 
-process.load("RecoMET.METFilters.EcalBadCalibFilter_cfi")
-process.EcalBadCalibFilter.taggingMode = cms.bool(True)
+process.load("RecoMET.METFilters.ecalBadCalibFilter_cfi")
+process.ecalBadCalibFilter.taggingMode = cms.bool(True)
 
 process.primaryVertexFilter = cms.EDFilter("GoodVertexFilter",
                                            vertexCollection = cms.InputTag('offlinePrimaryVertices'),
@@ -298,7 +298,7 @@ process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
                                             ESRecHits=cms.InputTag("reducedEcalRecHitsES"),
                                             BadChCandFilter=cms.InputTag("BadChargedCandidateFilter"),
                                             BadPFMuon=cms.InputTag("BadPFMuonFilter"),                                            
-                                            EcalBadCalibFilter=cms.InputTag("EcalBadCalibFilter"),
+                                            EcalBadCalibFilter=cms.InputTag("ecalBadCalibFilter"),
 					    OfflinePrimaryVertices = cms.InputTag("offlinePrimaryVertices"),
                                             HcalNoise=cms.InputTag("hcalnoise")
                                             
@@ -335,7 +335,7 @@ process.p = cms.Path(
     process.HcalStripHaloFilter*
     process.BadChargedCandidateFilter*
     process.BadPFMuonFilter*
-    process.EcalBadCalibFilter*
+    process.ecalBadCalibFilter*
     process.metScanNtupleMaker ##CH: writes a flat tree
     )
 
