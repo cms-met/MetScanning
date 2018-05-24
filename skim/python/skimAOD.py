@@ -271,7 +271,7 @@ process.condMETSelector = cms.EDProducer(
 
 process.metCounter = cms.EDFilter(
     "CandViewCountFilter",
-    isReco = cms.bool(False),
+    #isReco = cms.bool(False),
     src = cms.InputTag("condMETSelector"),
     minNumber = cms.uint32(1),
     )
