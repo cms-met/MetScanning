@@ -42,33 +42,4 @@ In order to submit job with large input data:
   In everything works fine you can then fully submit the jobs by:
 
   crab proceed
-  
-## Bug list!!!:
->> Compiling edm plugin /afs/cern.ch/user/l/ldidukh/CMSSW_10_1_2_patch2/src/MetScanning/tuple/test/METScanningNtupleMaker.cc 
->> Building edm plugin tmp/slc6_amd64_gcc630/src/MetScanning/tuple/test/METScanningNutpleMaker/libMETScanningNutpleMaker.so
-Leaving library rule at src/MetScanning/tuple/test
-@@@@ Running edmWriteConfigs for METScanningNutpleMaker
---- Registered EDM Plugin: METScanningNutpleMaker
->> Leaving Package MetScanning/tuple
->> Package MetScanning/tuple built
->> Subsystem MetScanning built
-gmake[1]: Entering directory '/afs/cern.ch/user/l/ldidukh/CMSSW_10_1_2_patch2'
->> Local Products Rules ..... started
->> Local Products Rules ..... done
-@@@@ Refreshing Plugins:edmPluginRefresh
->> Done generating edm plugin poisoned information
->> Creating project symlinks
->> Done python_symlink
->> Compiling python modules cfipython/slc6_amd64_gcc630
->> Compiling python modules python
->> Compiling python modules src/MetScanning/skim/python
->> Plugins of all types refreshed.
-Compiling src/MetScanning/skim/python/._skimAOD.py ...
-Sorry: TypeError: compile() expected string without null bytes
-config/SCRAM/GMake/Makefile.rules:2168: recipe for target 'CompilePython' failed
-gmake[1]: *** [CompilePython] Error 1
-gmake[1]: Leaving directory '/afs/cern.ch/user/l/ldidukh/CMSSW_10_1_2_patch2'
-config/SCRAM/GMake/Makefile.rules:2035: recipe for target 'src' failed
-gmake: *** [src] Error 2
-gmake: *** [There are compilation/build errors. Please see the detail log above.] Error 2
 ```
