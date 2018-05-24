@@ -18,12 +18,7 @@ process.load("RecoLocalCalo.EcalRecAlgos.EcalSeverityLevelESProducer_cfi")
 
 
 ##___________________________Global_Tag_______________________________________||
-#process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
-#from Configuration.AlCa.GlobalTag import GlobalTag
-#process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc', '')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
-#process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
-#process.GlobalTag.globaltag = 'GR_P_V56::All'
 process.load("RecoLuminosity.LumiProducer.bunchSpacingProducer_cfi")
 process.GlobalTag.globaltag = "100X_dataRun2_Prompt_v1"
 
@@ -31,7 +26,6 @@ process.GlobalTag.globaltag = "100X_dataRun2_Prompt_v1"
 ##___________________________Input_Files______________________________________||
 HEADER = "root://cms-xrd-global.cern.ch///"
 _HEADER = "root://xrootd-cms.infn.it///"
-#process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring())
 
 process.source = cms.Source(
     "PoolSource",
@@ -164,7 +158,6 @@ process.source = cms.Source(
 ##___________________________EDM_Output_File__________________________________||
 process.out = cms.OutputModule(
     "PoolOutputModule",
-    #isReco = cms.bool(False),
     fileName = cms.untracked.string('skim.root'),
     SelectEvents   = cms.untracked.PSet( SelectEvents = cms.vstring('p') ),
     outputCommands = cms.untracked.vstring(
@@ -176,9 +169,7 @@ process.out = cms.OutputModule(
 
 ##____________________________________________________________________________||
 process.options   = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
-
 #process.options = cms.untracked.PSet(SkipEvent = cms.untracked.vstring('ProductNotFound'))
-
 process.MessageLogger.cerr.FwkReport.reportEvery = 50
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(20000) )
 
@@ -186,10 +177,6 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(20000) )
 ##___________________________CSC_Halo_Filter__________________________________||
 process.load('RecoMET.METFilters.CSCTightHaloFilter_cfi')
 process.CSCTightHaloFilter.taggingMode = cms.bool(True)
-
-#Isabell suggestion
-#process.load('RecoMET.METFilters.CSCTightHalo2015Filter_cfi')
-#process.CSCTightHalo2015Filter.taggingMode = cms.bool(True)
 
 process.load('RecoMET.METFilters.CSCTightHaloTrkMuUnvetoFilter_cfi')
 process.CSCTightHaloTrkMuUnvetoFilter.taggingMode = cms.bool(True)
@@ -218,7 +205,6 @@ process.HcalStripHaloFilter.taggingMode = cms.bool(True)
 process.goodVertices = cms.EDFilter(
   "VertexSelector",
   filter = cms.bool(False),
-  #isReco = cms.bool(False),
   src = cms.InputTag("offlinePrimaryVertices"),
   cut = cms.string("!isFake && ndof > 4 && abs(z) <= 24 && position.rho < 2")
 )
@@ -250,7 +236,6 @@ process.load("RecoMET.METFilters.EcalBadCalibFilter_cfi")
 process.EcalBadCalibFilter.taggingMode = cms.bool(True)
 
 process.primaryVertexFilter = cms.EDFilter("GoodVertexFilter",
-  #                                         isReco = cms.bool(False),
                                            vertexCollection = cms.InputTag('offlinePrimaryVertices'),
                                            minimumNDOF = cms.uint32(4) ,
                                            maxAbsZ = cms.double(24),
@@ -271,7 +256,6 @@ process.condMETSelector = cms.EDProducer(
 
 process.metCounter = cms.EDFilter(
     "CandViewCountFilter",
-    #isReco = cms.bool(False),
     src = cms.InputTag("condMETSelector"),
     minNumber = cms.uint32(1),
     )
@@ -300,7 +284,6 @@ process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
                                             TRKfilterLETMS=cms.InputTag("logErrorTooManySeeds"),
                                             TRKfilterMSC=cms.InputTag("manystripclus53X"),
                                             TRKfilterTMSC=cms.InputTag("toomanystripclus53X"),
-                                            #CSC2015filter=cms.InputTag("CSCTightHalo2015Filter"),
                                             GlobalHalofilterTight=cms.InputTag("globalTightHalo2016Filter"),
                                             GlobalHalofilterSuperTight=cms.InputTag("globalSuperTightHalo2016Filter"),
                                             HcalStripHaloFilter=cms.InputTag("HcalStripHaloFilter"),
@@ -314,14 +297,9 @@ process.metScanNtupleMaker = cms.EDAnalyzer("METScanningNtupleMaker",
                                             EERecHits=cms.InputTag("reducedEcalRecHitsEE"),
                                             ESRecHits=cms.InputTag("reducedEcalRecHitsES"),
                                             BadChCandFilter=cms.InputTag("BadChargedCandidateFilter"),
-                                            BadPFMuon=cms.InputTag("BadPFMuonFilter"),
-                                            
-                                            #BadChCandSummer16Filter=cms.InputTag("BadChargedCandidateSummer16Filter"),
-                                            #BadPFMuonOld=cms.InputTag("BadPFMuonSummer16Filter"),
-                                            
-                                            #EcalBadCalibSummer17Filter=cms.InputTag("EcalBadCalibSummer17Filter"),  
+                                            BadPFMuon=cms.InputTag("BadPFMuonFilter"),                                            
                                             EcalBadCalibFilter=cms.InputTag("EcalBadCalibFilter"),
-					                        OfflinePrimaryVertices = cms.InputTag("offlinePrimaryVertices"),
+					    OfflinePrimaryVertices = cms.InputTag("offlinePrimaryVertices"),
                                             HcalNoise=cms.InputTag("hcalnoise")
                                             
 )
@@ -339,28 +317,24 @@ from RecoMET.METProducers.BeamHaloSummary_cfi import *
 ##___________________________PATH______________________________________________||
 process.p = cms.Path(
 #    process.BeamHaloId* #Uncomment this if you want to rerun the BeamHaloSummary. By default this line should remain commented
-   
     process.primaryVertexFilter*
     process.bunchSpacingProducer *
     process.condMETSelector *
-#    process.metCounter* #uncomment this line to apply a met cut
+#   process.metCounter* #uncomment this line to apply a met cut
     process.CSCTightHaloFilter*
     process.HBHENoiseFilterResultProducer* #produces bools    
-#    process.ApplyBaselineHBHENoiseFilter* 
+#   process.ApplyBaselineHBHENoiseFilter* 
     process.EcalDeadCellTriggerPrimitiveFilter*
     process.eeBadScFilter*
     process.goodVertices*
     process.trackingFailureFilter*
     process.EcalDeadCellBoundaryEnergyFilter*
-    #process.CSCTightHalo2015Filter*
     process.CSCTightHaloTrkMuUnvetoFilter*
     process.globalTightHalo2016Filter * 
     process.globalSuperTightHalo2016Filter * 
     process.HcalStripHaloFilter*
     process.BadChargedCandidateFilter*
     process.BadPFMuonFilter*
-    #process.BadChargedCandidateSummer16Filter*
-    #process.BadPFMuonSummer16Filter*
     process.EcalBadCalibFilter*
     process.metScanNtupleMaker ##CH: writes a flat tree
     )
