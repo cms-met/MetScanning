@@ -5,7 +5,10 @@ For recent instruction please visit: https://twiki.cern.ch/twiki/bin/view/CMS/Mi
   cmsrel CMSSW_10_1_2_patch2
   cd CMSSW_10_1_2_patch2/src
   cmsenv
-  git clone git@github.com:cms-met/MetScanning
+  git cms-init
+  git cms-addpkg RecoMET/METFilters 
+  
+  git clone https://github.com/didukhle/MetScanning.git
   scram b -j9
   ```
   You might need to run the following command if you want to access files via XROOT:
