@@ -111,7 +111,7 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
   edm::EDGetTokenT<bool> TrackingLETMS_token;
   edm::EDGetTokenT<bool> TrackingMSC_token;
   edm::EDGetTokenT<bool> TrackingTMSC_token;
-  edm::EDGetTokenT<bool> CSC2015_token;
+  //edm::EDGetTokenT<bool> CSC2015_token;
   edm::EDGetTokenT<bool> GlobalTightHalo2016_token;
   edm::EDGetTokenT<bool> GlobalSuperTightHalo2016_token;
   edm::EDGetTokenT<bool> HcalStripHalo_token;
@@ -128,9 +128,9 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
 
   edm::EDGetTokenT<bool> BadPFMuon_token;
 
-  edm::EDGetTokenT<bool> BadChCandFOld_token;
+  //edm::EDGetTokenT<bool> BadChCandFOld_token;
 
-  edm::EDGetTokenT<bool> BadPFMuonOld_token;
+  //edm::EDGetTokenT<bool> BadPFMuonOld_token;
 
   edm::EDGetTokenT<bool> EcalBadCalib_token;
 
@@ -139,8 +139,10 @@ class METScanningNtupleMaker : public edm::EDAnalyzer {
   bool isReco_token;
 
   size_t run,event,lumiBlock,time;
-  bool filtercsc2015, filterglobaltighthalo2016,filterglobalsupertighthalo2016, filterhcalstriphalo, filterhbher1, filterhbher2l, filterhbher2t, filterhbher1nozeros, filterhbheiso, filterecaltp, filterecalsc; 
-  bool filtertrackingletmc, filtertrackingletms, filtertrackingmsc, filtertrackingtmsc, filterbadChCandidate, filterbadPFMuon, filterbadChCandidateOld, filterbadPFMuonOld, filterEcalBadCalib  ;
+  //bool filtercsc2015
+  //bool filterbadChCandidateOld, filterbadPFMuonOld
+  bool filterglobaltighthalo2016,filterglobalsupertighthalo2016, filterhcalstriphalo, filterhbher1, filterhbher2l, filterhbher2t, filterhbher1nozeros, filterhbheiso, filterecaltp, filterecalsc; 
+  bool filtertrackingletmc, filtertrackingletms, filtertrackingmsc, filtertrackingtmsc, filterbadChCandidate, filterbadPFMuon, filterEcalBadCalib  ;
   edm::RunNumber_t irun;
   edm::EventNumber_t ievent;
   edm::LuminosityBlockNumber_t ilumiBlock;
